@@ -2,13 +2,14 @@ import type { Timestamp } from "firebase/firestore";
 
 export type Category =
 	| "Café"
-	| "Restaurang"
-	| "Snabbmat"
-	| "Kiosk/grill"
-	| "Foodtruck";
+	| "Restaurant"
+	| "Fast food"
+	| "Bodega"
+	| "Foodtruck"
+	| "Slop house";
 
 export type Offer = 
-	| "Fika" 
+	| "Breakfast" 
 	| "Lunch" 
 	| "After Work" 
 	| "Á la carte";

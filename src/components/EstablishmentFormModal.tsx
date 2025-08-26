@@ -9,13 +9,19 @@ import { useState } from "react";
 
 const CATEGORY_OPTIONS: Category[] = [
 	"Café",
-	"Restaurang",
-	"Snabbmat",
-	"Kiosk/grill",
+	"Restaurant",
+	"Fast food",
+	"Bodega",
 	"Foodtruck",
+	"Slop house",
 ];
 
-const OFFER_OPTIONS: Offer[] = ["Fika", "Lunch", "After Work", "Á la carte"];
+const OFFER_OPTIONS: Offer[] = [
+	"Breakfast", 
+	"Lunch", 
+	"After Work", 
+	"Á la carte"
+];
 
 interface EstablishmentFormModalProps {
 	initValues?: EstablishmentFormData;
@@ -60,7 +66,7 @@ const EstablishmentFormModal: React.FC<EstablishmentFormModalProps> = ({ onSave,
 				centered
 			>
 
-				<Form onSubmit={handleSubmit(onFormSubmit)}>
+				<Form onSubmit={handleSubmit(onFormSubmit)} className="m-3">
 
 					<Modal.Header closeButton>
 						<Modal.Title>Add Establishment</Modal.Title>
@@ -108,7 +114,7 @@ const EstablishmentFormModal: React.FC<EstablishmentFormModalProps> = ({ onSave,
 							<Form.Control
 								type="text"
 								placeholder="Enter name of city"
-								{...register("address", {
+								{...register("city", {
 									required: "Please enter city",
 									minLength: {
 										value: 2,
