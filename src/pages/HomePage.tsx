@@ -1,7 +1,8 @@
+import EstablishmentFormModal from "../components/EstablishmentFormModal";
 
 
 const HomePage = () => {
-	return <div>HomePage</div>;
+	return <EstablishmentFormModal onSave={() => {return}} isAdmin={true}/>;
 };
 
 export default HomePage;

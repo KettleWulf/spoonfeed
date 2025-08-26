@@ -1,9 +1,29 @@
+import { Route, Routes } from "react-router"
+import HomePage from "./pages/HomePage"
+import { ToastContainer } from "react-toastify"
 
 function App() {
 
 
 	return (
-		<></>
+		<div id="App">
+
+
+			<>
+				<Routes>
+					{/* <Route path="*" element={<NotFoundPage />} /> */}
+					<Route path="/" element={<HomePage />} />
+
+					{/* Auth Routes */}
+
+
+
+
+				</Routes>
+			</>
+
+			<ToastContainer closeOnClick theme="colored" limit={5} stacked position="bottom-right" />
+		</div>
 	)
 }
 
