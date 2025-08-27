@@ -94,9 +94,12 @@ const LoginPage = () => {
                             </Form>
 
                         </Card.Body>
+                        <div className="text-center">
+                            Have you <Link to="/forgot-password">Forgot Password</Link>
+                        </div>
                     </Card>
 
-                    <div>
+                    <div className="text-center">
                         Sign up here <Link to="/signup">Sign Up</Link>                  
                     </div>
                 </Col>
