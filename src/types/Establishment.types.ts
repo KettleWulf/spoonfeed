@@ -27,7 +27,7 @@ export interface Establishment {
 	description?: string;
 	category: Category;
 	offers: Offer[];
-	
+
 	email?: string;
 	phone?: string;
 	website?: string;
@@ -42,4 +42,4 @@ export interface Establishment {
 
 export type NewEstablishment = Omit<Establishment, "_id">;
 
-export type EstablishmentFormData = Omit<Establishment, "_id" | "updatedAt" | "isSuggestion">;
+export type EstablishmentFormData = Omit<Establishment, "_id" | "updatedAt">;

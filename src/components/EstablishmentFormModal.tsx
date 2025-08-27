@@ -176,6 +176,9 @@ const EstablishmentFormModal: React.FC<EstablishmentFormModalProps> = ({ onSave,
 					</Modal.Body>
 
 					<Modal.Footer>
+						{initValues && isAdmin && (
+							<Button variant="danger" onClick={() => {}}>Delete</Button>
+						)}
 						<Button variant="secondary" onClick={close} disabled={isSubmitting}>
 							Avbryt
 						</Button>
