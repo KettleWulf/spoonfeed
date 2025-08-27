@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 
 const HomePage = () => {
 
-		const addEstablishment = async (establishment: EstablishmentFormData) => {
+	const addEstablishment = async (establishment: EstablishmentFormData) => {
 		// Create document with a generated ID
 		const docRef = await addDoc(newEstablishmentsCol, {
 			...establishment,
