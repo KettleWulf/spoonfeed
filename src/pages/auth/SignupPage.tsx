@@ -7,7 +7,7 @@ import { AuthContext } from '../../context/AuthContext';
 import { FirebaseError } from 'firebase/app';
 import { toast } from "react-toastify";
 import { Card, Col, Container, Row } from 'react-bootstrap';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 
 const SignupPage = () => {
     const { handleSubmit, register, watch, formState: { errors, isSubmitting } } = useForm<SignUpCredentials>()
@@ -106,6 +106,9 @@ const SignupPage = () => {
 
                         </Card.Body>
                     </Card>
+                     <div className="text-center">
+                        Already have an account <Link to="/signin">Sign in</Link>                  
+                    </div>
                 </Col>
             </Row >
         </Container >
