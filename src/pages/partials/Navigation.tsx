@@ -8,11 +8,12 @@ const Navigation = () => {
         <>
             <Navbar bg="success" variant="dark">
                 <Container>
-                    <Navbar.Brand href="#home">Namn på sidan </Navbar.Brand>
+                    <Navbar.Brand href="*">Namn på sidan </Navbar.Brand>
                     <Nav>
                         <Nav.Link href="*">About us</Nav.Link>
                         <Nav.Link href="*">Resturants</Nav.Link>
                         <Nav.Link href="*">Send us a tip</Nav.Link>
+                        <Nav.Link href="/signup">signup</Nav.Link>
                     </Nav>
                 </Container>
             </Navbar>
