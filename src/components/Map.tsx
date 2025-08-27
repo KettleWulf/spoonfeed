@@ -13,15 +13,30 @@ const Map = () => {
         height: "400px",
     }
 
-    if(!userLocation){
-        return;
+    if(error &&  !userLocation){
+         return <p>Kunde inte hämta din position. Visar Stockholm istället.</p>
     }
     
-    const center = {
+    if(isLoading){
+        return <p>Hämtar din position... </p>
+    }
+    const FALLBACK_CENTER = {
         // Coordinates to STOCKHOLM as fallback 
         lat: 59.334591,
         lng: 18.063240,
     }
+
+    const mapCenter = userLocation || FALLBACK_CENTER;
+
+    {/*funktion för när man trycker på kartan */}
+    const onHandleMapClick = (e: google.maps.MapMouseEvent ) => {
+  
+        if(!e.latLng){
+            return;
+        }
+
+        console.log(e.latLng.lat(), e.latLng.lng());
+    } 
 
 
     return (
@@ -30,8 +45,9 @@ const Map = () => {
         >
             <GoogleMap
                 mapContainerStyle={containerStyle}
-                center={userLocation}
+                center={mapCenter}
                 zoom={12}
+                onClick={onHandleMapClick}
             ></GoogleMap>
 
         </LoadScript>
