@@ -3,6 +3,7 @@ import "./assets/scss/App.scss";
 import SignupPage from "./pages/auth/SignupPage";
 import { Route, Routes } from "react-router";
 import { ToastContainer } from "react-toastify";
+import LoginPage from "./pages/auth/LoginPage";
 
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
 			<Navigation />
 			<Routes>
 				<Route path="/signup" element={<SignupPage />} />
+				<Route path="/login" element={<LoginPage />} />
 					
 				
 

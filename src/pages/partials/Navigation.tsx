@@ -13,7 +13,7 @@ const Navigation = () => {
                         <Nav.Link href="*">About us</Nav.Link>
                         <Nav.Link href="*">Resturants</Nav.Link>
                         <Nav.Link href="*">Send us a tip</Nav.Link>
-                        <Nav.Link href="/signup">signup</Nav.Link>
+                        <Nav.Link href="/login">login</Nav.Link>
                     </Nav>
                 </Container>
             </Navbar>
