@@ -14,7 +14,14 @@ function App() {
 		
 			<Routes>
 				<Route path="/" element={<HomePage />}/>
+
+
+				{/* Auth Routes */}
+
+
 			</Routes>
+
+			<ToastContainer closeOnClick theme="colored" limit={5} stacked position="bottom-right" />
 		</div>
 	)
 }
