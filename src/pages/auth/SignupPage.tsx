@@ -28,7 +28,9 @@ const SignupPage = () => {
 
         try {
             await signUp(data.email, data.password)
+
             toast.success("Welcome to the team")
+            
             navigate("/")
         } catch (e) {
             if (e instanceof FirebaseError) {
@@ -97,7 +99,7 @@ const SignupPage = () => {
                                     />
                                     {errors.confirmPassword && <p className="text-danger">{errors.confirmPassword.message || "invalid"}</p>}
                                 </Form.Group>
-                                <Button variant="primary" type="submit">
+                                <Button variant="primary" type="submit" disabled={isSubmitting}> 
                                     Submit
                                 </Button>
                             </Form>
