@@ -35,9 +35,11 @@ export interface Establishment {
 
 	updatedAt?: Timestamp;
 
+	isSuggestion: boolean;
+
 	location: Location;
 }
 
 export type NewEstablishment = Omit<Establishment, "_id">;
 
-export type EstablishmentFormData = Omit<Establishment, "_id" | "updatedAt">;
+export type EstablishmentFormData = Omit<Establishment, "_id" | "updatedAt" | "isSuggestion">;
