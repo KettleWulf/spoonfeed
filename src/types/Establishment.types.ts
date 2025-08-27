@@ -27,15 +27,15 @@ export interface Establishment {
 	description?: string;
 	category: Category;
 	offers: Offer[];
+	
 	email?: string;
 	phone?: string;
 	website?: string;
 	facebook?: string;
 	instagram?: string;
 
+	createdAt?: Timestamp;
 	updatedAt?: Timestamp;
-
-	isSuggestion: boolean;
 
 	location: Location;
 }
