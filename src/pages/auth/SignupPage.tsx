@@ -107,7 +107,7 @@ const SignupPage = () => {
                         </Card.Body>
                     </Card>
                      <div className="text-center">
-                        Already have an account <Link to="/signin">Sign in</Link>                  
+                        Already have an accout<Link to="/signin">Sign in</Link>                  
                     </div>
                 </Col>
             </Row >
