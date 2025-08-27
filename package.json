@@ -1,4 +1,48 @@
 {
+<<<<<<< HEAD
+  "name": "hangry-app",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "tsc": "tsc --noEmit",
+    "type-coverage": "type-coverage -p ./tsconfig.app.json --at-least 100",
+    "check": "run-s lint tsc type-coverage",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@react-google-maps/api": "^2.20.7",
+    "firebase": "^11.10.0",
+    "react": "^19.0.0",
+    "react-bootstrap": "^2.10.9",
+    "react-dom": "^19.0.0",
+    "react-hook-form": "^7.62.0",
+    "react-router": "^7.6.0",
+    "react-spinners": "^0.17.0",
+    "react-toastify": "^11.0.5"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.22.0",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "@vitejs/plugin-react": "^4.3.4",
+    "bootstrap": "^5.3.5",
+    "eslint": "^9.22.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "globals": "^16.0.0",
+    "npm-run-all2": "^8.0.4",
+    "sass": "1.77.6",
+    "type-coverage": "^2.29.7",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.39.1",
+    "vite": "^7.1.2"
+  }
+}
+=======
 	"name": "hangry-app",
 	"private": true,
 	"version": "0.0.0",
@@ -40,3 +84,4 @@
 		"vite": "^7.1.2"
 	}
 }
+>>>>>>> 9b509d4c51fa5831ab4533d8dc530bb1ce4e9119
