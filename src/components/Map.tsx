@@ -30,7 +30,7 @@ const Map = () => {
         >
             <GoogleMap
                 mapContainerStyle={containerStyle}
-                center={userLocation || center}
+                center={userLocation}
                 zoom={12}
             ></GoogleMap>
 

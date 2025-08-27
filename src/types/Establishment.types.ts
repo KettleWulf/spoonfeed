@@ -27,12 +27,14 @@ export interface Establishment {
 	description?: string;
 	category: Category;
 	offers: Offer[];
+	
 	email?: string;
 	phone?: string;
 	website?: string;
 	facebook?: string;
 	instagram?: string;
 
+	createdAt?: Timestamp;
 	updatedAt?: Timestamp;
 
 	location: Location;
@@ -40,4 +42,4 @@ export interface Establishment {
 
 export type NewEstablishment = Omit<Establishment, "_id">;
 
-export type EstablishmentFormData = Omit<Establishment, "_id" | "updatedAt">;
+export type EstablishmentFormData = Omit<Establishment, "_id" | "updatedAt" | "isSuggestion">;
