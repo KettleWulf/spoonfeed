@@ -7,9 +7,10 @@ const containerStyle = {
 }
 
 const center = {
-    lat: -3.745,
-    lng: -38.523,
+    lat: 55.6033166,
+    lng: 13.0013362,
 }
+
 const Map = () => {
   return (
     <LoadScript
