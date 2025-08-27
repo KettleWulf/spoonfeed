@@ -17,9 +17,9 @@ const CATEGORY_OPTIONS: Category[] = [
 ];
 
 const OFFER_OPTIONS: Offer[] = [
-	"Breakfast", 
-	"Lunch", 
-	"After Work", 
+	"Breakfast",
+	"Lunch",
+	"After Work",
 	"Á la carte"
 ];
 
@@ -30,7 +30,7 @@ interface EstablishmentFormModalProps {
 }
 
 const EstablishmentFormModal: React.FC<EstablishmentFormModalProps> = ({ onSave, isAdmin = false, initValues }) => {
-	
+
 	const [show, setShow] = useState(false);
 	const open = () => setShow(true);
 	const close = () => setShow(false);
@@ -145,10 +145,10 @@ const EstablishmentFormModal: React.FC<EstablishmentFormModalProps> = ({ onSave,
 							<Form.Select
 								isInvalid={!!errors.category}
 								{...register("category", { required: "Please choose a category" })}
-								>
+							>
 								{CATEGORY_OPTIONS.map((c) => (
 									<option key={c} value={c}>
-									{c}
+										{c}
 									</option>
 								))}
 							</Form.Select>
@@ -162,10 +162,10 @@ const EstablishmentFormModal: React.FC<EstablishmentFormModalProps> = ({ onSave,
 							<Form.Select
 								isInvalid={!!errors.offers}
 								{...register("offers", { required: "Please choose a service" })}
-								>
+							>
 								{OFFER_OPTIONS.map((o) => (
 									<option key={o} value={o}>
-									{o}
+										{o}
 									</option>
 								))}
 							</Form.Select>
@@ -196,6 +196,7 @@ const EstablishmentFormModal: React.FC<EstablishmentFormModalProps> = ({ onSave,
 				</Form>
 			</Modal>
 		</>
-)};
+	)
+};
 
 export default EstablishmentFormModal;

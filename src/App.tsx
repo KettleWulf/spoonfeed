@@ -11,9 +11,9 @@ function App() {
 		<div id="App">
 
 			<Navigation />
-		
+
 			<Routes>
-				<Route path="/" element={<HomePage />}/>
+				<Route path="/" element={<HomePage />} />
 
 
 				{/* Auth Routes */}
