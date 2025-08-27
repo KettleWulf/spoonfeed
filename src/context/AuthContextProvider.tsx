@@ -1,11 +1,19 @@
-import { useState, type PropsWithChildren } from "react"
+import { useEffect, useState, type PropsWithChildren } from "react"
 import { AuthContext } from "./AuthContext"
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, type User } from "firebase/auth"
+import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, type User } from "firebase/auth"
 import { auth } from "../services/Firebase"
 
 const AuthContextProvider: React.FC<PropsWithChildren> = ({children}) => {
     const [currentUser, setCurrentUser]= useState< User | null>(null)
-   
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setCurrentUser(user)
+        })
+
+        return unsubscribe
+    },[])
+
     const logIn = (email: string, password: string) => {
         return signInWithEmailAndPassword(auth, email, password)
     }

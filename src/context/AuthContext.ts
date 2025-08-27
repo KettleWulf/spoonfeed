@@ -10,7 +10,6 @@ interface AuthContextType {
     logOut: () => void,
 
 
-    
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null)
