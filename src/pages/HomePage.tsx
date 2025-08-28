@@ -34,7 +34,7 @@ const HomePage = () => {
 			<Row className="justify-content-center">
 				<Col md={8} lg={6}>
 					<Map />
-					<EstablishmentFormModal onSave={addEstablishment} isAdmin={true}/>
+					<EstablishmentFormModal onSave={addEstablishment} />
 				</Col>
 			</Row>
 </Container>
