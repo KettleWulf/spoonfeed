@@ -6,9 +6,12 @@ import type { EstablishmentFormData } from "../types/Establishment.types";
 import { addDoc, serverTimestamp } from "firebase/firestore";
 import { newEstablishmentsCol } from "../services/Firebase";
 import { toast } from "react-toastify";
+import useAuth from "../hooks/useAuth";
 
 
 const HomePage = () => {
+
+		const { currentUser } = useAuth();
 
 		const addEstablishment = async (establishment: EstablishmentFormData) => {
 		// Create document with a generated ID
@@ -16,6 +19,7 @@ const HomePage = () => {
 			...establishment,
 			createdAt: serverTimestamp(),
 			updatedAt: serverTimestamp(),
+			isSuggestion: !currentUser
 		});
 		console.log("Establishment created with ID:", docRef.id);
 		console.log("Wrote to:", docRef.path);

@@ -33,9 +33,5 @@ export const storage = getStorage(app);
 export const establishmentsCol = createCollection<Establishment>("establishments");
 export const newEstablishmentsCol = createCollection<NewEstablishment>("establishments");
 
-export const suggestionsCol = createCollection<Establishment>("suggestions");
-export const newSuggetionsCol = createCollection<NewEstablishment>("suggestions");
-
-
 
 export default app;

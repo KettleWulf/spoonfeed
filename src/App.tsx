@@ -15,19 +15,14 @@ function App() {
 		<div id="App">
 
 			<Navigation />
-			<Routes>
-				<Route path="/signup" element={<SignupPage />} />
-				<Route path="/login" element={<LoginPage />} />
-					
-				
-
-			</Routes>
 
 			<Routes>
 				<Route path="/" element={<HomePage />} />
 
 
 				{/* Auth Routes */}
+				<Route path="/signup" element={<SignupPage />} />
+				<Route path="/login" element={<LoginPage />} />
 
 
 			</Routes>
