@@ -9,6 +9,10 @@ interface AuthContextType {
     logIn: (email: string, password: string) => Promise<UserCredential>,
     logOut: () => void,
 
+    changeEmail: (email: string) => Promise<void>,
+    changeUserName: (name: string) => Promise<void>,
+    changePhotoUrl: (url: string) => Promise<void>,
+    changePassword: (password: string) => Promise<void>
 
 }
 
