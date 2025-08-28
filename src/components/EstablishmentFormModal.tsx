@@ -6,6 +6,7 @@ import type {
 } from "../types/Establishment.types";
 import { Button, Modal, Form } from "react-bootstrap";
 import { useState } from "react";
+import useAuth from "../hooks/useAuth";
 
 const CATEGORY_OPTIONS: Category[] = [
 	"Café",
@@ -25,11 +26,12 @@ const OFFER_OPTIONS: Offer[] = [
 
 interface EstablishmentFormModalProps {
 	initValues?: EstablishmentFormData;
-	isAdmin: boolean;
 	onSave: (establishment: EstablishmentFormData) => void;
 }
 
-const EstablishmentFormModal: React.FC<EstablishmentFormModalProps> = ({ onSave, isAdmin = false, initValues }) => {
+const EstablishmentFormModal: React.FC<EstablishmentFormModalProps> = ({ onSave, initValues }) => {
+
+	const { currentUser } = useAuth();
 
 	const [show, setShow] = useState(false);
 	const open = () => setShow(true);
@@ -47,10 +49,7 @@ const EstablishmentFormModal: React.FC<EstablishmentFormModalProps> = ({ onSave,
 	const onFormSubmit: SubmitHandler<EstablishmentFormData> = (data) => {
 		console.log(data);
 
-		// Kontrollera om admin (spara data) eller gäst (spara tips, somehow?)
-		if (isAdmin) {
-			onSave(data);
-		}
+		onSave(data);
 
 		reset(); // maybe reset, maybe not?
 	}
@@ -176,7 +175,7 @@ const EstablishmentFormModal: React.FC<EstablishmentFormModalProps> = ({ onSave,
 					</Modal.Body>
 
 					<Modal.Footer>
-						{initValues && isAdmin && (
+						{initValues && currentUser && (
 							<Button variant="danger" onClick={() => {}}>Delete</Button>
 						)}
 						<Button variant="secondary" onClick={close} disabled={isSubmitting}>
