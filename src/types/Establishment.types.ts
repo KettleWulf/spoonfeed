@@ -16,7 +16,7 @@ export type Offer =
 
 export interface Location {
 	lat: number;
-	lon: number;
+	lng: number;
 }
 
 export interface Establishment {

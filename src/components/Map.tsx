@@ -1,11 +1,18 @@
 import { GoogleMap, LoadScript } from "@react-google-maps/api";
 import useUserLocation from "../hooks/useUserLocation";
+import useGeocoding from "../hooks/useGeocoding";
 
 const mapApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 
 const Map = () => {
-    const {userLocation, isLoading, error } = useUserLocation();
+    const {
+        userLocation, 
+        isLoading, 
+        error 
+    } = useUserLocation();
+
+    const { getAdress, adress } = useGeocoding();
     
     console.log(userLocation, isLoading, error);
     const containerStyle = {
@@ -35,7 +42,16 @@ const Map = () => {
             return;
         }
 
-        console.log(e.latLng.lat(), e.latLng.lng());
+        const clickedCoords = {
+            lat: e.latLng.lat(),
+            lng: e.latLng.lng(),
+        }
+
+        getAdress(clickedCoords);
+        
+        console.log(adress);
+
+        
     } 
 
 
