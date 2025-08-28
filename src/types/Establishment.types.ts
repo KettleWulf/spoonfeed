@@ -1,19 +1,20 @@
 import type { Timestamp } from "firebase/firestore";
 
-type Category =
+export type Category =
 	| "Café"
-	| "Restaurang"
-	| "Snabbmat"
-	| "Kiosk/grill"
-	| "Foodtruck";
+	| "Restaurant"
+	| "Fast food"
+	| "Bodega"
+	| "Foodtruck"
+	| "Slop house";
 
-type Offer = 
-	| "Fika" 
+export type Offer = 
+	| "Breakfast" 
 	| "Lunch" 
 	| "After Work" 
 	| "Á la carte";
 
-interface Location {
+export interface Location {
 	lat: number;
 	lon: number;
 }
@@ -26,15 +27,19 @@ export interface Establishment {
 	description?: string;
 	category: Category;
 	offers: Offer[];
+
 	email?: string;
 	phone?: string;
 	website?: string;
 	facebook?: string;
 	instagram?: string;
 
+	createdAt?: Timestamp;
 	updatedAt?: Timestamp;
 
 	location: Location;
 }
 
 export type NewEstablishment = Omit<Establishment, "_id">;
+
+export type EstablishmentFormData = Omit<Establishment, "_id" | "updatedAt">;
