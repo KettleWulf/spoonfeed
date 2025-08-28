@@ -5,3 +5,9 @@ export interface User {
 
 	photoFiles: FileList;
 }
+
+export type SignUpCredentials = {
+	email: string,
+	password: string,
+	confirmPassword: string
+}
