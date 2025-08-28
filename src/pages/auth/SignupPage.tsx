@@ -1,26 +1,20 @@
-import { useContext } from 'react'
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import type { SignUpCredentials } from '../../types/User.types';
-import { AuthContext } from '../../context/AuthContext';
 import { FirebaseError } from 'firebase/app';
 import { toast } from "react-toastify";
 import { Card, Col, Container, Row } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router';
+import useAuth from '../../hooks/useAuth';
 
 const SignupPage = () => {
     const { handleSubmit, register, watch, formState: { errors, isSubmitting } } = useForm<SignUpCredentials>()
     const navigate = useNavigate()
 
-    const authContext = useContext(AuthContext)
+    
 
-    if (!authContext) {
-        throw new Error("Trying to use authcontext outside of authcontextprovider");
-
-    }
-
-    const { signUp } = authContext
+    const { signUp } = useAuth()
 
 
     const onSubmit: SubmitHandler<SignUpCredentials> = async (data) => {
@@ -107,7 +101,7 @@ const SignupPage = () => {
                         </Card.Body>
                     </Card>
                      <div className="text-center">
-                        Already have an accout<Link to="/Login">Log in</Link>                  
+                        Already have an accout <Link to="/Login">Log in</Link>                  
                     </div>
                 </Col>
             </Row >
