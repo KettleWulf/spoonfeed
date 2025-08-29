@@ -11,3 +11,4 @@ export type SignUpCredentials = {
 	password: string,
 	confirmPassword: string
 }
+

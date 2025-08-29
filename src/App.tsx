@@ -7,6 +7,7 @@ import SignupPage from "./pages/auth/SignupPage";
 import LoginPage from "./pages/auth/LoginPage";
 
 import { ToastContainer } from "react-toastify"
+import EstablishmentsPage from "./pages/EstablishmentsPage";
 
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
 
 			<Routes>
 				<Route path="/" element={<HomePage />} />
+				<Route path="/establishments" element={<EstablishmentsPage />} />
 
 
 				{/* Auth Routes */}
