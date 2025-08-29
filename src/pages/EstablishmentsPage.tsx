@@ -1,6 +1,6 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import SortableTable from "../components/SortableTable";
-import useGetEstablishments from "../hooks/useGetEstablishments";
+import useGetEstablishments from "../hooks/useGetAllEstablishments";
 import type { Establishment } from "../types/Establishment.types";
 
 const columnDefs: ColumnDef<Establishment>[] = [
