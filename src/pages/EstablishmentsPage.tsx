@@ -1,3 +1,4 @@
+import type { ColumnDef } from "@tanstack/react-table";
 import SortableTable from "../components/SortableTable";
 import useGetEstablishments from "../hooks/useGetEstablishments";
 import type { Establishment } from "../types/Establishment.types";
