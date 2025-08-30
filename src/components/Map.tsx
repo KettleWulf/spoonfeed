@@ -1,11 +1,15 @@
 import { GoogleMap, LoadScript } from "@react-google-maps/api";
 import useUserLocation from "../hooks/useUserLocation";
 import useGeocoding from "../hooks/useGeocoding";
+import { useState } from "react";
 
 const mapApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 
 const Map = () => {
+
+    const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
+
     const {
         userLocation, 
         isLoading: locationLoading, 
@@ -51,11 +55,12 @@ const Map = () => {
 
         getAdress(clickedCoords,
             (foundAddress) => {
+                setSelectedAddress(foundAddress);
                 console.log("Found address", foundAddress);
                 console.log("For coordinates", clickedCoords);
             }
         );
-        console.log("Last searched address: ", address);
+        console.log("Last clicked address: ", address, " Current clicked address ", selectedAddress);
     } 
 
 
