@@ -8,23 +8,25 @@ const mapApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 const Map = () => {
     const {
         userLocation, 
-        isLoading, 
-        error 
+        isLoading: locationLoading, 
+        error: locationError
     } = useUserLocation();
 
-    const { getAdress, adress } = useGeocoding();
+    const { getAdress,
+            address,
+            // lägg till erroor handling senare : error: geocodingError, isLoading: geocoingIsLoading
+            } = useGeocoding();
     
-    console.log(userLocation, isLoading, error);
     const containerStyle = {
         width: "400px",
         height: "400px",
     }
 
-    if(error &&  !userLocation){
+    if(locationError &&  !userLocation){
          return <p>Kunde inte hämta din position. Visar Stockholm istället.</p>
     }
     
-    if(isLoading){
+    if(locationLoading){
         return <p>Hämtar din position... </p>
     }
     const FALLBACK_CENTER = {
@@ -36,7 +38,7 @@ const Map = () => {
     const mapCenter = userLocation || FALLBACK_CENTER;
 
     {/*funktion för när man trycker på kartan */}
-    const onHandleMapClick = (e: google.maps.MapMouseEvent ) => {
+    const onHandleMapClick = async (e: google.maps.MapMouseEvent ) => {
   
         if(!e.latLng){
             return;
@@ -47,11 +49,13 @@ const Map = () => {
             lng: e.latLng.lng(),
         }
 
-        getAdress(clickedCoords);
-        
-        console.log(adress);
-
-        
+        getAdress(clickedCoords,
+            (foundAddress) => {
+                console.log("Found address", foundAddress);
+                console.log("For coordinates", clickedCoords);
+            }
+        );
+        console.log("Last searched address: ", address);
     } 
 
 
