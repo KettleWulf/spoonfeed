@@ -5,10 +5,24 @@ import { auth } from "../services/Firebase"
 
 const AuthContextProvider: React.FC<PropsWithChildren> = ({children}) => {
     const [currentUser, setCurrentUser]= useState< User | null>(null)
+    const [userName, setUserName] = useState<string | null>(null)
+    const [userEmail, setUserEmail] = useState<string | null>(null)
+    const [loading, setloading] = useState(true)
+
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             setCurrentUser(user)
+
+            if(user){
+                setUserName(user.displayName)
+                setUserEmail(user.email)
+            } else{
+                setUserName(null)
+                setUserEmail(null)
+            }
+
+            setloading(false)
         })
 
         return unsubscribe
@@ -68,6 +82,8 @@ const AuthContextProvider: React.FC<PropsWithChildren> = ({children}) => {
         return updatePassword(currentUser, password)
     }
 
+   
+
     return (
 
     <AuthContext.Provider value={{
@@ -79,9 +95,14 @@ const AuthContextProvider: React.FC<PropsWithChildren> = ({children}) => {
         changeUserName,
         changePassword,
         changePhotoUrl,
+        userName,
+        userEmail,
     }}>
 
-        { children }
+        { loading ? (<div>Loading</div>
+        ) : children
+    
+    }
 
     </AuthContext.Provider>
 

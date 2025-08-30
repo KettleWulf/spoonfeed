@@ -1,60 +1,123 @@
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import type { SignUpCredentials } from '../../types/User.types';
+import type { UppdateUserCredentials } from '../../types/User.types';
 import { FirebaseError } from 'firebase/app';
 import { toast } from "react-toastify";
 import { Card, Col, Container, Row } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router';
 import useAuth from '../../hooks/useAuth';
+
+
+
+
+
 const UppdateProfile = () => {
+    const { currentUser, changeEmail, changePassword, changePhotoUrl, changeUserName, userName, userEmail } = useAuth()
 
-    const { handleSubmit, register, watch, formState: { errors, isSubmitting } } = useForm<SignUpCredentials>()
-    const navigate = useNavigate()
+        console.log("mitt namn är", userName);
+        
 
-    
+    const { handleSubmit, register, reset, watch, formState: { errors, isSubmitting } } = useForm<UppdateUserCredentials>({
+        defaultValues: {
+            email: userEmail ?? "",
+            username: userName ?? "",
+        }
+    })
 
-    const { signUp } = useAuth()
+
+
 
     const password = watch("password")
 
-    const onSubmit: SubmitHandler<SignUpCredentials> = async (data) => {
+    
 
+    
+    
+
+    const onUppdateProfile: SubmitHandler<UppdateUserCredentials> = async (data) => {
+
+        if (!currentUser) {
+            throw new Error("You must be logged in to update your Profile");
+
+        }
 
         try {
-            await signUp(data.email, data.password)
-
-            toast.success("Welcome to the team")
             
-            navigate("/")
-        } catch (e) {
+            if (data.email !== (userEmail ?? "")) {
+
+
+                await changeEmail(data.email)
+                console.log("updated email");
+                
+                //toast.success("Success you updated your email")
+
+            }
+
+            if (data.username !== (userName ?? "")) {
+
+
+                await changeUserName(data.username)
+                console.log("updated name", data.username)
+                //toast.success("Success you updated your Name")
+
+            }
+
+            if (data.photoUrl !== (currentUser.photoURL ?? "")) {
+
+
+                await changePhotoUrl(data.photoUrl)
+                console.log("updated url")
+
+            }
+
+            if (data.password) {
+
+
+                await changePassword(data.password)
+                console.log("updated password")
+            }
+
+            reset()
+
+            toast.success("Success you updated your Profile")
+        }
+
+        catch (e) {
             if (e instanceof FirebaseError) {
                 toast.error(e.message)
             } else if (e instanceof Error) {
                 toast.error(e.message)
             }
         }
-    }
 
-  return (
-      <Container className="py-3 center-y">
+    }
+    console.log("your name is", userName)
+console.log("your email is", userEmail)
+console.log("your url is",currentUser?.photoURL)
+
+    return (
+        <Container className="py-3 center-y">
             <Row>
                 <Col md={{ span: 6, offset: 3 }}>
                     <Card className="mb-3">
                         <Card.Body>
-                            <Card.Title className="mb-3">Sign Up</Card.Title>
+                            <Card.Title className="mb-3">Update Profile</Card.Title>
 
                             { /* Sign up form */}
-                            <Form onSubmit={handleSubmit(onSubmit)}>
+                            <Form onSubmit={handleSubmit(onUppdateProfile)}>
 
                                 {/* Email */}
                                 <Form.Group className="mb-3" controlId="formBasicEmail">
                                     <Form.Label>Email address</Form.Label>
                                     <Form.Control type="email"
-                                        placeholder="Enter email"
+                                        placeholder="Email"
                                         {...register("email", {
-                                            required: "You must enter an Email"
+                                            minLength: {
+                                                value: 3,
+                                                message: "You have to have at least 3 characters long"
+                                            }
                                         })}
+                                        
                                     />
                                     {errors.email
                                         ? <p className="text-danger">{errors.email.message || "invalid"}</p>
@@ -66,12 +129,26 @@ const UppdateProfile = () => {
 
                                 </Form.Group>
 
+                                <Form.Group className="mb-3" controlId="displayName">
+                                    <Form.Label>Name</Form.Label>
+                                    <Form.Control type="text"
+                                        placeholder="Sven"
+                                        {...register("username", {
+                                            minLength:{
+                                                value: 3,
+                                                message: "You have to have at least 3 characters long"
+                                            }
+                                        })}
+                                    />
+                                    {errors.username && <p className="text-danger">{errors.username.message || "invalid"}</p>}
+                                </Form.Group>
+
                                 {/* Password */}
                                 <Form.Group className="mb-3" controlId="formBasicPassword">
                                     <Form.Label>Password</Form.Label>
                                     <Form.Control type="password" autoComplete="new-password" placeholder="Password"
                                         {...register("password", {
-                                            required: "You must enter an password",
+
                                             minLength: {
                                                 message: "Enter at least 6 characters",
                                                 value: 6
@@ -86,26 +163,24 @@ const UppdateProfile = () => {
                                     <Form.Label>Confirm Password</Form.Label>
                                     <Form.Control type="password" autoComplete="off" placeholder="Confirm Password"
                                         {...register("confirmPassword", {
-                                            required: "You must enter an password",
+
                                             validate: (value) => value === password || "Paswords do not match"
                                         })}
                                     />
                                     {errors.confirmPassword && <p className="text-danger">{errors.confirmPassword.message || "invalid"}</p>}
                                 </Form.Group>
-                                <Button variant="primary" type="submit" disabled={isSubmitting}> 
-                                    Submit
+                                <Button variant="primary" type="submit" disabled={isSubmitting}>
+                                    Save
                                 </Button>
                             </Form>
 
                         </Card.Body>
                     </Card>
-                     <div className="text-center">
-                        Already have an accout <Link to="/Login">Log in</Link>                  
-                    </div>
+
                 </Col>
             </Row >
         </Container >
-  )
+    )
 }
 
 export default UppdateProfile

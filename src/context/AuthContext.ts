@@ -14,6 +14,9 @@ interface AuthContextType {
     changePhotoUrl: (url: string) => Promise<void>,
     changePassword: (password: string) => Promise<void>
 
+    userName: string | null
+    userEmail: string | null
+
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null)

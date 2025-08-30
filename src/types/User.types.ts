@@ -11,3 +11,11 @@ export type SignUpCredentials = {
 	password: string,
 	confirmPassword: string
 }
+
+export type UppdateUserCredentials = {
+	email: string,
+	password: string,
+	confirmPassword: string,
+	photoUrl: string,
+	username: string ,
+}

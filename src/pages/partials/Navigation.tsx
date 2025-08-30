@@ -43,6 +43,11 @@ const Navigation = () => {
                                 title={currentUser.email}
                                 menuVariant="dark"
                             >
+                                <NavDropdown.Item
+                                     href="/Profile"
+                                >
+                                    Profile
+                                </NavDropdown.Item>
 
                                 <NavDropdown.Item
                                     className="text-danger fw-bold"
