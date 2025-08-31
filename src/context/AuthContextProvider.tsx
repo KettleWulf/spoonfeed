@@ -7,10 +7,11 @@ const AuthContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const [currentUser, setCurrentUser] = useState<User | null>(null)
     const [userName, setUserName] = useState<string | null>(null)
     const [userEmail, setUserEmail] = useState<string | null>(null)
+    const [userUrl, setUserUrl] = useState<string | null>(null)
     const [loading, setLoading] = useState(true)
 
 
-    const reloadForm =  () => {
+    const reloadForm = () => {
 
 
         if (!currentUser) {
@@ -21,8 +22,9 @@ const AuthContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
         setUserName(currentUser.displayName)
         setUserEmail(currentUser.email)
+        setUserUrl(currentUser.photoURL)
 
-        return 
+        return
     }
 
 
@@ -33,9 +35,11 @@ const AuthContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
             if (user) {
                 setUserName(user.displayName)
                 setUserEmail(user.email)
+                setUserUrl(user.photoURL)
             } else {
                 setUserName(null)
                 setUserEmail(null)
+                setUserUrl(null)
             }
 
             setLoading(false)
@@ -114,6 +118,7 @@ const AuthContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
             changePhotoUrl,
             userName,
             userEmail,
+            userUrl,
             reloadForm,
         }}>
 

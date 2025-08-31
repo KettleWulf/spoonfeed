@@ -16,6 +16,7 @@ interface AuthContextType {
 
     userName: string | null
     userEmail: string | null
+    userUrl: string | null
 
     reloadForm: () => void
 

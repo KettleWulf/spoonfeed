@@ -16,6 +16,6 @@ export type UppdateUserCredentials = {
 	email: string,
 	password: string,
 	confirmPassword: string,
-	photoUrl: string,
+	photoUrl: FileList,
 	username: string ,
 }

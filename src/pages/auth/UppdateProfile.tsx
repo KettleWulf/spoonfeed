@@ -4,19 +4,18 @@ import { useForm, type SubmitHandler } from 'react-hook-form';
 import type { UppdateUserCredentials } from '../../types/User.types';
 import { FirebaseError } from 'firebase/app';
 import { toast } from "react-toastify";
-import { Card, Col, Container, Row } from 'react-bootstrap';
+import { Card, Col, Container, Image, Row } from 'react-bootstrap';
 import useAuth from '../../hooks/useAuth';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { storage } from '../../services/Firebase';
 
 
 
 
 
 const UppdateProfile = () => {
-    const { currentUser, changeEmail, changePassword, changePhotoUrl, changeUserName, userName, userEmail, reloadForm } = useAuth()
-
-    console.log("mitt namn är", userName);
-
+    const { currentUser, changeEmail, changePassword, changePhotoUrl, changeUserName, userName, userUrl, userEmail, reloadForm } = useAuth()
 
     const { handleSubmit, register, reset, watch, formState: { errors, isSubmitting } } = useForm<UppdateUserCredentials>({
         defaultValues: {
@@ -25,12 +24,14 @@ const UppdateProfile = () => {
         }
     })
 
+    const [urlUpload, seturlUpload] = useState<string | null>(null)
+
     const password = watch("password")
 
     useEffect(() => {
         reset({
             email: userEmail ?? "",
-            username: userName ?? ""
+            username: userName ?? "",
         })
     }, [userEmail, userName])
 
@@ -63,11 +64,27 @@ const UppdateProfile = () => {
 
             }
 
-            if (data.photoUrl !== (currentUser.photoURL ?? "")) {
+            if (data.photoUrl.length) {
+                const photo = data.photoUrl[0]
+
+                const fileRef = ref(storage, `ProfileImage/${currentUser.uid}/${photo.name}`)
+
+                try {
+                    const uploadUrl = await uploadBytes(fileRef, photo)
+
+                    const photoUrl = await getDownloadURL(uploadUrl.ref)
+
+                    await changePhotoUrl(photoUrl)
+                } catch (e) {
+                    if (e instanceof FirebaseError) {
+                        toast.error(e.message)
+                    } else if (e instanceof Error) {
+                        toast.error(e.message)
+                    }
+                }
 
 
-                await changePhotoUrl(data.photoUrl)
-                console.log("updated url")
+
 
             }
 
@@ -97,9 +114,13 @@ const UppdateProfile = () => {
         }
 
     }
+
     console.log("your name is", userName)
     console.log("your email is", userEmail)
-    console.log("your url is", currentUser?.photoURL)
+    console.log("your url is", userUrl)
+
+
+
 
     return (
         <Container className="py-3 center-y">
@@ -108,6 +129,11 @@ const UppdateProfile = () => {
                     <Card className="mb-3">
                         <Card.Body>
                             <Card.Title className="mb-3">Update Profile</Card.Title>
+
+                            <div>
+                                <Image src={userUrl || urlUpload || undefined} roundedCircle className="w-75" />
+                            </div>
+
 
                             { /* Sign up form */}
                             <Form onSubmit={handleSubmit(onUppdateProfile)}>
@@ -135,6 +161,7 @@ const UppdateProfile = () => {
 
                                 </Form.Group>
 
+                                {/* Name */}
                                 <Form.Group className="mb-3" controlId="displayName">
                                     <Form.Label>Name</Form.Label>
                                     <Form.Control type="text"
@@ -147,6 +174,21 @@ const UppdateProfile = () => {
                                         })}
                                     />
                                     {errors.username && <p className="text-danger">{errors.username.message || "invalid"}</p>}
+                                </Form.Group>
+
+                                <Form.Group className="mb-3" controlId="photoUrl">
+                                    <Form.Label>Profile Piqture</Form.Label>
+                                    <Form.Control type="file"
+                                        accept='image/png, image/jpeg, image/jpg'
+                                        {...register("photoUrl", {
+                                            onChange: (e) => {
+                                                e.target.files?.[0];
+                                                seturlUpload(userUrl)
+                                            }
+                                        })}
+                                    />
+
+                                    {errors.photoUrl && <p className="text-danger">{errors.photoUrl.message || "invalid"}</p>}
                                 </Form.Group>
 
                                 {/* Password */}

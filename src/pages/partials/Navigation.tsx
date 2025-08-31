@@ -1,4 +1,4 @@
-import { Container, NavDropdown } from "react-bootstrap";
+import { Container, Image, NavDropdown } from "react-bootstrap";
 import { Nav } from "react-bootstrap";
 import { Navbar } from "react-bootstrap";
 import useAuth from "../../hooks/useAuth";
@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 
 const Navigation = () => {
 
-    const { currentUser, logOut } = useAuth()
+    const { currentUser, logOut, userUrl, userEmail, userName } = useAuth()
 
     const handleLogOut = async () => {
 
@@ -40,7 +40,19 @@ const Navigation = () => {
                             ?
                             <NavDropdown
                                 id="nav-dropdown-dark-example"
-                                title={currentUser.email}
+                                title={userUrl 
+                                    ? 
+                                    <Image
+                                        src={userUrl}
+                                        title={(userName || userEmail) || ""}
+										className="img-cover"
+										fluid
+										height={30}
+										width={30}
+										roundedCircle
+                                    />
+                                    : userName || userEmail
+                                }
                                 menuVariant="dark"
                             >
                                 <NavDropdown.Item
