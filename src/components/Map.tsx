@@ -1,4 +1,4 @@
-import { GoogleMap, LoadScript } from "@react-google-maps/api";
+import { GoogleMap } from "@react-google-maps/api";
 import useUserLocation from "../hooks/useUserLocation";
 import useGeocoding from "../hooks/useGeocoding";
 import { useState } from "react";
