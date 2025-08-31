@@ -128,7 +128,7 @@ const UppdateProfile = () => {
                 <Col md={{ span: 6, offset: 3 }}>
                     <Card className="mb-3">
                         <Card.Body>
-                            <Card.Title className="mb-3">Update Profile</Card.Title>
+                            <Card.Title className="mb-3">Profile</Card.Title>
 
                             <div>
                                 <Image src={userUrl || urlUpload || undefined} roundedCircle className="w-75" />
