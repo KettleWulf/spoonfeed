@@ -3,36 +3,53 @@ import { AuthContext } from "./AuthContext"
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, updateEmail, updatePassword, updateProfile, type User } from "firebase/auth"
 import { auth } from "../services/Firebase"
 
-const AuthContextProvider: React.FC<PropsWithChildren> = ({children}) => {
-    const [currentUser, setCurrentUser]= useState< User | null>(null)
+const AuthContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
+    const [currentUser, setCurrentUser] = useState<User | null>(null)
     const [userName, setUserName] = useState<string | null>(null)
     const [userEmail, setUserEmail] = useState<string | null>(null)
-    const [loading, setloading] = useState(true)
+    const [loading, setLoading] = useState(true)
+
+
+    const reloadForm =  () => {
+
+
+        if (!currentUser) {
+            throw new Error("You must be logged in");
+
+        }
+
+
+        setUserName(currentUser.displayName)
+        setUserEmail(currentUser.email)
+
+        return 
+    }
 
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             setCurrentUser(user)
 
-            if(user){
+            if (user) {
                 setUserName(user.displayName)
                 setUserEmail(user.email)
-            } else{
+            } else {
                 setUserName(null)
                 setUserEmail(null)
             }
 
-            setloading(false)
+            setLoading(false)
         })
 
         return unsubscribe
-    },[])
+    }, [])
+
 
     const logIn = (email: string, password: string) => {
         return signInWithEmailAndPassword(auth, email, password)
     }
 
-    const logOut = () =>{
+    const logOut = () => {
         return signOut(auth)
     }
 
@@ -40,73 +57,75 @@ const AuthContextProvider: React.FC<PropsWithChildren> = ({children}) => {
         return createUserWithEmailAndPassword(auth, email, password)
     }
 
-    const changeEmail = (email: string, ) =>{
+    const changeEmail = (email: string,) => {
 
-        if(!currentUser){
+        if (!currentUser) {
             throw new Error("You must be logged in to update your email");
-            
+
         }
 
         return updateEmail(currentUser, email)
     }
 
 
-    const changeUserName = (name: string, ) =>{
+    const changeUserName = (name: string,) => {
 
-        if(!currentUser){
+        if (!currentUser) {
             throw new Error("You must be logged in to update your Name");
-            
+
         }
 
-        return updateProfile(currentUser, {displayName: name})
+        return updateProfile(currentUser, { displayName: name })
     }
 
-     const changePhotoUrl = (url: string, ) =>{
+    const changePhotoUrl = (url: string,) => {
 
-        if(!currentUser){
+        if (!currentUser) {
             throw new Error("You must be logged in to update your photo");
-            
+
         }
 
-        return updateProfile(currentUser, {photoURL: url})
+        return updateProfile(currentUser, { photoURL: url })
     }
 
 
-     const changePassword = (password: string, ) =>{
+    const changePassword = (password: string,) => {
 
-        if(!currentUser){
+        if (!currentUser) {
             throw new Error("You must be logged in to update your password");
-            
+
         }
 
         return updatePassword(currentUser, password)
     }
 
-   
+
 
     return (
 
-    <AuthContext.Provider value={{
-        currentUser,
-        logIn,
-        logOut,
-        signUp,
-        changeEmail,
-        changeUserName,
-        changePassword,
-        changePhotoUrl,
-        userName,
-        userEmail,
-    }}>
+        <AuthContext.Provider value={{
+            currentUser,
+            logIn,
+            logOut,
+            signUp,
+            changeEmail,
+            changeUserName,
+            changePassword,
+            changePhotoUrl,
+            userName,
+            userEmail,
+            reloadForm,
+        }}>
 
-        { loading ? (<div>Loading</div>
-        ) : children
-    
-    }
+            {loading ? (<div>Loading</div>
+            ) : children
 
-    </AuthContext.Provider>
+            }
+
+        </AuthContext.Provider>
 
 
-)}
+    )
+}
 
 export default AuthContextProvider

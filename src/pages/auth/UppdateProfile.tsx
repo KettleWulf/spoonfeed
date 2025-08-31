@@ -6,16 +6,17 @@ import { FirebaseError } from 'firebase/app';
 import { toast } from "react-toastify";
 import { Card, Col, Container, Row } from 'react-bootstrap';
 import useAuth from '../../hooks/useAuth';
+import { useEffect } from 'react';
 
 
 
 
 
 const UppdateProfile = () => {
-    const { currentUser, changeEmail, changePassword, changePhotoUrl, changeUserName, userName, userEmail } = useAuth()
+    const { currentUser, changeEmail, changePassword, changePhotoUrl, changeUserName, userName, userEmail, reloadForm } = useAuth()
 
-        console.log("mitt namn är", userName);
-        
+    console.log("mitt namn är", userName);
+
 
     const { handleSubmit, register, reset, watch, formState: { errors, isSubmitting } } = useForm<UppdateUserCredentials>({
         defaultValues: {
@@ -24,15 +25,15 @@ const UppdateProfile = () => {
         }
     })
 
-
-
-
     const password = watch("password")
 
-    
+    useEffect(() => {
+        reset({
+            email: userEmail ?? "",
+            username: userName ?? ""
+        })
+    }, [userEmail, userName])
 
-    
-    
 
     const onUppdateProfile: SubmitHandler<UppdateUserCredentials> = async (data) => {
 
@@ -42,13 +43,13 @@ const UppdateProfile = () => {
         }
 
         try {
-            
+
             if (data.email !== (userEmail ?? "")) {
 
 
                 await changeEmail(data.email)
                 console.log("updated email");
-                
+
                 //toast.success("Success you updated your email")
 
             }
@@ -77,11 +78,16 @@ const UppdateProfile = () => {
                 console.log("updated password")
             }
 
+            reloadForm()
+
             reset()
 
             toast.success("Success you updated your Profile")
-        }
 
+
+
+
+        }
         catch (e) {
             if (e instanceof FirebaseError) {
                 toast.error(e.message)
@@ -92,8 +98,8 @@ const UppdateProfile = () => {
 
     }
     console.log("your name is", userName)
-console.log("your email is", userEmail)
-console.log("your url is",currentUser?.photoURL)
+    console.log("your email is", userEmail)
+    console.log("your url is", currentUser?.photoURL)
 
     return (
         <Container className="py-3 center-y">
@@ -117,7 +123,7 @@ console.log("your url is",currentUser?.photoURL)
                                                 message: "You have to have at least 3 characters long"
                                             }
                                         })}
-                                        
+
                                     />
                                     {errors.email
                                         ? <p className="text-danger">{errors.email.message || "invalid"}</p>
@@ -134,7 +140,7 @@ console.log("your url is",currentUser?.photoURL)
                                     <Form.Control type="text"
                                         placeholder="Sven"
                                         {...register("username", {
-                                            minLength:{
+                                            minLength: {
                                                 value: 3,
                                                 message: "You have to have at least 3 characters long"
                                             }

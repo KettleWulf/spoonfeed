@@ -17,6 +17,8 @@ interface AuthContextType {
     userName: string | null
     userEmail: string | null
 
+    reloadForm: () => void
+
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null)
