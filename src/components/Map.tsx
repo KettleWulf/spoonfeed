@@ -3,9 +3,6 @@ import useUserLocation from "../hooks/useUserLocation";
 import useGeocoding from "../hooks/useGeocoding";
 import { useState } from "react";
 
-const mapApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-
-
 const Map = () => {
 
     const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
@@ -65,17 +62,12 @@ const Map = () => {
 
 
     return (
-        <LoadScript
-            googleMapsApiKey={mapApiKey}
-        >
-            <GoogleMap
-                mapContainerStyle={containerStyle}
-                center={mapCenter}
-                zoom={12}
-                onClick={onHandleMapClick}
-            ></GoogleMap>
-
-        </LoadScript>
+		<GoogleMap
+			mapContainerStyle={containerStyle}
+			center={mapCenter}
+			zoom={12}
+			onClick={onHandleMapClick}
+		></GoogleMap>
     )
 }
 
