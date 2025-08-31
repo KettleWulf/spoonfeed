@@ -31,7 +31,7 @@ const EstablishmentsPage = () => {
 	return (
 		<>
 			<h1>Restaurants</h1>
-			{data && <SortableTable columns={columnDefs} data={data} />}
+			{data && <SortableTable columns={columnDefs} data={data} getRowLink={(row) => `/establishments/${row._id}`} />}
 		</>
 	)
 };
