@@ -1,9 +1,10 @@
-import { GoogleMap, LoadScript } from "@react-google-maps/api";
+import { GoogleMap, InfoWindow, Marker } from "@react-google-maps/api";
 import useUserLocation from "../hooks/useUserLocation";
 import useGeocoding from "../hooks/useGeocoding";
 import { useState } from "react";
+import { Button, Container } from "react-bootstrap";
 
-const mapApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+
 
 interface ClickedLocation {
     coords: google.maps.LatLngLiteral;
@@ -37,14 +38,6 @@ const Map = () => {
     const containerStyle = {
         width: "400px",
         height: "400px",
-    }
-
-    if (locationError && !userLocation) {
-        return <p>Kunde inte hämta din position. Visar Stockholm istället.</p>
-    }
-
-    if (locationLoading) {
-        return <p>Hämtar din position... </p>
     }
 
     const mapCenter = userLocation || FALLBACK_CENTER;
@@ -91,21 +84,75 @@ const Map = () => {
         console.log("Last clicked address: ", address);
     }
 
+    const handleOpenModal = () => {
+        if (selectedLocation && selectedLocation.address !== "Hämtar adress...") {
+            setShowModal(true);
+        }
+    }
+
+    {/*Loading states*/ }
+
+    if (locationLoading) {
+        return <p>Hämtar din position... </p>
+    }
+
+    if (locationError && !userLocation) {
+        return <p>Kunde inte hämta din position. Visar Stockholm istället.</p>
+    }
 
     return (
-        <LoadScript
-            googleMapsApiKey={mapApiKey}
 
-        >
+        <>
+
             <GoogleMap
                 mapContainerStyle={containerStyle}
                 center={mapCenter}
                 zoom={12}
                 onClick={onHandleMapClick}
 
-            ></GoogleMap>
+            >
 
-        </LoadScript>
+                {userLocation && (
+                    <Marker
+                        position={userLocation}
+                        title="Din position"
+                        icon={{
+                            url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+                        }}
+                    />
+                )}
+
+                {selectedLocation && (
+                    <>
+                        <Marker
+                            position={selectedLocation.coords}
+                            title={selectedLocation.address}
+                        />
+
+                        <InfoWindow
+                            position={selectedLocation.coords}
+                            onCloseClick={() => setSelectedLocation(null)}
+                        >
+                            <Container>
+                                <p>Vald plats</p>
+                                <p>{selectedLocation.address}</p>
+                                {isLoadingAddress && selectedLocation.address !== "Kunde inte hämta adess" && (
+                                    <Button
+                                        onClick={handleOpenModal}
+                                        className="btn btn-sm btn-primary"
+                                        style={{ width: "100%" }}
+                                    >
+                                        Lägg till ett matställe här
+                                    </Button>
+                                )}
+                            </Container>
+                        </InfoWindow>
+                    </>
+                )}
+            </GoogleMap>
+
+        </>
+
     )
 }
 
