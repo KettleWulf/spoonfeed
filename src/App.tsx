@@ -8,6 +8,7 @@ import LoginPage from "./pages/auth/LoginPage";
 
 import { ToastContainer } from "react-toastify"
 import UppdateProfile from "./pages/auth/UppdateProfile";
+import ProtectedRoutes from "./components/auth/ProtectedRoutes";
 
 function App() {
 
@@ -17,10 +18,14 @@ function App() {
 
 			<Navigation />
 			<Routes>
-				<Route path="/signup" element={<SignupPage />} />
-				<Route path="/login" element={<LoginPage />} />
-				<Route path="/Profile" element={<UppdateProfile />}></Route>
-				
+
+					<Route path="/login" element={<LoginPage />} />
+				<Route element={<ProtectedRoutes />}>
+					<Route path="/signup" element={<SignupPage />} />
+					<Route path="/Profile" element={<UppdateProfile />}></Route>
+				</Route>
+
+
 
 			</Routes>
 
