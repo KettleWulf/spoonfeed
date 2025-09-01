@@ -20,6 +20,7 @@ interface UseMapHandlersProps {
     setSelectedLocation: (location: ClickedLocation | null) => void;
     setSearchResult: (result: Location | null) => void;
     setShowModal: (show: boolean) => void;
+    setIsLoadingAddress: (loading: boolean) => void;
 }
 
 const useMapHandler = ({
@@ -30,6 +31,7 @@ const useMapHandler = ({
     setSelectedLocation,
     setSearchResult,
     setShowModal,
+    setIsLoadingAddress,
 }: UseMapHandlersProps) => {
     const mapRef = useRef<google.maps.Map | null>(null);
     const { getAddress } = useGeocoding();
@@ -80,8 +82,9 @@ const useMapHandler = ({
         setSearchResult(null);
         setSelectedLocation({
             coords: clickedCoords,
-            address: "Hämtar adress..."
+            address: "Getting address..."
         });
+        setIsLoadingAddress(true);
 
         getAddress(
             clickedCoords,
@@ -100,12 +103,12 @@ const useMapHandler = ({
             (error) => {
                 setSelectedLocation({
                     coords: clickedCoords,
-                    address: "Kunde inte hämta adress"
+                    address: "Couldn't get address"
                 });
-                console.error("Geocoding fel: ", error);
+                console.error("Geocoding error: ", error);
             }
         );
-    }, [getAddress, setCurrentCity, setSelectedLocation, setSearchResult]);
+    }, [getAddress, setCurrentCity, setSelectedLocation, setSearchResult, setIsLoadingAddress]);
 
     const handleSavePlace = useCallback(async (place: PlaceFormData) => {
         try {
@@ -128,7 +131,6 @@ const useMapHandler = ({
     }, [])
 
     return {
-        mapRef,
         handleLocationFound,
         handleMapLoad,
         handleMapClick,
