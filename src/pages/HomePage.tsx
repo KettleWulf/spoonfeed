@@ -15,14 +15,13 @@ const HomePage = () => {
 
 	const addPlace = async (place: PlaceFormData) => {
 		// Create document with a generated ID
-		const docRef = await addDoc(newPlacesCol, {
+		await addDoc(newPlacesCol, {
 			...place,
 			createdAt: serverTimestamp(),
 			updatedAt: serverTimestamp(),
 			isSuggestion: !currentUser
 		});
-		console.log("Place created with ID:", docRef.id);
-		console.log("Wrote to:", docRef.path);
+
 
 		// 🥂
 		toast.success("Place added!");
