@@ -1,11 +1,12 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
 import type {
 	Category,
-	PlaceFormData,
+	Location,
 	Offer,
+	PlaceFormData,
 } from "../types/Place.types";
 import { Button, Modal, Form } from "react-bootstrap";
-import { useState } from "react";
+import { useEffect } from "react";
 import useAuth from "../hooks/useAuth";
 
 
@@ -26,41 +27,80 @@ const OFFER_OPTIONS: Offer[] = [
 ];
 
 interface PlaceFormModalProps {
+	show: boolean;
+	onHide: () => void;
 	initValues?: PlaceFormData;
-	onSave: (place: PlaceFormData) => void;
+	address?: string;
+	coords?: Location;
+	onSave: (establishment: PlaceFormData) => void;
 }
 
-const PlaceFormModal: React.FC<PlaceFormModalProps> = ({ onSave, initValues }) => {
+const PlaceFormModal: React.FC<EstablishmentFormModalProps> = ({ 
+	onSave, 
+	initValues,
+	show,
+	address,
+	coords,
+	onHide,
+
+	}) => {
 
 	const { currentUser } = useAuth();
-
-	const [show, setShow] = useState(false);
-	const open = () => setShow(true);
-	const close = () => setShow(false);
 
 	const {
 		handleSubmit,
 		register,
 		reset,
+		setValue,
 		formState: { errors, isSubmitting },
 	} = useForm<PlaceFormData>({
 		defaultValues: initValues,
 	});
 
-	const onFormSubmit: SubmitHandler<PlaceFormData> = (data) => {
-		console.log(data);
+	useEffect(()=> {
+		if(show && address){
+			const addressParts = address.split(",");
 
-		onSave(data);
+			if(addressParts.length > 2) {
+				const street = addressParts[0].trim();
+				const city = addressParts[1].trim();
+
+				setValue("address", street);
+				setValue("city", city);
+			} else {
+				setValue("address", address);
+			}
+		}
+	}, [show, address, setValue]);
+
+	const onFormSubmit: SubmitHandler<PlaceFormData> = (data) => {
+		const placeData = {
+			...data,
+			...(coords && {
+				location: {
+					lat: coords.lat,
+					lng: coords.lng,
+				}
+			})
+		}
+		console.log(placeData);
+
+		onSave(placeData);
 
 		reset(); // maybe reset, maybe not?
+		onHide();
+	}
+
+	const handleClose = () => {
+		reset();
+		onHide();
 	}
 
 	return (
 		<>
-			<Button onClick={open}>Lägg till matställe</Button>
 			<Modal
 				show={show}
-				onHide={close}
+				onHide={handleClose}
 				backdrop="static"
 				keyboard={!isSubmitting}
 				centered
@@ -172,6 +212,11 @@ const PlaceFormModal: React.FC<PlaceFormModalProps> = ({ onSave, initValues }) =
 							{errors.offers && (
 								<div className="form-text text-danger text-small">{errors.offers.message || "Invalid value"}</div>
 							)}
+							{coords && (
+								<Form.Text className="text-muted d-block mb-2">
+									Coordinates: {coords.lat.toFixed(6)}, {coords.lng.toFixed(6)}
+								</Form.Text>
+							)}
 						</Form.Group>
 					</Modal.Body>
 
@@ -179,7 +224,7 @@ const PlaceFormModal: React.FC<PlaceFormModalProps> = ({ onSave, initValues }) =
 						{initValues && currentUser && (
 							<Button variant="danger" onClick={() => {}}>Delete</Button>
 						)}
-						<Button variant="secondary" onClick={close} disabled={isSubmitting}>
+						<Button variant="secondary" onClick={handleClose} disabled={isSubmitting}>
 							Avbryt
 						</Button>
 						<Button
