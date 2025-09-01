@@ -1,6 +1,5 @@
 
 import { Col, Container, Row } from "react-bootstrap";
-import EstablishmentFormModal from "../components/EstablishmentFormModal";
 import Map from "../components/Map";
 import type { EstablishmentFormData } from "../types/Establishment.types";
 import { addDoc, serverTimestamp } from "firebase/firestore";
@@ -33,8 +32,8 @@ const HomePage = () => {
 		<Container className="py-2">
 			<Row className="justify-content-center">
 				<Col md={8} lg={6}>
-					<Map />
-					<EstablishmentFormModal onSave={addEstablishment} />
+					<Map onSavePlace={addEstablishment} />
+					{/* <EstablishmentFormModal onSave={addEstablishment} /> */}
 				</Col>
 			</Row>
 </Container>

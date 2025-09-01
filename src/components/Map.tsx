@@ -3,6 +3,9 @@ import useUserLocation from "../hooks/useUserLocation";
 import useGeocoding from "../hooks/useGeocoding";
 import { useState } from "react";
 import { Button, Container } from "react-bootstrap";
+import type { EstablishmentFormData } from "../types/Establishment.types";
+import { toast } from "react-toastify";
+import EstablishmentFormModal from "./EstablishmentFormModal";
 
 
 
@@ -11,7 +14,10 @@ interface ClickedLocation {
     address: string
 }
 
-const Map = () => {
+interface MapProps {
+    onSavePlace: (place: EstablishmentFormData) => Promise<string | void >}
+
+const Map: React.FC<MapProps> = ({ onSavePlace }) => {
 
     const FALLBACK_CENTER = {
         // Coordinates to STOCKHOLM as fallback 
@@ -85,8 +91,23 @@ const Map = () => {
     }
 
     const handleOpenModal = () => {
-        if (selectedLocation && selectedLocation.address !== "Hämtar adress...") {
+        if (selectedLocation && selectedLocation.address !== "Hämtar adress..." && selectedLocation.address !== "Kunde inte hämta adress") {
             setShowModal(true);
+        }
+    }
+
+    const handleSavePlace = async (place: EstablishmentFormData) => {
+        try {
+            await onSavePlace(place);
+
+            setShowModal(false);
+            setSelectedLocation(null);
+        } catch (error) {
+            if (error instanceof Error){
+                console.error("Fel vid sparning ", error.message)
+                toast.error("Något gick fel vid sparningen ");
+            }
+            
         }
     }
 
@@ -134,9 +155,9 @@ const Map = () => {
                             onCloseClick={() => setSelectedLocation(null)}
                         >
                             <Container>
-                                <p>Vald plats</p>
+                                <p>Vald plats:</p>
                                 <p>{selectedLocation.address}</p>
-                                {isLoadingAddress && selectedLocation.address !== "Kunde inte hämta adess" && (
+                                {!isLoadingAddress && selectedLocation.address !== "Kunde inte hämta adess" && (
                                     <Button
                                         onClick={handleOpenModal}
                                         className="btn btn-sm btn-primary"
@@ -150,6 +171,14 @@ const Map = () => {
                     </>
                 )}
             </GoogleMap>
+
+            <EstablishmentFormModal 
+                show={showModal}
+                onHide={()=>setShowModal(false)}
+                address={selectedLocation?.address}
+                coords={selectedLocation?.coords}
+                onSave={handleSavePlace}
+                />
 
         </>
 
