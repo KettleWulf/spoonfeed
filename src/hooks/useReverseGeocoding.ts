@@ -1,6 +1,9 @@
 import {useState, useCallback } from "react"
 import type { Location } from "../types/Place.types"
 
+{/*Gör till stor del detsamma som useGeocoding men tar emot en adress istället. vet inte om det skulle vara fördelaktigt om jag kombinerar
+    eftersom de är rätt mycket upprepning i koden
+    */}
 export const useReverseGeocoding = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] =  useState<string | null>(null);
@@ -31,6 +34,7 @@ export const useReverseGeocoding = () => {
         const request: google.maps.GeocoderRequest = {
             address: address,
             region: "SE",
+            // Kanske behöver göra detta mer dynamiskt
         }
 
         geocoder.geocode(request, (results, status) => {

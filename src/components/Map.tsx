@@ -3,12 +3,19 @@ import useUserLocation from "../hooks/useUserLocation";
 import useGeocoding from "../hooks/useGeocoding";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Alert, Button, Container, Spinner } from "react-bootstrap";
-import type { Location, PlaceFormData } from "../types/Place.types";
+import type { Location, Place, PlaceFormData } from "../types/Place.types";
 import { toast } from "react-toastify";
 import PlaceFormModal from "./PlaceFormModal";
+import AddressSearch from "./AddressSearch";
+import { useGetPlacesByCity } from "../hooks/useGetPlacesByCity";
 
 
 const libraries: ("places" | "geocoding" | "geometry")[] = ["places", "geocoding", "geometry"];
+const FALLBACK_CENTER = {
+    // Coordinates to STOCKHOLM as fallback 
+    lat: 59.334591,
+    lng: 18.063240,
+}
 
 interface ClickedLocation {
     coords: google.maps.LatLngLiteral;
@@ -19,7 +26,22 @@ interface MapProps {
     onSavePlace: (place: PlaceFormData) => Promise<string | void>
 }
 
+
 const Map: React.FC<MapProps> = ({ onSavePlace }) => {
+
+    const [currentCity, setCurrentCity] = useState<string>("Stockholm");
+    const [isLoadingAddress, setIsLoadingAddress] = useState(false);
+    const [mapCenter, setMapCenter] = useState<Location>(FALLBACK_CENTER);
+    const [mapZoom, setMapZoom] = useState(12);
+    const [selectedLocation, setSelectedLocation] = useState<ClickedLocation | null>(null);
+    const [searchReslut, setSearchResult] = useState<Location | null>(null);
+    const [showModal, setShowModal] = useState(false);
+
+    const {
+        data: places = [],
+        isLoading: placesLoading,
+        error: placesErrorm,
+    } = useGetPlacesByCity(currentCity);
 
     const { isLoaded, loadError } = useJsApiLoader({
         googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
@@ -29,63 +51,63 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
         region: "SE",
     });
 
-    const mapRef = useRef<google.maps.Map | null>(null);
-
-    const FALLBACK_CENTER = {
-        // Coordinates to STOCKHOLM as fallback 
-        lat: 59.334591,
-        lng: 18.063240,
-    }
-
-    const [selectedLocation, setSelectedLocation] = useState<ClickedLocation | null>(null);
-    const [showModal, setShowModal] = useState(false);
-    const [isLoadingAddress, setIsLoadingAddress] = useState(false);
-    const [mapCenter, setMapCenter] = useState<Location>(FALLBACK_CENTER);
-    const [mapZoom, setMapZoom] = useState(12);
-
-
     const {
         userLocation,
         isLoading: locationLoading,
         error: locationError
     } = useUserLocation();
 
-    const { 
+    const {
         getAddress,
         // error: geocodingError,
     } = useGeocoding();
 
-    const containerStyle = {
-        width: "400px",
-        height: "400px",
-    }
 
+    const mapRef = useRef<google.maps.Map | null>(null);
 
     // const mapCenter = userLocation || FALLBACK_CENTER;
-    useEffect(()=>{
-        if(userLocation && isLoaded ){
+    useEffect(() => {
+        if (userLocation && isLoaded) {
             setMapCenter(userLocation)
         }
     }, [userLocation, isLoaded]);
 
 
-    // const handleLocationFound = useCallback((coords: Location, address: string) => {
-    //     setSelectedLocation({
-    //         coords: coords,
-    //         address: address,
-    //     });
+    const handleLocationFound = useCallback((coords: Location, city?: string) => {
+        setSearchResult(coords);
+        setSelectedLocation(null);
 
-    //     setMapCenter(coords);
-    //     setMapZoom(16);
+        setCurrentCity(prevCity => {
+            if (city && city !== prevCity) {
+                return city;
+            }
+            return prevCity;
+        });
 
-    //     if(mapRef.current) {
-    //         mapRef.current.panTo(coords);
-    //         mapRef.current.setZoom(16);
-    //     }
-    // }, []);
+        setMapCenter(coords);
+        setMapZoom(10);
+
+        if (mapRef.current) {
+            mapRef.current.panTo(coords);
+            mapRef.current.setZoom(16);
+        }
+    }, []);
 
     const onMapLoad = useCallback((map: google.maps.Map) => {
         mapRef.current = map;
+
+        map.setOptions({
+            styles: [
+                {
+                    featureType: "poi",
+                    stylers: [{ visibility: "off" }]
+                },
+                {
+                    featureType: "poi.business",
+                    stylers: [{ visibility: "off" }]
+                }
+            ]
+        })
     }, []);
 
     {/*funktion för när man trycker på kartan */ }
@@ -100,6 +122,8 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
             lng: e.latLng.lng(),
         }
 
+        setSearchResult(null);
+
         setSelectedLocation({
             coords: clickedCoords,
             address: "Hämtar adress..."
@@ -108,13 +132,21 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
 
         getAddress(
             clickedCoords,
-            (foundAddress) => {
+            (foundAddress, city) => {
                 setSelectedLocation({
                     coords: clickedCoords,
                     address: foundAddress,
                 });
                 setIsLoadingAddress(false);
                 setMapZoom(16);
+
+                setCurrentCity(prevCity => {
+                    if (city && city !== prevCity) {
+                        return city;
+                    }
+                    return prevCity;
+                });
+
             },
             (error) => {
                 setSelectedLocation({
@@ -128,9 +160,9 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
     }, [getAddress]);
 
     const handleOpenModal = () => {
-        if (selectedLocation && 
-            selectedLocation.address !== "Hämtar adress..." && 
-            selectedLocation.address !== "Kunde inte hämta adress") {
+        if (selectedLocation &&
+            selectedLocation.address !== "Getting addresses" &&
+            selectedLocation.address !== "Couldn't get addresses") {
             setShowModal(true);
         }
     }
@@ -150,9 +182,17 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
         }
     }, [onSavePlace]);
 
+    const handlePlaceClick = useCallback((place: Place) => {
+        const { lat, lng } = place.location;
+        const destination = `${lat},${lng}`
+        const url = `https://www.google.com/maps/dir/?api=1&destination=${destination}&destination_place_id=${place.name}`;
+
+        window.open(url, "_blank");
+    }, []); 
+
     {/*Loading states*/ }
 
-    if(loadError){
+    if (loadError) {
         return (
             <Alert variant="danger">
                 <p>Fel vid laddning av Google Maps</p>
@@ -162,11 +202,11 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
         );
     }
 
-    if(!isLoaded){
+    if (!isLoaded) {
         return (
             <Container>
                 <div className="text-center">
-                    <Spinner animation="border" role="status" className="mb-2"/>
+                    <Spinner animation="border" role="status" className="mb-2" />
                     <p>Laddar karta</p>
                 </div>
             </Container>
@@ -185,8 +225,10 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
 
         <>
 
+            <AddressSearch onLocationFound={handleLocationFound} />
+
             <GoogleMap
-                mapContainerStyle={containerStyle}
+                mapContainerStyle={{ width: "750px", height: "750px" }}
                 center={mapCenter}
                 zoom={mapZoom}
                 onClick={onHandleMapClick}
