@@ -6,7 +6,7 @@ import { newPlacesCol } from "../services/Firebase";
 import { toast } from "react-toastify";
 import useAuth from "../hooks/useAuth";
 import type { PlaceFormData } from "../types/Place.types";
-import PlaceFormModal from "../components/PlaceFormModal";
+
 
 
 const HomePage = () => {
@@ -33,8 +33,7 @@ const HomePage = () => {
 		<Container className="py-2">
 			<Row className="justify-content-center">
 				<Col md={8} lg={6}>
-					<Map />
-					<EstablishmentFormModal onSave={addEstablishment} />
+					<Map onSavePlace={addPlace}/>
 				</Col>
 			</Row>
 		</Container>

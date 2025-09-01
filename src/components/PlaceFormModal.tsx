@@ -35,7 +35,7 @@ interface PlaceFormModalProps {
 	onSave: (establishment: PlaceFormData) => void;
 }
 
-const PlaceFormModal: React.FC<EstablishmentFormModalProps> = ({ 
+const PlaceFormModal: React.FC<PlaceFormModalProps> = ({ 
 	onSave, 
 	initValues,
 	show,

@@ -3,9 +3,9 @@ import useUserLocation from "../hooks/useUserLocation";
 import useGeocoding from "../hooks/useGeocoding";
 import { useState } from "react";
 import { Button, Container } from "react-bootstrap";
-import type { EstablishmentFormData } from "../types/Establishment.types";
+import type { PlaceFormData } from "../types/Place.types";
 import { toast } from "react-toastify";
-import EstablishmentFormModal from "./EstablishmentFormModal";
+import PlaceFormModal from "./PlaceFormModal";
 
 
 
@@ -15,7 +15,7 @@ interface ClickedLocation {
 }
 
 interface MapProps {
-    onSavePlace: (place: EstablishmentFormData) => Promise<string | void >}
+    onSavePlace: (place: PlaceFormData) => Promise<string | void >}
 
 const Map: React.FC<MapProps> = ({ onSavePlace }) => {
 
@@ -96,7 +96,7 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
         }
     }
 
-    const handleSavePlace = async (place: EstablishmentFormData) => {
+    const handleSavePlace = async (place: PlaceFormData) => {
         try {
             await onSavePlace(place);
 
@@ -172,7 +172,7 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
                 )}
             </GoogleMap>
 
-            <EstablishmentFormModal 
+            <PlaceFormModal
                 show={showModal}
                 onHide={()=>setShowModal(false)}
                 address={selectedLocation?.address}
