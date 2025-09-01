@@ -23,3 +23,7 @@ export type UppdateUserCredentials = {
 export type ForgotPasswordCredentials ={
 	email: string
 }
+
+export type PasswordcheckCredentials = {
+	password: string
+}
