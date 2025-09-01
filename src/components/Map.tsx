@@ -51,7 +51,7 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
     } = useUserLocation();
 
     const { 
-        getAdress,
+        getAddress,
         // error: geocodingError,
     } = useGeocoding();
 
@@ -106,7 +106,7 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
         });
         setIsLoadingAddress(true);
 
-        getAdress(
+        getAddress(
             clickedCoords,
             (foundAddress) => {
                 setSelectedLocation({
@@ -125,7 +125,7 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
                 console.error("Geocoding fel: ", error);
             }
         );
-    }, [getAdress]);
+    }, [getAddress]);
 
     const handleOpenModal = () => {
         if (selectedLocation && 

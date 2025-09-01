@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react"
-import type { Location } from "../types/Establishment.types";
+import type { Location } from "../types/Place.types";
 
 
 
@@ -8,7 +8,7 @@ export const useGeocoding = () => {
     const [error, setError] = useState<string | null>(null);
     const [address, setAddress] = useState<string | null>(null);
 
-    const getAdress = useCallback((
+    const getAddress = useCallback((
         coords: Location,
         onSuccess?: (address: string) => void, 
         onError?: (error: string) => void
@@ -61,7 +61,7 @@ export const useGeocoding = () => {
         isLoading,
         error,
         address,
-        getAdress,
+        getAddress,
     }
 
 }
