@@ -17,12 +17,7 @@ import { storage } from '../../services/Firebase';
 const UppdateProfile = () => {
     const { currentUser, changeEmail, changePassword, changePhotoUrl, changeUserName, userName, userUrl, userEmail, reloadForm } = useAuth()
 
-    const { handleSubmit, register, reset, watch, formState: { errors, isSubmitting } } = useForm<UppdateUserCredentials>({
-        defaultValues: {
-            email: userEmail ?? "",
-            username: userName ?? "",
-        }
-    })
+    const { handleSubmit, register, reset, watch, formState: { errors, isSubmitting } } = useForm<UppdateUserCredentials>()
 
     const [urlUpload, seturlUpload] = useState<string | null>(null)
 
@@ -40,23 +35,18 @@ const UppdateProfile = () => {
 
         if (!currentUser) {
             throw new Error("You must be logged in to update your Profile");
-
         }
 
         try {
 
             if (data.email !== (userEmail ?? "")) {
 
-
                 await changeEmail(data.email)
                 console.log("updated email");
-
                 //toast.success("Success you updated your email")
-
             }
 
             if (data.username !== (userName ?? "")) {
-
 
                 await changeUserName(data.username)
                 console.log("updated name", data.username)
@@ -75,21 +65,20 @@ const UppdateProfile = () => {
                     const photoUrl = await getDownloadURL(uploadUrl.ref)
 
                     await changePhotoUrl(photoUrl)
+
                 } catch (e) {
+
                     if (e instanceof FirebaseError) {
                         toast.error(e.message)
+
                     } else if (e instanceof Error) {
                         toast.error(e.message)
                     }
                 }
 
-
-
-
             }
 
             if (data.password) {
-
 
                 await changePassword(data.password)
                 console.log("updated password")
@@ -101,13 +90,11 @@ const UppdateProfile = () => {
 
             toast.success("Success you updated your Profile")
 
-
-
-
         }
         catch (e) {
             if (e instanceof FirebaseError) {
                 toast.error(e.message)
+
             } else if (e instanceof Error) {
                 toast.error(e.message)
             }
@@ -115,13 +102,7 @@ const UppdateProfile = () => {
 
     }
 
-    console.log("your name is", userName)
-    console.log("your email is", userEmail)
-    console.log("your url is", userUrl)
-
-
-
-
+    
     return (
         <Container className="py-3 center-y">
             <Row>
@@ -131,7 +112,7 @@ const UppdateProfile = () => {
                             <Card.Title className="mb-3">Profile</Card.Title>
 
                             <div>
-                                <Image src={userUrl || urlUpload || undefined} roundedCircle className="w-75" />
+                                <Image alt={currentUser?.photoURL ?? "Your Profile Piqture"} src={userUrl || urlUpload || undefined} roundedCircle className="w-75" />
                             </div>
 
 
@@ -157,9 +138,8 @@ const UppdateProfile = () => {
                                             We'll never share your email with anyone else.
                                         </Form.Text>
                                     }
-
-
                                 </Form.Group>
+
 
                                 {/* Name */}
                                 <Form.Group className="mb-3" controlId="displayName">
@@ -176,6 +156,7 @@ const UppdateProfile = () => {
                                     {errors.username && <p className="text-danger">{errors.username.message || "invalid"}</p>}
                                 </Form.Group>
 
+
                                 <Form.Group className="mb-3" controlId="photoUrl">
                                     <Form.Label>Profile Piqture</Form.Label>
                                     <Form.Control type="file"
@@ -190,6 +171,7 @@ const UppdateProfile = () => {
 
                                     {errors.photoUrl && <p className="text-danger">{errors.photoUrl.message || "invalid"}</p>}
                                 </Form.Group>
+
 
                                 {/* Password */}
                                 <Form.Group className="mb-3" controlId="formBasicPassword">
@@ -206,6 +188,7 @@ const UppdateProfile = () => {
                                     {errors.password && <p className="text-danger">{errors.password.message || "invalid"}</p>}
                                 </Form.Group>
 
+
                                 {/* Comfirm Password */}
                                 <Form.Group className="mb-3" controlId="formBasicCheckbox">
                                     <Form.Label>Confirm Password</Form.Label>
@@ -217,9 +200,12 @@ const UppdateProfile = () => {
                                     />
                                     {errors.confirmPassword && <p className="text-danger">{errors.confirmPassword.message || "invalid"}</p>}
                                 </Form.Group>
+
+
                                 <Button variant="primary" type="submit" disabled={isSubmitting}>
                                     Save
                                 </Button>
+
                             </Form>
 
                         </Card.Body>
