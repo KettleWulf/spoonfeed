@@ -19,3 +19,7 @@ export type UppdateUserCredentials = {
 	photoUrl: FileList,
 	username: string ,
 }
+
+export type ForgotPasswordCredentials ={
+	email: string
+}

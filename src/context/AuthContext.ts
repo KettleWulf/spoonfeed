@@ -20,6 +20,8 @@ interface AuthContextType {
 
     reloadForm: () => void
 
+    forgotPassword: (email: string) => Promise<void>
+
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null)

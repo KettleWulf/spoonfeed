@@ -89,7 +89,7 @@ const LoginPage = () => {
 
                         </Card.Body>
                         <div className="text-center">
-                            Have you <Link to="/forgot-password">Forgot Password</Link>
+                            Have you <Link to="/forgot-Password">Forgot Password</Link>
                         </div>
                     </Card>
 

@@ -1,6 +1,6 @@
 import { useEffect, useState, type PropsWithChildren } from "react"
 import { AuthContext } from "./AuthContext"
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, updateEmail, updatePassword, updateProfile, type User } from "firebase/auth"
+import { createUserWithEmailAndPassword, onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, updateEmail, updatePassword, updateProfile, type User } from "firebase/auth"
 import { auth } from "../services/Firebase"
 
 const AuthContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
@@ -9,6 +9,7 @@ const AuthContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const [userEmail, setUserEmail] = useState<string | null>(null)
     const [userUrl, setUserUrl] = useState<string | null>(null)
     const [loading, setLoading] = useState(true)
+
 
 
     const reloadForm = () => {
@@ -103,6 +104,14 @@ const AuthContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
         return updatePassword(currentUser, password)
     }
 
+    const forgotPassword = async (email: string) => {
+        await sendPasswordResetEmail(auth, email)
+
+        setTimeout(() => {
+            window.location.href = "/login"
+        }, 5000);
+    }
+
 
 
     return (
@@ -120,6 +129,7 @@ const AuthContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
             userEmail,
             userUrl,
             reloadForm,
+            forgotPassword,
         }}>
 
             {loading ? (<div>Loading</div>
