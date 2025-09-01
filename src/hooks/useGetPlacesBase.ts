@@ -9,7 +9,7 @@ interface Options {
 	isSuggestion: boolean;
 	orderByField: OrderField;
 	orderDir: OrderDir;
-	city?: string; // <-- valfritt city-filter (==)
+	city?: string; 
 }
 
 const useGetPlacesBase = (opts: Options) => {

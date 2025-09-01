@@ -1,4 +1,4 @@
-import useGetPlacesBase from "./useGetPlacesOrSuggestions";
+import useGetPlacesBase from "./useGetPlacesBase";
 
 // Alla suggestions (oavsett stad, nyast -> äldst)
 export const useGetSuggestions = () => {
