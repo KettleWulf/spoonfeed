@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import type { Location } from "../types/Place.types";
 import useUserLocation from "./useUserLocation";
-import useUserLocation from "./useUserLocation";
 
 interface ClickedLocation {
     coords: google.maps.LatLngLiteral;
