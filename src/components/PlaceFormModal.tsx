@@ -49,9 +49,10 @@ const PlaceFormModal: React.FC<PlaceFormModalProps> = ({ onSave, initValues }) =
 
 	const onFormSubmit: SubmitHandler<PlaceFormData> = (data) => {
 		console.log(data);
-
+		
 		onSave(data);
-
+		close();
+		
 		reset(); // maybe reset, maybe not?
 	}
 
