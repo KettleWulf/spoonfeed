@@ -3,11 +3,11 @@ import HomePage from "./pages/HomePage"
 import Navigation from "./pages/partials/Navigation"
 import "./assets/scss/App.scss";
 import SignupPage from "./pages/auth/SignupPage";
-
 import LoginPage from "./pages/auth/LoginPage";
-
+import PlacesPage from "./pages/PlacesPage";
 import { ToastContainer } from "react-toastify"
-import EstablishmentsPage from "./pages/EstablishmentsPage";
+
+
 
 function App() {
 
@@ -19,7 +19,7 @@ function App() {
 
 			<Routes>
 				<Route path="/" element={<HomePage />} />
-				<Route path="/establishments" element={<EstablishmentsPage />} />
+				<Route path="/places" element={<PlacesPage />} />
 
 
 				{/* Auth Routes */}

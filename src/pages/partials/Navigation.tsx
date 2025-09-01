@@ -34,7 +34,7 @@ const Navigation = () => {
                     <Navbar.Brand as={Link} to="/">Namn på sidan </Navbar.Brand>
                     <Nav>
                         <Nav.Link as={NavLink} to="/about">About us</Nav.Link>
-                        <Nav.Link as={NavLink} to="/establishments">Resturants</Nav.Link>
+                        <Nav.Link as={NavLink} to="/places">Resturants</Nav.Link>
                         <Nav.Link as={NavLink} to="/tips">Send us a tip</Nav.Link>
                         {currentUser
 

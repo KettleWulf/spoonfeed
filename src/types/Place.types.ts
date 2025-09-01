@@ -19,7 +19,7 @@ export interface Location {
 	lng: number;
 }
 
-export interface Establishment {
+export interface Place {
 	_id: string;
 	name: string;
 	address: string;
@@ -42,6 +42,6 @@ export interface Establishment {
 	location: Location;
 }
 
-export type NewEstablishment = Omit<Establishment, "_id">;
+export type NewPlace = Omit<Place, "_id">;
 
-export type EstablishmentFormData = Omit<Establishment, "_id" | "updatedAt" | "createdAt" | "isSuggestion">;
+export type PlaceFormData = Omit<Place, "_id" | "updatedAt" | "createdAt" | "isSuggestion">;

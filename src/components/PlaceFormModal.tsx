@@ -1,12 +1,13 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
 import type {
 	Category,
-	EstablishmentFormData,
+	PlaceFormData,
 	Offer,
-} from "../types/Establishment.types";
+} from "../types/Place.types";
 import { Button, Modal, Form } from "react-bootstrap";
 import { useState } from "react";
 import useAuth from "../hooks/useAuth";
+
 
 const CATEGORY_OPTIONS: Category[] = [
 	"Café",
@@ -24,12 +25,12 @@ const OFFER_OPTIONS: Offer[] = [
 	"Á la carte"
 ];
 
-interface EstablishmentFormModalProps {
-	initValues?: EstablishmentFormData;
-	onSave: (establishment: EstablishmentFormData) => void;
+interface PlaceFormModalProps {
+	initValues?: PlaceFormData;
+	onSave: (place: PlaceFormData) => void;
 }
 
-const EstablishmentFormModal: React.FC<EstablishmentFormModalProps> = ({ onSave, initValues }) => {
+const PlaceFormModal: React.FC<PlaceFormModalProps> = ({ onSave, initValues }) => {
 
 	const { currentUser } = useAuth();
 
@@ -42,11 +43,11 @@ const EstablishmentFormModal: React.FC<EstablishmentFormModalProps> = ({ onSave,
 		register,
 		reset,
 		formState: { errors, isSubmitting },
-	} = useForm<EstablishmentFormData>({
+	} = useForm<PlaceFormData>({
 		defaultValues: initValues,
 	});
 
-	const onFormSubmit: SubmitHandler<EstablishmentFormData> = (data) => {
+	const onFormSubmit: SubmitHandler<PlaceFormData> = (data) => {
 		console.log(data);
 
 		onSave(data);
@@ -201,4 +202,4 @@ const EstablishmentFormModal: React.FC<EstablishmentFormModalProps> = ({ onSave,
 	)
 };
 
-export default EstablishmentFormModal;
+export default PlaceFormModal;
