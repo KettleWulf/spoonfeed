@@ -1,9 +1,9 @@
 import { GoogleMap, InfoWindow, Marker, useJsApiLoader } from "@react-google-maps/api";
 import useUserLocation from "../hooks/useUserLocation";
 import useGeocoding from "../hooks/useGeocoding";
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Button, Container } from "react-bootstrap";
-import type { PlaceFormData } from "../types/Place.types";
+import type { Location, PlaceFormData } from "../types/Place.types";
 import { toast } from "react-toastify";
 import PlaceFormModal from "./PlaceFormModal";
 
@@ -16,7 +16,8 @@ interface ClickedLocation {
 }
 
 interface MapProps {
-    onSavePlace: (place: PlaceFormData) => Promise<string | void >}
+    onSavePlace: (place: PlaceFormData) => Promise<string | void>
+}
 
 const Map: React.FC<MapProps> = ({ onSavePlace }) => {
 
@@ -39,6 +40,8 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
     const [selectedLocation, setSelectedLocation] = useState<ClickedLocation | null>(null);
     const [showModal, setShowModal] = useState(false);
     const [isLoadingAddress, setIsLoadingAddress] = useState(false);
+    const [mapCenter, setMapCenter] = useState<Location>(FALLBACK_CENTER);
+    const [mapZoom, setMapZoom] = useState(12);
 
 
     const {
@@ -49,7 +52,7 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
 
     const { getAdress,
         address,
-        // lägg till error handling senare : error: geocodingError, isLoading: geocoingIsLoading
+        error: geocodingError,
     } = useGeocoding();
 
     const containerStyle = {
@@ -57,7 +60,32 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
         height: "400px",
     }
 
-    const mapCenter = userLocation || FALLBACK_CENTER;
+    // const mapCenter = userLocation || FALLBACK_CENTER;
+    useEffect(()=>{
+        if(userLocation && isLoaded ){
+            setMapCenter(userLocation)
+        }
+    }, [userLocation, isLoaded]);
+
+
+    const handleLocationFound = useCallback((coords: Location, address: string) => {
+        setSelectedLocation({
+            coords: coords,
+            address: address,
+        });
+
+        setMapCenter(coords);
+        setMapZoom(16);
+
+        if(mapRef.current) {
+            mapRef.current.panTo(coords);
+            mapRef.current.setZoom(16);
+        }
+    }, []);
+
+    const onMapLoad = useCallback((map: google.maps.Map) => {
+        mapRef.current = map;
+    }, []);
 
     {/*funktion för när man trycker på kartan */ }
     const onHandleMapClick = async (e: google.maps.MapMouseEvent) => {
@@ -85,8 +113,6 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
                     address: foundAddress,
                 });
                 setIsLoadingAddress(false)
-                console.log("Found address", foundAddress);
-                console.log("For coordinates", clickedCoords);
             },
             (error) => {
                 setSelectedLocation({
@@ -114,11 +140,11 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
             setShowModal(false);
             setSelectedLocation(null);
         } catch (error) {
-            if (error instanceof Error){
+            if (error instanceof Error) {
                 console.error("Fel vid sparning ", error.message)
                 toast.error("Något gick fel vid sparningen ");
             }
-            
+
         }
     }
 
@@ -185,11 +211,11 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
 
             <PlaceFormModal
                 show={showModal}
-                onHide={()=>setShowModal(false)}
+                onHide={() => setShowModal(false)}
                 address={selectedLocation?.address}
                 coords={selectedLocation?.coords}
                 onSave={handleSavePlace}
-                />
+            />
 
         </>
 
