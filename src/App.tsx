@@ -6,42 +6,34 @@ import SignupPage from "./pages/auth/SignupPage";
 import LoginPage from "./pages/auth/LoginPage";
 import PlacesPage from "./pages/PlacesPage";
 import { ToastContainer } from "react-toastify"
-import { LoadScript } from "@react-google-maps/api";
 
-const mapApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 function App() {
 
 
 	return (
-		<LoadScript
-			googleMapsApiKey={mapApiKey}
-			preventGoogleFontsLoading={true}
-			loadingElement={<div>Laddar karta...</div>}
-			id="google-map-script"
-			
-		>
 
 
-			<div id="App">
 
-				<Navigation />
+		<div id="App">
 
-				<Routes>
-					<Route path="/" element={<HomePage />} />
-					<Route path="/places" element={<PlacesPage />} />
+			<Navigation />
 
-
-					{/* Auth Routes */}
-					<Route path="/signup" element={<SignupPage />} />
-					<Route path="/login" element={<LoginPage />} />
+			<Routes>
+				<Route path="/" element={<HomePage />} />
+				<Route path="/places" element={<PlacesPage />} />
 
 
-				</Routes>
+				{/* Auth Routes */}
+				<Route path="/signup" element={<SignupPage />} />
+				<Route path="/login" element={<LoginPage />} />
 
-				<ToastContainer closeOnClick theme="colored" limit={5} stacked position="bottom-right" />
-			</div>
-		</LoadScript>
+
+			</Routes>
+
+			<ToastContainer closeOnClick theme="colored" limit={5} stacked position="bottom-right" />
+		</div>
+
 	)
 }
 

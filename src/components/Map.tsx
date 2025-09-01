@@ -2,7 +2,7 @@ import { GoogleMap, InfoWindow, Marker, useJsApiLoader } from "@react-google-map
 import useUserLocation from "../hooks/useUserLocation";
 import useGeocoding from "../hooks/useGeocoding";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Button, Container } from "react-bootstrap";
+import { Alert, Button, Container, Spinner } from "react-bootstrap";
 import type { Location, PlaceFormData } from "../types/Place.types";
 import { toast } from "react-toastify";
 import PlaceFormModal from "./PlaceFormModal";
@@ -24,7 +24,7 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
     const { isLoaded, loadError } = useJsApiLoader({
         googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
         id: "googe-map-script",
-        preventGoogleFontsLoading: true,
+        libraries: libraries,
         language: "sv",
         region: "SE",
     });
@@ -50,15 +50,16 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
         error: locationError
     } = useUserLocation();
 
-    const { getAdress,
-        address,
-        error: geocodingError,
+    const { 
+        getAdress,
+        // error: geocodingError,
     } = useGeocoding();
 
     const containerStyle = {
         width: "400px",
         height: "400px",
     }
+
 
     // const mapCenter = userLocation || FALLBACK_CENTER;
     useEffect(()=>{
@@ -68,27 +69,27 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
     }, [userLocation, isLoaded]);
 
 
-    const handleLocationFound = useCallback((coords: Location, address: string) => {
-        setSelectedLocation({
-            coords: coords,
-            address: address,
-        });
+    // const handleLocationFound = useCallback((coords: Location, address: string) => {
+    //     setSelectedLocation({
+    //         coords: coords,
+    //         address: address,
+    //     });
 
-        setMapCenter(coords);
-        setMapZoom(16);
+    //     setMapCenter(coords);
+    //     setMapZoom(16);
 
-        if(mapRef.current) {
-            mapRef.current.panTo(coords);
-            mapRef.current.setZoom(16);
-        }
-    }, []);
+    //     if(mapRef.current) {
+    //         mapRef.current.panTo(coords);
+    //         mapRef.current.setZoom(16);
+    //     }
+    // }, []);
 
     const onMapLoad = useCallback((map: google.maps.Map) => {
         mapRef.current = map;
     }, []);
 
     {/*funktion för när man trycker på kartan */ }
-    const onHandleMapClick = async (e: google.maps.MapMouseEvent) => {
+    const onHandleMapClick = useCallback((e: google.maps.MapMouseEvent) => {
 
         if (!e.latLng) {
             return;
@@ -112,7 +113,8 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
                     coords: clickedCoords,
                     address: foundAddress,
                 });
-                setIsLoadingAddress(false)
+                setIsLoadingAddress(false);
+                setMapZoom(16);
             },
             (error) => {
                 setSelectedLocation({
@@ -123,17 +125,17 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
                 console.error("Geocoding fel: ", error);
             }
         );
-
-        console.log("Last clicked address: ", address);
-    }
+    }, [getAdress]);
 
     const handleOpenModal = () => {
-        if (selectedLocation && selectedLocation.address !== "Hämtar adress..." && selectedLocation.address !== "Kunde inte hämta adress") {
+        if (selectedLocation && 
+            selectedLocation.address !== "Hämtar adress..." && 
+            selectedLocation.address !== "Kunde inte hämta adress") {
             setShowModal(true);
         }
     }
 
-    const handleSavePlace = async (place: PlaceFormData) => {
+    const handleSavePlace = useCallback(async (place: PlaceFormData) => {
         try {
             await onSavePlace(place);
 
@@ -146,9 +148,30 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
             }
 
         }
-    }
+    }, [onSavePlace]);
 
     {/*Loading states*/ }
+
+    if(loadError){
+        return (
+            <Alert variant="danger">
+                <p>Fel vid laddning av Google Maps</p>
+                <p>Kontrollera API-nyckel och nödvändiga API-inställningar</p>
+                <p>{loadError.message}</p>
+            </Alert>
+        );
+    }
+
+    if(!isLoaded){
+        return (
+            <Container>
+                <div className="text-center">
+                    <Spinner animation="border" role="status" className="mb-2"/>
+                    <p>Laddar karta</p>
+                </div>
+            </Container>
+        )
+    }
 
     if (locationLoading) {
         return <p>Hämtar din position... </p>
@@ -165,8 +188,13 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
             <GoogleMap
                 mapContainerStyle={containerStyle}
                 center={mapCenter}
-                zoom={12}
+                zoom={mapZoom}
                 onClick={onHandleMapClick}
+                onLoad={onMapLoad}
+                options={{
+                    fullscreenControl: true,
+                    zoomControl: true,
+                }}
 
             >
 
@@ -177,6 +205,7 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
                         icon={{
                             url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
                         }}
+                        animation={google.maps.Animation.DROP}
                     />
                 )}
 
