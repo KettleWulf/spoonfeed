@@ -3,7 +3,7 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import { createCollection } from "../helpers/createCollection";
-import type { Establishment, NewEstablishment } from "../types/Establishment.types";
+import type { NewPlace, Place } from "../types/Place.types";
 
 
 // Firebase configuration
@@ -30,12 +30,8 @@ export const storage = getStorage(app);
 
 
 // Collections
-export const establishmentsCol = createCollection<Establishment>("establishments");
-export const newEstablishmentsCol = createCollection<NewEstablishment>("establishments");
-
-export const suggestionsCol = createCollection<Establishment>("suggestions");
-export const newSuggetionsCol = createCollection<NewEstablishment>("suggestions");
-
+export const placesCol = createCollection<Place>("places");
+export const newPlacesCol = createCollection<NewPlace>("places");
 
 
 export default app;

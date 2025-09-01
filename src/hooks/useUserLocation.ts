@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react"
+import type { Location } from "../types/Establishment.types";
 
 const useUserLocation = () => {
-    const [userLocation, setUserLocation] = useState<{ lat: number, lng: number } | null>(null);
+    const [userLocation, setUserLocation] = useState<Location | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -18,12 +19,12 @@ const useUserLocation = () => {
 
                     setIsLoading(false);
                 },
-                    (error) => {
+                (error) => {
 
-                        setError(error.message);
-                        setIsLoading(false);
+                    setError(error.message);
+                    setIsLoading(false);
 
-                    }
+                }
                 );
 
             } else {
