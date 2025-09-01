@@ -14,16 +14,22 @@ function App() {
 
 
 	return (
-		<LoadScript googleMapsApiKey={mapApiKey} >
+		<LoadScript
+			googleMapsApiKey={mapApiKey}
+			preventGoogleFontsLoading={true}
+			loadingElement={<div>Laddar karta...</div>}
+			id="google-map-script"
+			
+		>
 
 
 			<div id="App">
 
 				<Navigation />
 
-			<Routes>
-				<Route path="/" element={<HomePage />} />
-				<Route path="/places" element={<PlacesPage />} />
+				<Routes>
+					<Route path="/" element={<HomePage />} />
+					<Route path="/places" element={<PlacesPage />} />
 
 
 					{/* Auth Routes */}

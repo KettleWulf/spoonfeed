@@ -1,13 +1,14 @@
-import { GoogleMap, InfoWindow, Marker } from "@react-google-maps/api";
+import { GoogleMap, InfoWindow, Marker, useJsApiLoader } from "@react-google-maps/api";
 import useUserLocation from "../hooks/useUserLocation";
 import useGeocoding from "../hooks/useGeocoding";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button, Container } from "react-bootstrap";
 import type { PlaceFormData } from "../types/Place.types";
 import { toast } from "react-toastify";
 import PlaceFormModal from "./PlaceFormModal";
 
 
+const libraries: ("places" | "geocoding" | "geometry")[] = ["places", "geocoding", "geometry"];
 
 interface ClickedLocation {
     coords: google.maps.LatLngLiteral;
@@ -18,6 +19,16 @@ interface MapProps {
     onSavePlace: (place: PlaceFormData) => Promise<string | void >}
 
 const Map: React.FC<MapProps> = ({ onSavePlace }) => {
+
+    const { isLoaded, loadError } = useJsApiLoader({
+        googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+        id: "googe-map-script",
+        preventGoogleFontsLoading: true,
+        language: "sv",
+        region: "SE",
+    });
+
+    const mapRef = useRef<google.maps.Map | null>(null);
 
     const FALLBACK_CENTER = {
         // Coordinates to STOCKHOLM as fallback 
