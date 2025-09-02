@@ -9,7 +9,6 @@ import { ToastContainer } from "react-toastify"
 import UppdateProfile from "./pages/auth/UppdateProfile";
 import ProtectedRoutes from "./components/auth/ProtectedRoutes";
 import ForgotPassword from "./pages/auth/ForgotPassword";
-import PasswordCheck from "./components/auth/PasswordCheck";
 import { LoadScript } from "@react-google-maps/api";
 
 const mapApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
@@ -26,7 +25,6 @@ function App() {
 				<Navigation />
 
 				<Routes>
-					<Route path="/hej" element={<PasswordCheck />} />
 					<Route path="/login" element={<LoginPage />} />
 						<Route path="/signup" element={<SignupPage />} />
 

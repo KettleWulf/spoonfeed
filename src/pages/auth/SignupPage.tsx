@@ -6,9 +6,14 @@ import { Card, Col, Container, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
 import useAuth from '../../hooks/useAuth';
 import SignUpForm from '../../components/auth/SignUpForm';
+import { useState } from 'react';
+import PasswordCheck from '../../components/auth/PasswordCheck';
+
+    const password = import.meta.env.VITE_SECRET_PASSWORD_TO_LOGIN
+
 
 const SignupPage = () => {
-	
+	const [passwordCheck, setPasswordCheck] = useState(false)
 	const navigate = useNavigate()
 	const { signUp } = useAuth()
 
@@ -38,7 +43,13 @@ const SignupPage = () => {
 				<Col md={{ span: 6, offset: 3 }}>
 					<Card className="mb-3">
 						<Card.Body>
-							{<SignUpForm onSubmit={onSubmit} />}
+							{passwordCheck 
+								? <SignUpForm onSubmit={onSubmit} />
+								: <PasswordCheck 
+									password={password}
+									correctPassword={() => setPasswordCheck(true)}
+									/>
+							}
 						</Card.Body>
 					</Card>
 				</Col>

@@ -1,74 +1,60 @@
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import type {PasswordcheckCredentials} from '../../types/User.types';
+import type { PasswordcheckCredentials } from '../../types/User.types';
 import { toast } from "react-toastify";
-import { Card, Col, Container, Row } from 'react-bootstrap';
-import { useNavigate } from 'react-router';
+import { Card } from 'react-bootstrap';
+
+type PasswordCheckProp = {
+    password: string
+    correctPassword: () => void
+}
 
 
 
-
-
-const PasswordCheck: React.FC = () => {
-    const password = import.meta.env.VITE_SECRET_PASSWORD_TO_LOGIN
-    const navigate = useNavigate()
+const PasswordCheck: React.FC<PasswordCheckProp> = ({ correctPassword, password }) => {
 
     const { handleSubmit, register, formState: { errors, isSubmitting } } = useForm<PasswordcheckCredentials>()
 
 
-     const onForgotPassword: SubmitHandler<PasswordcheckCredentials> = (data) => {
+    const onForgotPassword: SubmitHandler<PasswordcheckCredentials> = (data) => {
 
-        if(data.password === password){
-            toast.success("Welcome My Friend")
-            navigate("/login")
-        } else{
+        if (data.password === password) {
+            correctPassword()
+            toast.success("Welcome my friend")
+        } else {
             toast.error("Wrong password")
         }
-        
-     }
-   
 
+    }
 
-    
-
-    
     return (
-        <Container className="py-3 center-y">
-            <Row>
-                <Col md={{ span: 6, offset: 3 }}>
-                    <Card className="mb-3">
-                        <Card.Body>
-                            <Card.Title className="mb-3">Forgot Password</Card.Title>
+        <>
+            <Card.Title className="mb-3">Welcome</Card.Title>
 
-                           
 
-                            <Form onSubmit={handleSubmit(onForgotPassword)}>
 
-                                <Form.Group className="mb-3" controlId="formBasicPassword">
-                                    <Form.Label>Welcome</Form.Label>
-                                    <Form.Control type="password"
-                                        placeholder="Welcome"
-                                        {...register("password", {
-                                           required: "Enter a Password"
-                                        })}
+            <Form onSubmit={handleSubmit(onForgotPassword)}>
 
-                                    />
-                                    {errors.password && <p className="text-danger">{errors.password.message || "invalid"}</p>}
-                                </Form.Group>
+                <Form.Group className="mb-3" controlId="formBasicPassword">
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control type="password"
+                        {...register("password", {
+                            required: "Enter a Password"
+                        })}
 
-                                <Button variant="primary" type="submit" disabled={isSubmitting}>
-                                    continue
-                                </Button>
+                    />
+                    {errors.password && <p className="text-danger">{errors.password.message || "invalid"}</p>}
+                </Form.Group>
 
-                            </Form>
+                <Button variant="primary" type="submit" disabled={isSubmitting}>
+                    continue
+                </Button>
 
-                        </Card.Body>
-                    </Card>
+            </Form>
 
-                </Col>
-            </Row >
-        </Container >
+        </>
+
     )
 }
 
