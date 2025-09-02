@@ -5,19 +5,19 @@ import type { PasswordcheckCredentials } from '../../types/User.types';
 import { toast } from "react-toastify";
 import { Card } from 'react-bootstrap';
 
-type PasswordCheckProp = {
+type PasswordGuardProp = {
     password: string
     correctPassword: () => void
 }
 
 
 
-const PasswordCheck: React.FC<PasswordCheckProp> = ({ correctPassword, password }) => {
+const PasswordGuard: React.FC<PasswordGuardProp> = ({ correctPassword, password }) => {
 
     const { handleSubmit, register, formState: { errors, isSubmitting } } = useForm<PasswordcheckCredentials>()
 
 
-    const onForgotPassword: SubmitHandler<PasswordcheckCredentials> = (data) => {
+    const onPasswordGuard: SubmitHandler<PasswordcheckCredentials> = (data) => {
 
         if (data.password === password) {
             correctPassword()
@@ -34,7 +34,7 @@ const PasswordCheck: React.FC<PasswordCheckProp> = ({ correctPassword, password 
 
 
 
-            <Form onSubmit={handleSubmit(onForgotPassword)}>
+            <Form onSubmit={handleSubmit(onPasswordGuard)}>
 
                 <Form.Group className="mb-3" controlId="formBasicPassword">
                     <Form.Label>Password</Form.Label>
@@ -58,4 +58,4 @@ const PasswordCheck: React.FC<PasswordCheckProp> = ({ correctPassword, password 
     )
 }
 
-export default PasswordCheck
+export default PasswordGuard

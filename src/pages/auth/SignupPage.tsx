@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router';
 import useAuth from '../../hooks/useAuth';
 import SignUpForm from '../../components/auth/SignUpForm';
 import { useState } from 'react';
-import PasswordCheck from '../../components/auth/PasswordCheck';
+import PasswordGuard from '../../components/auth/PasswordGuard';
 
     const password = import.meta.env.VITE_SECRET_PASSWORD_TO_LOGIN
 
@@ -45,7 +45,7 @@ const SignupPage = () => {
 						<Card.Body>
 							{passwordCheck 
 								? <SignUpForm onSubmit={onSubmit} />
-								: <PasswordCheck 
+								: <PasswordGuard 
 									password={password}
 									correctPassword={() => setPasswordCheck(true)}
 									/>
