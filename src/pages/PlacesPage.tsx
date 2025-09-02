@@ -47,6 +47,11 @@ const PlacesPage = () => {
 
 			<h2>Suggestions</h2>
 			{suggestions && <SortableTable columns={columnDefs} data={suggestions} getRowLink={(row) => `/places/${row._id}`} />}
+				
+			<hr />
+
+			<h2>Suggestions</h2>
+			{suggestions && <SortableTable columns={columnDefs} data={suggestions} getRowLink={(row) => `/places/${row._id}`} />}
 		</>
 	)
 };
