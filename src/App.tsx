@@ -16,9 +16,10 @@ const mapApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 function App() {
 
+		{/* <LoadScript googleMapsApiKey={mapApiKey} >
+		</LoadScript> */}
 
 	return (
-		<LoadScript googleMapsApiKey={mapApiKey} >
 
 			<div id="App">
 
@@ -27,11 +28,11 @@ function App() {
 				<Routes>
 					<Route path="/hej" element={<PasswordCheck />} />
 					<Route path="/login" element={<LoginPage />} />
+						<Route path="/signup" element={<SignupPage />} />
 
 
 					<Route element={<ProtectedRoutes />}>
 						<Route path="/forgot-Password" element={<ForgotPassword />} />
-						<Route path="/signup" element={<SignupPage />} />
 						<Route path="/Profile" element={<UppdateProfile />} />
 					</Route>
 
@@ -48,7 +49,6 @@ function App() {
 
 				<ToastContainer closeOnClick theme="colored" limit={5} stacked position="bottom-right" />
 			</div>
-		</LoadScript>
 	)
 }
 
