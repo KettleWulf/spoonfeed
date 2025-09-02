@@ -112,7 +112,7 @@ const UppdateProfile = () => {
                             <Card.Title className="mb-3">Profile</Card.Title>
 
                             <div>
-                                <Image alt={currentUser?.photoURL ?? "Your Profile Piqture"} src={userUrl || urlUpload || undefined} roundedCircle className="w-75" />
+                                <Image alt={currentUser?.photoURL ?? "Your Profile Piqture"} src={userUrl || urlUpload || undefined} roundedCircle className="img-cover w-75" />
                             </div>
 
 
