@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router';
 
 
 
-const PasswordCheck = () => {
+const PasswordCheck: React.FC = () => {
     const password = import.meta.env.VITE_SECRET_PASSWORD_TO_LOGIN
     const navigate = useNavigate()
 
