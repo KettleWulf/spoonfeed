@@ -45,3 +45,15 @@ export interface Place {
 export type NewPlace = Omit<Place, "_id">;
 
 export type PlaceFormData = Omit<Place, "_id" | "updatedAt" | "createdAt" | "isSuggestion">;
+
+
+export interface PlaceIMG {
+	_id: string;
+	createdAt: Timestamp;
+	name: string;
+	path: string;
+	size: number;
+	type: string;
+	uid: string;
+	url: string;
+}

@@ -34,7 +34,9 @@ export const storage = getStorage(app);
 export const placesCol = createCollection<Place>("places");
 export const newPlacesCol = createCollection<NewPlace>("places");
 
-export const usersCol = createCollection<User>("users")
+export const usersCol = createCollection<User>("users");
+
+
 
 
 export default app;

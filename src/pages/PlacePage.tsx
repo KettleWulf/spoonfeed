@@ -11,10 +11,13 @@ import {
 import { useParams } from "react-router";
 import useGetPlace from "../hooks/useGetPlace";
 import { firebaseTimestampToString } from "../helpers/time";
+import DropZone from "../components/DropZone";
+import useAuth from "../hooks/useAuth";
 
 
 
 const PlacePage = () => {
+	const { currentUser } = useAuth();
 	const { id } = useParams<{ id: string }>();
 	const { data: place, isLoading, error } = useGetPlace(id);
 
@@ -39,7 +42,7 @@ const PlacePage = () => {
 		);
 	}
 
-	if (!place) {
+	if (!place || !id) {
 		return (
 			<Container className="py-4">
 				<Alert variant="warning">Place not found.</Alert>
@@ -147,8 +150,10 @@ const PlacePage = () => {
 							</div>
 						</Card.Body>
 					</Card>
+					{currentUser && <DropZone user={currentUser} placeId={id} />}
 				</Col>
 			</Row>
+
 		</Container>
 	);
 };
