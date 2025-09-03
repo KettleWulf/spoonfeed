@@ -5,7 +5,6 @@ import { FirebaseError } from 'firebase/app';
 import { toast } from "react-toastify";
 import { Card, Col, Container, Row } from 'react-bootstrap';
 import useAuth from '../../hooks/useAuth';
-import { useEffect } from 'react';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { storage } from '../../services/Firebase';
 import UpdateProfileFrom from '../../components/auth/UpdateProfileFrom';
@@ -19,16 +18,6 @@ const UppdateProfile = () => {
     const { currentUser, changeEmail, changePassword, changePhotoUrl, changeUserName, userName, userUrl, userEmail, reloadForm, updateUserDataName, updateUserDataPhoto } = useAuth()
 
     const { reset, } = useForm<UppdateUserCredentials>()
-
-
-
-    useEffect(() => {
-        reset({
-            email: userEmail ?? "",
-            username: userName ?? "",
-        })
-    }, [userEmail, userName])
-
 
     const onUppdateProfile: SubmitHandler<UppdateUserCredentials> = async (data) => {
 

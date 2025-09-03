@@ -1,7 +1,7 @@
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import blankProfile from "../../assets/images/blank-profile-picture-973460_1280.png"
-import { useEffect, useState } from 'react';
+import {useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import type { UppdateUserCredentials } from '../../types/User.types';
 import { Card, Image } from 'react-bootstrap';
@@ -20,14 +20,14 @@ type UpdateProfileFromProps = {
 const UpdateProfileFrom: React.FC<UpdateProfileFromProps> = ({ currentUser, userUrl, userEmail, userName, onUppdateProfile}) => {
     const [urlUpload, seturlUpload] = useState<string | null>(null)
 
-    const { handleSubmit, register, reset, watch, formState: { errors, isSubmitting } } = useForm<UppdateUserCredentials>()
+    const { handleSubmit, register, watch, formState: { errors, isSubmitting } } = useForm<UppdateUserCredentials>({
+        defaultValues: {
+            email: userEmail ?? "",
+            username: userName ?? "",
+        }
+    })
 
-    useEffect(() => {
-            reset({
-                email: userEmail ?? "",
-                username: userName ?? "",
-            })
-        }, [userEmail, userName])
+    
 
     const password = watch("password")
     return (
