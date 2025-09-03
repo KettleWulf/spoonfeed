@@ -9,44 +9,39 @@ import { ToastContainer } from "react-toastify"
 import UppdateProfile from "./pages/auth/UppdateProfile";
 import ProtectedRoutes from "./components/auth/ProtectedRoutes";
 import ForgotPassword from "./pages/auth/ForgotPassword";
-import { LoadScript } from "@react-google-maps/api";
-
-const mapApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 function App() {
 
-		{/* <LoadScript googleMapsApiKey={mapApiKey} >
-		</LoadScript> */}
-
 	return (
 
-			<div id="App">
+		<div id="App">
 
-				<Navigation />
+			<Navigation />
 
-				<Routes>
-					<Route path="/login" element={<LoginPage />} />
-						<Route path="/signup" element={<SignupPage />} />
+			<Routes>
+				<Route path="/login" element={<LoginPage />} />
 
+				{/* Auth Routes */}
+				<Route path="/signup" element={<SignupPage />} />
 
-					<Route element={<ProtectedRoutes />}>
-						<Route path="/forgot-Password" element={<ForgotPassword />} />
-						<Route path="/Profile" element={<UppdateProfile />} />
-					</Route>
-
-
-					<Route path="/" element={<HomePage />} />
-					<Route path="/places" element={<PlacesPage />} />
-
-
-					{/* Auth Routes */}
-					
+				<Route element={<ProtectedRoutes />}>
+					<Route path="/forgot-Password" element={<ForgotPassword />} />
+					<Route path="/Profile" element={<UppdateProfile />} />
+				</Route>
+				<Route path="/" element={<HomePage />} />
+				<Route path="/places" element={<PlacesPage />} />
+			</Routes>
 
 
-				</Routes>
+			
 
-				<ToastContainer closeOnClick theme="colored" limit={5} stacked position="bottom-right" />
-			</div>
+
+
+
+
+
+			<ToastContainer closeOnClick theme="colored" limit={5} stacked position="bottom-right" />
+		</div>
 	)
 }
 

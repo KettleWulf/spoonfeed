@@ -4,6 +4,7 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import { createCollection } from "../helpers/createCollection";
 import type { NewPlace, Place } from "../types/Place.types";
+import type { User } from "../types/User.types";
 
 
 // Firebase configuration
@@ -32,6 +33,8 @@ export const storage = getStorage(app);
 // Collections
 export const placesCol = createCollection<Place>("places");
 export const newPlacesCol = createCollection<NewPlace>("places");
+
+export const usersCol = createCollection<User>("users")
 
 
 export default app;
