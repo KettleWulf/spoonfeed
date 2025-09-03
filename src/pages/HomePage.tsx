@@ -23,6 +23,8 @@ const HomePage = () => {
 		});
 		console.log("Place created with ID:", docRef.id);
 		console.log("Wrote to:", docRef.path);
+		console.log("isSuggestion value:", !currentUser); // Debug
+    	console.log("Current user:", currentUser);
 
 		// 🥂
 		toast.success("Place added!");

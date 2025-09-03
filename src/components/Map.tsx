@@ -14,6 +14,8 @@ import { toast } from "react-toastify";
 
 const libraries: ("places" | "geocoding" | "geometry")[] = ["places", "geocoding", "geometry"];
 
+
+
 // Fallback till sthlm om användaren inte get platsdata.
 const FALLBACK_CENTER = {
     lat: 59.334591,
@@ -23,6 +25,7 @@ const FALLBACK_CENTER = {
 interface ClickedLocation {
     coords: google.maps.LatLngLiteral;
     address: string;
+    city?: string;
 }
 
 interface MapProps {
@@ -54,6 +57,27 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
     });
 
     const mapRef = useRef<google.maps.Map | null>(null);
+
+    // Debug
+    useEffect(() => {
+        console.log("=== MAP DEBUG ===");
+        console.log("Current city:", currentCity);
+        console.log("Places loading:", placesLoading);
+        console.log("Places data:", places);
+        console.log("Places count:", places?.length);
+
+        if (places && places.length > 0) {
+            console.log("First place:", places[0]);
+            places.forEach((place, index) => {
+                console.log(`Place ${index + 1}:`, {
+                    name: place.name,
+                    city: place.city,
+                    isSuggestion: place.isSuggestion,
+                    location: place.location
+                });
+            });
+        }
+    }, [currentCity, placesLoading, places]);
 
     useEffect(() => {
         if (userLocation && isLoaded) {
@@ -106,15 +130,19 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
         setSearchResult(null);
         setSelectedLocation({
             coords: clickedCoords,
-            address: "Getting address..."
+            address: "Getting address...",
+            city: undefined,
         });
 
         setIsLoadingAddress(true);
 
         getAddress(clickedCoords, (foundAddress, city) => {
+            console.log("Extracted city:", city);
+
             setSelectedLocation({
                 coords: clickedCoords,
                 address: foundAddress,
+                city,
             });
             setIsLoadingAddress(false);
 
@@ -126,6 +154,7 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
                 setSelectedLocation({
                     coords: clickedCoords,
                     address: "Could not get address",
+                    city: undefined,
                 });
                 setIsLoadingAddress(false);
                 console.error("Geocoding error:", error);
@@ -238,26 +267,30 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
             >
 
                 {userLocation && (
-                    <Marker 
+                    <Marker
                         position={userLocation}
                         title="Your position"
                         icon={{
                             url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
                         }}
                         animation={google.maps.Animation.DROP}
-                        />
-                )} 
+                    />
+                )}
 
-                {places?.map((place) => (
-                    <Marker 
+                {places?.map((place, index) => {
+                    console.log(`Rendering marker ${index + 1}: ${place.name} at`, place.location);
+                    return (
+                    
+                    <Marker
                         key={place._id}
                         position={place.location}
                         title={`${place.name} - ${place.category}`}
                         icon={getMarkerIcon(place.category)}
                         onClick={() => handlePlaceClick(place)}
-                        animation={google.maps.Animation.BOUNCE}
+                        animation={google.maps.Animation.DROP}
                     />
-                ))}
+                )}
+                )}
 
 
                 {searchResult && (
@@ -272,12 +305,12 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
 
                 {selectedLocation && (
                     <>
-                        <Marker 
+                        <Marker
                             position={selectedLocation.coords}
                             title={selectedLocation.address}
                         />
 
-                        <InfoWindow 
+                        <InfoWindow
                             position={selectedLocation.coords}
                             onCloseClick={() => setSelectedLocation(null)}
                         >
@@ -287,12 +320,12 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
                                 {!isLoadingAddress && selectedLocation.address !== "Could not get address" && (
                                     <Button
                                         onClick={handleOpenModal}
-                                        style={{ width:"100%" }}
-                                        >
-                                            Add a places to eat
+                                        style={{ width: "100%" }}
+                                    >
+                                        Add a places to eat
                                     </Button>
                                 )}
-                                
+
                             </Container>
                         </InfoWindow>
                     </>
@@ -303,6 +336,7 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
                 show={showModal}
                 onHide={() => setShowModal(false)}
                 address={selectedLocation?.address}
+                city={selectedLocation?.city}
                 coords={selectedLocation?.coords}
                 onSave={handleSavePlace}
             />

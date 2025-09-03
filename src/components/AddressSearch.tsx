@@ -37,6 +37,9 @@ const AddressSearch: React.FC<AddressSearchProps> = ({
 
         getCoordinates(
             searchInput, (coords, formattedAddress) => {
+                console.log("AddressSearch: coords", coords);
+                console.log("AddressSearch: formattedAddress", formattedAddress);
+                
                 onLocationFound(coords, formattedAddress);
 
                 setSerachInput("");
