@@ -13,9 +13,7 @@ import { toast } from "react-toastify";
 import getMarkerIcon from "../helpers/getMarkerIcon";
 
 // Definerar biblioteket som Google Maps-apiet ska använda när kartan laddas
-const libraries: ("places" | "geocoding" )[] = ["places", "geocoding"];
-
-
+const libraries: ("places" | "geocoding")[] = ["places", "geocoding"];
 
 // Fallback till sthlm om användaren inte get platsdata.
 const FALLBACK_CENTER = {
@@ -58,34 +56,13 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
     // Med mapRef kan vi kontrollera kartan, skapar en referens till kartan från google maps
     const mapRef = useRef<google.maps.Map | null>(null);
 
-    // Debug
-    useEffect(() => {
-        console.log("=== MAP DEBUG ===");
-        console.log("Current city:", currentCity);
-        console.log("Places loading:", placesLoading);
-        console.log("Places data:", places);
-        console.log("Places count:", places?.length);
-
-        if (places && places.length > 0) {
-            console.log("First place:", places[0]);
-            places.forEach((place, index) => {
-                console.log(`Place ${index + 1}:`, {
-                    name: place.name,
-                    city: place.city,
-                    isSuggestion: place.isSuggestion,
-                    location: place.location
-                });
-            });
-        }
-    }, [currentCity, placesLoading, places]);
-
     // useEffect som sätter currentCity till userCity, när denna är tillgänglig, userCity hämtas från useUserLocation
 
     useEffect(() => {
         if (userCity && userCity !== currentCity) {
             console.log("Setting currentCity to user location:", userCity);
             setCurrentCity(userCity);
-        } 
+        }
     }, [userCity, currentCity]);
 
     useEffect(() => {
@@ -97,9 +74,9 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
 
     // Handler för när någon söker efter en stad, panorerar till och zoom in på vår sökning samt sätter currentCity till det som står i sökfältet
     const handleSearchLocation = (coords: Location, city?: string) => {
-        if(mapRef.current){
+        if (mapRef.current) {
             mapRef.current.panTo(coords);
-            mapRef.current.setZoom(10);
+            mapRef.current.setZoom(13);
         }
 
         if (city && city !== currentCity) {
@@ -123,7 +100,7 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
         });
 
         // centrerar kartan på på användaren om denna är tillgänglig
-        if(userLocation) {
+        if (userLocation) {
             map.panTo(userLocation);
             map.setZoom(14);
         }
@@ -208,10 +185,6 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
         }
     };
 
-    
-
-    {/*Loading states*/ }
-
     if (loadError) {
         return (
             <Alert variant="danger">
@@ -284,31 +257,21 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
                     />
                 )}
 
-                {places?.map((place, index) => {
-                    console.log(`Rendering marker ${index + 1}: ${place.name} at`, place.location);
-                    return (
-                    
-                    <Marker
-                        key={place._id}
-                        position={place.location}
-                        title={`${place.name} - ${place.category}`}
-                        icon={getMarkerIcon(place.category)}
-                        onClick={() => handlePlaceClick(place)}
-                        animation={google.maps.Animation.DROP}
-                    />
-                )}
+                {places?.map((place) => (
+                    <>
+                        <Marker
+                            key={place._id}
+                            position={place.location}
+                            title={`${place.name} - ${place.category}`}
+                            icon={getMarkerIcon(place.category)}
+                            onClick={() => handlePlaceClick(place)}
+                            animation={google.maps.Animation.DROP}
+                        />
+                    </>
+
+                )
                 )}
 
-
-                {/* {searchResult && (
-                    <Marker
-                        position={searchResult}
-                        title="Search results"
-                        icon={{
-                            url: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
-                        }}
-                    />
-                )} */}
 
                 {selectedLocation && (
                     <>

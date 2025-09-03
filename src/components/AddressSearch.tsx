@@ -15,7 +15,7 @@ const AddressSearch: React.FC<AddressSearchProps> = ({
     placeholder = "Search for an Address (ex. Kungsgatan 1, Stockholm)",
 }) => {
 
-    const [searchInput, setSerachInput] = useState("");
+    const [searchInput, setSearchInput] = useState("");
     const [searchError, setSearchError] = useState<string | null>(null);
 
 
@@ -41,7 +41,7 @@ const AddressSearch: React.FC<AddressSearchProps> = ({
 
                 onLocationFound(coords, city);
 
-                setSerachInput("");
+                setSearchInput("");
                 setSearchError(null);
             },
             (error) => {
@@ -51,7 +51,7 @@ const AddressSearch: React.FC<AddressSearchProps> = ({
     };
 
     const handleClear = () => {
-        setSerachInput("");
+        setSearchInput("");
         setSearchError(null);
     }
 
@@ -64,7 +64,7 @@ const AddressSearch: React.FC<AddressSearchProps> = ({
                     type="text"
                     placeholder={placeholder}
                     value={searchInput}
-                    onChange={(e) => setSerachInput(e.target.value)}
+                    onChange={(e) => setSearchInput(e.target.value)}
                     disabled={isLoading}
 
                     />
