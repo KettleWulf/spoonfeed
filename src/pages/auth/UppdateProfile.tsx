@@ -9,6 +9,8 @@ import useAuth from '../../hooks/useAuth';
 import { useEffect, useState } from 'react';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { storage } from '../../services/Firebase';
+import blankProfile from "../../assets/images/blank-profile-picture-973460_1280.png"
+
 
 
 
@@ -115,7 +117,7 @@ const UppdateProfile = () => {
                             <Card.Title className="mb-3">Profile</Card.Title>
 
                             <div>
-                                <Image alt={currentUser?.photoURL ?? "Your Profile Piqture"} src={userUrl || urlUpload || undefined} roundedCircle className="img-cover w-75" />
+                                <Image alt={currentUser?.photoURL ?? blankProfile } src={userUrl || urlUpload || undefined} roundedCircle className="img-cover w-75" />
                             </div>
 
 
