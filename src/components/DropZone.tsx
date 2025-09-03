@@ -22,10 +22,10 @@ const DropZone: React.FC<UploadMemesProps> = ({ user, placeId }) => {
 			return;
 		}
 
-		console.log("Yummm, files 😋:", acceptedFiles);
+	
 
 		for (const file of acceptedFiles) {
-    		await uploadPlaceIMG.upload(file);
+			await uploadPlaceIMG.upload(file);
   		}
 
 	}, [uploadPlaceIMG]);
@@ -39,7 +39,7 @@ const DropZone: React.FC<UploadMemesProps> = ({ user, placeId }) => {
 			"image/webp": [],
 		},
 		maxFiles: 3,
-		maxSize: 4 * 1024 * 1024, // 4 MB
+		maxSize: 4 * 1024 * 1024,
 		onDrop,
 	});
 
@@ -58,8 +58,8 @@ const DropZone: React.FC<UploadMemesProps> = ({ user, placeId }) => {
 						? <p>YU-HUP</p>
 						: <p>NAH-AH</p>
 					: <div>
-						<p className="h5 mb-1">All Your Memes Are Belong To Me</p>
-						<p>(drop your memes here or click to choose memes)</p>
+						<p className="h5 mb-1">- UPLOAD -</p>
+						<p>(drop your images here or click to choose in finder)</p>
 					</div>
 				}
 			</div>
@@ -74,8 +74,8 @@ const DropZone: React.FC<UploadMemesProps> = ({ user, placeId }) => {
 				/>
 			)}
 
-			{uploadPlaceIMG.isError && <Alert variant="danger">😳 {uploadPlaceIMG.error}</Alert>}
-			{uploadPlaceIMG.isSuccess && <Alert variant="success">😂 that was a funny meme!</Alert>}
+			{uploadPlaceIMG.isError && <Alert variant="danger">{uploadPlaceIMG.error}</Alert>}
+			{uploadPlaceIMG.isSuccess && <Alert variant="light">Successfully uploaded!</Alert>}
 		</div>
 	)
 }

@@ -1,9 +1,9 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { collection, CollectionReference, getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import { createCollection } from "../helpers/createCollection";
-import type { NewPlace, Place } from "../types/Place.types";
+import type { NewPlace, NewPlaceIMG, Place, PlaceIMG } from "../types/Place.types";
 import type { User } from "../types/User.types";
 
 
@@ -35,6 +35,10 @@ export const placesCol = createCollection<Place>("places");
 export const newPlacesCol = createCollection<NewPlace>("places");
 
 export const usersCol = createCollection<User>("users");
+
+
+export const imagesCol = (placeId: string) => collection(db, "places", placeId, "images") as CollectionReference<PlaceIMG>;
+export const newImagesCol = (placeId: string) => collection(db, "places", placeId, "images") as CollectionReference<NewPlaceIMG>;
 
 
 

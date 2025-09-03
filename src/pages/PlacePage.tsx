@@ -13,6 +13,7 @@ import useGetPlace from "../hooks/useGetPlace";
 import { firebaseTimestampToString } from "../helpers/time";
 import DropZone from "../components/DropZone";
 import useAuth from "../hooks/useAuth";
+import useStreamPlaceImages from "../hooks/useStreamPlaceImages";
 
 
 
@@ -20,6 +21,7 @@ const PlacePage = () => {
 	const { currentUser } = useAuth();
 	const { id } = useParams<{ id: string }>();
 	const { data: place, isLoading, error } = useGetPlace(id);
+	const { data: images, isLoading: isLoadingIMGs } = useStreamPlaceImages(id);
 
 	if (isLoading) {
 		return (
@@ -57,6 +59,8 @@ const PlacePage = () => {
 		? [place.offers]
 		: [];
 
+	console.log("images:", images);
+
 
 	return (
 		<Container className="py-4">
@@ -82,7 +86,6 @@ const PlacePage = () => {
 								</div>
 							</div>
 
-							{/* Description (optional) */}
 							{place.description && (
 								<Card.Text className="mt-3">{place.description}</Card.Text>
 							)}

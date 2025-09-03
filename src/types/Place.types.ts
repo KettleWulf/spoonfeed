@@ -47,6 +47,7 @@ export type NewPlace = Omit<Place, "_id">;
 export type PlaceFormData = Omit<Place, "_id" | "updatedAt" | "createdAt" | "isSuggestion">;
 
 
+
 export interface PlaceIMG {
 	_id: string;
 	createdAt: Timestamp;
@@ -57,3 +58,5 @@ export interface PlaceIMG {
 	uid: string;
 	url: string;
 }
+
+export type NewPlaceIMG = Omit<PlaceIMG, "_id">;
