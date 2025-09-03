@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import type { Location } from "../types/Establishment.types";
+import type { Location } from "../types/Place.types";
 
 const useUserLocation = () => {
     const [userLocation, setUserLocation] = useState<Location | null>(null);
