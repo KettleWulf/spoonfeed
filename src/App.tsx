@@ -9,6 +9,7 @@ import { ToastContainer } from "react-toastify"
 import UppdateProfile from "./pages/auth/UppdateProfile";
 import ProtectedRoutes from "./components/auth/ProtectedRoutes";
 import ForgotPassword from "./pages/auth/ForgotPassword";
+import ListOfProfilePage from "./pages/auth/ListOfProfilePage";
 
 function App() {
 
@@ -27,13 +28,14 @@ function App() {
 				<Route element={<ProtectedRoutes />}>
 					<Route path="/forgot-Password" element={<ForgotPassword />} />
 					<Route path="/Profile" element={<UppdateProfile />} />
+					<Route path="/Admins" element={<ListOfProfilePage />} />
 				</Route>
 				<Route path="/" element={<HomePage />} />
 				<Route path="/places" element={<PlacesPage />} />
 			</Routes>
 
 
-			
+
 
 
 

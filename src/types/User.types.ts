@@ -27,3 +27,11 @@ export type ForgotPasswordCredentials ={
 export type PasswordcheckCredentials = {
 	password: string
 }
+
+export type UserList = {
+	_id?: string;
+	name?: string;
+	email: string;
+
+	photoFiles?: string;
+}

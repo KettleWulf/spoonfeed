@@ -61,6 +61,11 @@ const Navigation = () => {
                                 >
                                     Profile
                                 </NavDropdown.Item>
+                                 <NavDropdown.Item
+                                     href="/Admins"
+                                >
+                                    Admins
+                                </NavDropdown.Item>
 
                                 <NavDropdown.Item
                                     className="text-danger fw-bold"
@@ -68,6 +73,7 @@ const Navigation = () => {
                                 >
                                     Log Out
                                 </NavDropdown.Item>
+
                             </NavDropdown>
 
                             : <Nav.Link href="/login">Log In</Nav.Link>

@@ -22,6 +22,11 @@ interface AuthContextType {
 
     forgotPassword: (email: string) => Promise<void>
 
+    updateUserDataName: (id: string, name: string) => Promise<void>
+    updateUserDataPhoto: (id: string, url: string) => Promise<void>
+
+
+
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null)
