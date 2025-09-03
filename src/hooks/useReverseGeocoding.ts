@@ -1,26 +1,24 @@
-import {useState, useCallback } from "react"
+import { useState, useCallback } from "react"
 import type { Location } from "../types/Place.types"
+import extractCityFromResults from "../helpers/extractCityFromResults";
 
-{/*Gör till stor del detsamma som useGeocoding men tar emot en adress istället. vet inte om det skulle vara fördelaktigt om jag kombinerar
-    eftersom de är rätt mycket upprepning i koden
-    */}
 export const useReverseGeocoding = () => {
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] =  useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null);
     const [coordinates, setCoordinates] = useState<Location | null>(null);
 
     const getCoordinates = useCallback((
         address: string,
-        onSuccess?: (coords: Location, formattedAddress: string) => void,
+        onSuccess?: (coords: Location, formattedAddress: string, city?: string) => void,
         onError?: (error: string) => void,
     ) => {
-        if(!window.google || !window.google.maps) {
+        if (!window.google || !window.google.maps) {
             setError("Google Maps API hasn't loaded");
             onError?.("Google Maps API hasn't loaded");
             return;
         }
 
-        if(!address || address.trim().length === 0){
+        if (!address || address.trim().length === 0) {
             setError("Please provide an address");
             onError?.("Please provide an address");
             return;
@@ -38,7 +36,7 @@ export const useReverseGeocoding = () => {
         }
 
         geocoder.geocode(request, (results, status) => {
-            if(status === google.maps.GeocoderStatus.OK && results && results[0]){
+            if (status === google.maps.GeocoderStatus.OK && results && results[0]) {
                 const location = results[0].geometry.location;
                 const coords: Location = {
                     lat: location.lat(),
@@ -46,10 +44,18 @@ export const useReverseGeocoding = () => {
                 };
                 const formattedAddress = results[0].formatted_address;
 
+                const city = extractCityFromResults(results[0]);
+
+                console.log("ReverseGeocoding result:");
+                console.log("- Address:", formattedAddress);
+                console.log("- Extracted city:", city);
+
+                if(!city) return;
+
                 setCoordinates(coords);
                 setIsLoading(false);
 
-                onSuccess?.(coords, formattedAddress);
+                onSuccess?.(coords, formattedAddress, city);
             } else {
                 if (status === google.maps.GeocoderStatus.INVALID_REQUEST) {
                     setError("Invalid Request");
@@ -57,10 +63,10 @@ export const useReverseGeocoding = () => {
                 } else if (status === google.maps.GeocoderStatus.REQUEST_DENIED) {
                     setError("Request Denied");
                     setIsLoading(false);
-                } else if (status === google.maps.GeocoderStatus.OVER_QUERY_LIMIT){
+                } else if (status === google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
                     setError("Query limit exceeded");
                     setIsLoading(false);
-                } else if(status === google.maps.GeocoderStatus.ZERO_RESULTS){
+                } else if (status === google.maps.GeocoderStatus.ZERO_RESULTS) {
                     setError("No resluts found on this location");
                     setIsLoading(false);
                 }
