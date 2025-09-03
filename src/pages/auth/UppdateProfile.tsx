@@ -15,7 +15,7 @@ import { storage } from '../../services/Firebase';
 
 
 const UppdateProfile = () => {
-    const { currentUser, changeEmail, changePassword, changePhotoUrl, changeUserName, userName, userUrl, userEmail, reloadForm } = useAuth()
+    const { currentUser, changeEmail, changePassword, changePhotoUrl, changeUserName, userName, userUrl, userEmail, reloadForm, updateUserDataName, updateUserDataPhoto } = useAuth()
 
     const { handleSubmit, register, reset, watch, formState: { errors, isSubmitting } } = useForm<UppdateUserCredentials>()
 
@@ -49,6 +49,8 @@ const UppdateProfile = () => {
             if (data.username !== (userName ?? "")) {
 
                 await changeUserName(data.username)
+
+                await updateUserDataName(currentUser.uid, data.username)
                 console.log("updated name", data.username)
                 //toast.success("Success you updated your Name")
 
@@ -65,6 +67,7 @@ const UppdateProfile = () => {
                     const photoUrl = await getDownloadURL(uploadUrl.ref)
 
                     await changePhotoUrl(photoUrl)
+                    await updateUserDataPhoto(currentUser.uid, photoUrl)
 
                 } catch (e) {
 
@@ -102,7 +105,7 @@ const UppdateProfile = () => {
 
     }
 
-    
+
     return (
         <Container className="py-3 center-y">
             <Row>

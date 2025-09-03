@@ -1,7 +1,8 @@
 import { useEffect, useState, type PropsWithChildren } from "react"
 import { AuthContext } from "./AuthContext"
 import { createUserWithEmailAndPassword, onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, updateEmail, updatePassword, updateProfile, type User } from "firebase/auth"
-import { auth } from "../services/Firebase"
+import { auth, db } from "../services/Firebase"
+import { doc, setDoc } from "firebase/firestore"
 
 const AuthContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const [currentUser, setCurrentUser] = useState<User | null>(null)
@@ -112,6 +113,15 @@ const AuthContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
         }, 5000);
     }
 
+    const updateUserDataName  = async (id: string, name: string) => {
+
+        await setDoc(doc(db, "users", id), { name }, { merge: true })
+    }
+
+    const updateUserDataPhoto  = async (id: string, url: string) => {
+
+        await setDoc(doc(db, "users", id), { photoFiles: url }, { merge: true })
+    }
 
 
     return (
@@ -130,6 +140,8 @@ const AuthContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
             userUrl,
             reloadForm,
             forgotPassword,
+            updateUserDataName,
+            updateUserDataPhoto
         }}>
 
             {loading ? (<div>Loading</div>

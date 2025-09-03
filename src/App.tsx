@@ -9,7 +9,7 @@ import { ToastContainer } from "react-toastify"
 import UppdateProfile from "./pages/auth/UppdateProfile";
 import ProtectedRoutes from "./components/auth/ProtectedRoutes";
 import ForgotPassword from "./pages/auth/ForgotPassword";
-import PasswordCheck from "./components/auth/PasswordCheck";
+import ListOfProfilePage from "./pages/auth/ListOfProfilePage";
 import PlacePage from "./pages/PlacePage";
 
 function App() {
@@ -21,24 +21,31 @@ function App() {
 			<Navigation />
 
 			<Routes>
-				<Route path="/hej" element={<PasswordCheck />} />
 				<Route path="/login" element={<LoginPage />} />
 
 				{/* Auth Routes */}
+				<Route path="/signup" element={<SignupPage />} />
+
 				<Route element={<ProtectedRoutes />}>
 					<Route path="/forgot-Password" element={<ForgotPassword />} />
-					<Route path="/signup" element={<SignupPage />} />
 					<Route path="/Profile" element={<UppdateProfile />} />
+					<Route path="/Admins" element={<ListOfProfilePage />} />
 				</Route>
-
 				<Route path="/" element={<HomePage />} />
 				<Route path="/places" element={<PlacesPage />} />
 				<Route path="/places/:id" element={<PlacePage />} />
 			</Routes>
 
+
+
+
+
+
+
+
+
 			<ToastContainer closeOnClick theme="colored" limit={5} stacked position="bottom-right" />
 		</div>
-
 	)
 }
 
