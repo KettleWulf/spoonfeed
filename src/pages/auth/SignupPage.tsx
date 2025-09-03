@@ -49,28 +49,28 @@ const SignupPage = () => {
 			}
 		}
 
-
-		return (
-
-			<Container className="py-3 center-y">
-				<Row>
-					<Col md={{ span: 6, offset: 3 }}>
-						<Card className="mb-3">
-							<Card.Body>
-								{passwordCheck
-									? <SignUpForm onSubmit={onSubmit} />
-									: <PasswordGuard
-										password={password}
-										correctPassword={() => setPasswordCheck(true)}
-									/>
-								}
-							</Card.Body>
-						</Card>
-					</Col>
-				</Row >
-			</Container >
-		);
 	}
+
+	return (
+
+		<Container className="py-3 center-y">
+			<Row>
+				<Col md={{ span: 6, offset: 3 }}>
+					<Card className="mb-3">
+						<Card.Body>
+							{passwordCheck
+								? <SignUpForm onSubmit={onSubmit} />
+								: <PasswordGuard
+									password={password}
+									correctPassword={() => setPasswordCheck(true)}
+								/>
+							}
+						</Card.Body>
+					</Card>
+				</Col>
+			</Row >
+		</Container >
+	);
 }
 
 
