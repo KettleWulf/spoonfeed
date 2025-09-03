@@ -10,6 +10,7 @@ import UppdateProfile from "./pages/auth/UppdateProfile";
 import ProtectedRoutes from "./components/auth/ProtectedRoutes";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import PasswordCheck from "./components/auth/PasswordCheck";
+import PlacePage from "./pages/PlacePage";
 
 function App() {
 
@@ -32,6 +33,7 @@ function App() {
 
 				<Route path="/" element={<HomePage />} />
 				<Route path="/places" element={<PlacesPage />} />
+				<Route path="/places/:id" element={<PlacePage />} />
 			</Routes>
 
 			<ToastContainer closeOnClick theme="colored" limit={5} stacked position="bottom-right" />
