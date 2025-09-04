@@ -36,7 +36,7 @@ const PlacesPage = () => {
 	return (
 		<>
 
-			<Container className="py-5 center-y">
+			<Container className="py-2 center-y">
 				<Row>
 					<Col>
 						<Card className="mb-3 shadow-lg rounded-3 border-0">
@@ -45,9 +45,9 @@ const PlacesPage = () => {
 								<h2>Suggestions</h2>
 								{suggestions && <SortableTable columns={columnDefs} data={suggestions} getRowLink={(row) => `/places/${row._id}`} />}
 
-								<hr />
+								<hr className="my-5" />
 
-								<h2 className="mt-5">Confirmed Locations</h2>
+								<h2>Confirmed Locations</h2>
 								{places && <SortableTable columns={columnDefs} data={places} getRowLink={(row) => `/places/${row._id}`} />}
 
 							</Card.Body>
