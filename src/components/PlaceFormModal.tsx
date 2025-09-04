@@ -31,6 +31,7 @@ interface PlaceFormModalProps {
 	onHide: () => void;
 	initValues?: PlaceFormData;
 	address?: string;
+	city?: string;
 	coords?: Location;
 	onSave: (establishment: PlaceFormData) => void;
 }
@@ -40,6 +41,7 @@ const PlaceFormModal: React.FC<PlaceFormModalProps> = ({
 	initValues,
 	show,
 	address,
+	city,
 	coords,
 	onHide,
 
@@ -63,15 +65,16 @@ const PlaceFormModal: React.FC<PlaceFormModalProps> = ({
 
 			if(addressParts.length > 2) {
 				const street = addressParts[0].trim();
-				const city = addressParts[1].trim();
-
 				setValue("address", street);
-				setValue("city", city);
 			} else {
 				setValue("address", address);
 			}
+
+			if(city) {
+				setValue("city", city);
+			}
 		}
-	}, [show, address, setValue]);
+	}, [show, address, city, setValue]);
 
 	const onFormSubmit: SubmitHandler<PlaceFormData> = (data) => {
 		const placeData = {
