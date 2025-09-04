@@ -1,146 +1,283 @@
-import { GoogleMap, InfoWindow, Marker } from "@react-google-maps/api";
+import { GoogleMap, InfoWindow, Marker, useJsApiLoader } from "@react-google-maps/api";
+import { Alert, Container, Spinner, Button } from "react-bootstrap";
+import { useEffect, useRef, useState } from "react";
+
 import useUserLocation from "../hooks/useUserLocation";
 import useGeocoding from "../hooks/useGeocoding";
-import { useState } from "react";
-import { Button, Container } from "react-bootstrap";
-import type { PlaceFormData } from "../types/Place.types";
-import { toast } from "react-toastify";
+import { useGetPlacesByCity } from "../hooks/useGetPlacesByCity";
+
 import PlaceFormModal from "./PlaceFormModal";
+import AddressSearch from "./AddressSearch";
+import type { PlaceFormData, Location, Place } from "../types/Place.types";
+import { toast } from "react-toastify";
+import getMarkerIcon from "../helpers/getMarkerIcon";
 
+// Definerar biblioteket som Google Maps-apiet ska använda när kartan laddas
+const libraries: ("places" | "geocoding")[] = ["places", "geocoding"];
 
+// Fallback till sthlm om användaren inte get platsdata.
+const FALLBACK_CENTER = {
+    lat: 59.334591,
+    lng: 18.063240,
+}
+
+const FALLBACK_CITY = "Stockholm";
 
 interface ClickedLocation {
     coords: google.maps.LatLngLiteral;
-    address: string
+    address: string;
+    city?: string;
 }
 
 interface MapProps {
-    onSavePlace: (place: PlaceFormData) => Promise<string | void >}
-
-const Map: React.FC<MapProps> = ({ onSavePlace }) => {
-
-    const FALLBACK_CENTER = {
-        // Coordinates to STOCKHOLM as fallback 
-        lat: 59.334591,
-        lng: 18.063240,
-    }
-
-    const [selectedLocation, setSelectedLocation] = useState<ClickedLocation | null>(null);
-    const [showModal, setShowModal] = useState(false);
-    const [isLoadingAddress, setIsLoadingAddress] = useState(false);
+    onSavePlace: (place: PlaceFormData) => Promise<string | void>
+    setCityString: (city: string) => void;
+}
 
 
-    const {
-        userLocation,
-        isLoading: locationLoading,
-        error: locationError
-    } = useUserLocation();
+const Map: React.FC<MapProps> = ({ onSavePlace, setCityString }) => {
 
-    const { getAdress,
-        address,
-        // lägg till error handling senare : error: geocodingError, isLoading: geocoingIsLoading
-    } = useGeocoding();
+    // States
+    const [currentCity, setCurrentCity] = useState("");
+    const [selectedLocation, setSelectedLocation] = useState<ClickedLocation | null>(null)
+    const [showModal, setShowModal] = useState(false)
 
-    const containerStyle = {
-        width: "400px",
-        height: "400px",
-    }
+    // Hooks
+    const { data: places = [], isLoading: placesLoading } = useGetPlacesByCity(currentCity);
+    const { userLocation, userCity, isLoading: locationLoading, error: locationError } = useUserLocation();
+    const { getAddress } = useGeocoding();
+    const { isLoaded, loadError } = useJsApiLoader({
+        googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+        id: "googe-map-script",
+        libraries: libraries,
+        language: "sv",
+        region: "SE",
+    });
 
-    const mapCenter = userLocation || FALLBACK_CENTER;
+    // Med mapRef kan vi kontrollera kartan, skapar en referens till kartan från google maps
+    const mapRef = useRef<google.maps.Map | null>(null);
 
-    {/*funktion för när man trycker på kartan */ }
-    const onHandleMapClick = async (e: google.maps.MapMouseEvent) => {
+    // useEffect som sätter currentCity till userCity, när denna är tillgänglig, userCity hämtas från useUserLocation
 
-        if (!e.latLng) {
-            return;
+    useEffect(() => {
+        if (userCity && userCity !== currentCity) {
+            console.log("Setting currentCity to user location:", userCity);
+            setCurrentCity(userCity);
+        }
+    }, [userCity, currentCity]);
+
+    useEffect(() => {
+        if (userLocation && mapRef.current) {
+            mapRef.current.panTo(userLocation);
+            mapRef.current.setZoom(14);
+        }
+    }, [userLocation]);
+
+    // Handler för när någon söker efter en stad, panorerar till och zoom in på vår sökning samt sätter currentCity till det som står i sökfältet
+    const handleSearchLocation = (coords: Location, city?: string) => {
+        if (mapRef.current) {
+            mapRef.current.panTo(coords);
+            mapRef.current.setZoom(13);
         }
 
+        if (city && city !== currentCity) {
+            setCurrentCity(city);
+        }
+
+        
+        if(city){
+            setCityString(city);
+        }
+        
+        setSelectedLocation(null)
+    };
+
+
+    // Handler för kartan när den laddas in
+    const handleMapLoad = (map: google.maps.Map) => {
+        mapRef.current = map;
+
+        // styling så points of interests som google har satt ut inte syns
+        map.setOptions({
+            styles: [
+                { featureType: "poi", stylers: [{ visibility: "off" }] },
+                { featureType: "poi.business", stylers: [{ visibility: "off" }] }
+            ]
+        });
+
+        // centrerar kartan på på användaren om denna är tillgänglig
+        if (userLocation) {
+            map.panTo(userLocation);
+            map.setZoom(14);
+        }
+
+        if(userCity){
+            setCityString(userCity);
+        }
+    };
+
+    // handler för när man trycker på kartan
+    const handleMapClick = (e: google.maps.MapMouseEvent) => {
+        if (!e.latLng) return;
+
+        // Koordinaters om har hämtats från knapptryckning på kartan
         const clickedCoords = {
             lat: e.latLng.lat(),
             lng: e.latLng.lng(),
         }
 
+        // visar loading state
         setSelectedLocation({
             coords: clickedCoords,
-            address: "Hämtar adress..."
+            address: "Getting address...",
+            city: undefined,
         });
-        setIsLoadingAddress(true);
 
-        getAdress(
-            clickedCoords,
-            (foundAddress) => {
-                setSelectedLocation({
-                    coords: clickedCoords,
-                    address: foundAddress,
-                });
-                setIsLoadingAddress(false)
-                console.log("Found address", foundAddress);
-                console.log("For coordinates", clickedCoords);
-            },
+        // hämtar adress, getAddress kommer från useGeocoding och tar lat och lng och omvandlar till en adress
+        getAddress(clickedCoords, (foundAddress, city) => {
+            console.log("Extracted city:", city);
+
+            setSelectedLocation({
+                coords: clickedCoords,
+                address: foundAddress,
+                city,
+            });
+            // Om där finns en stad uppdateras staden (om det inte är samma som currentCity)
+            if (city && city !== currentCity) {
+                setCurrentCity(city);
+            }
+        },
             (error) => {
                 setSelectedLocation({
                     coords: clickedCoords,
-                    address: "Kunde inte hämta adress"
+                    address: "Could not get address",
                 });
-                setIsLoadingAddress(false);
-                console.error("Geocoding fel: ", error);
-            }
-        );
+                console.error("Geocoding error:", error);
+            });
+    };
 
-        console.log("Last clicked address: ", address);
-    }
-
-    const handleOpenModal = () => {
-        if (selectedLocation && selectedLocation.address !== "Hämtar adress..." && selectedLocation.address !== "Kunde inte hämta adress") {
-            setShowModal(true);
-        }
-    }
-
+    // Sparar platsen man klickade på till databasen
     const handleSavePlace = async (place: PlaceFormData) => {
         try {
             await onSavePlace(place);
-
             setShowModal(false);
             setSelectedLocation(null);
         } catch (error) {
-            if (error instanceof Error){
-                console.error("Fel vid sparning ", error.message)
-                toast.error("Något gick fel vid sparningen ");
+            if (error instanceof Error) {
+                console.error("Error when trying to save", error.message);
+                toast.error("Something went wrong when trying to add a place to eat");
             }
-            
         }
+    };
+
+    const handlePlaceClick = (place: Place) => {
+        const { lat, lng } = place.location;
+        const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+        window.open(url, "_blank");
+    };
+
+    if (!isLoaded || locationLoading || !currentCity) {
+        return (
+            <Container>
+                <div className="text-center">
+                    <Spinner animation="border" role="status" className="mb-2" />
+                    <p>Loading map and detecting location...</p>
+                </div>
+            </Container>
+        );
     }
 
-    {/*Loading states*/ }
+    const handleOpenModal = () => {
+        if (selectedLocation &&
+            selectedLocation.address !== "Could not get address" &&
+            selectedLocation.address !== "Getting address...") {
+            setShowModal(true);
+        }
+    };
 
-    if (locationLoading) {
-        return <p>Hämtar din position... </p>
+    if (loadError) {
+        return (
+            <Alert variant="danger">
+                <p>Error when loading Google Maps</p>
+                <p>Check API-key and necessary API-settings</p>
+                <p>{loadError.message}</p>
+            </Alert>
+        );
+    }
+
+    if (!isLoaded || locationLoading) {
+        return (
+            <Container>
+                <div className="text-center">
+                    <Spinner animation="border" role="status" className="mb-2" />
+                    <p>Laddar karta</p>
+                </div>
+            </Container>
+        )
     }
 
     if (locationError && !userLocation) {
-        return <p>Kunde inte hämta din position. Visar Stockholm istället.</p>
+        toast.warn("Could not get your position, showing " + FALLBACK_CITY);
+    }
+
+    if (locationError && !userLocation) {
+        return <p>Couldn't get your position showing Stockholm instead.</p>
     }
 
     return (
 
         <>
+            <div className="mb-3">
 
+                <AddressSearch onLocationFound={handleSearchLocation} />
+                {placesLoading && (
+                    <div className="text-center mt-2">
+                        <Spinner animation="border" size="sm" className="me-2" />
+                        <p>Loading places to eat in {currentCity} </p>
+                    </div>
+                )}
+                {places && places.length === 0 && !placesLoading && (
+                    <div className="alert alert-info mt-2">
+                        <small>No places to eat in {currentCity}, please add some!</small>
+                    </div>
+                )}
+            </div>
+            
             <GoogleMap
-                mapContainerStyle={containerStyle}
-                center={mapCenter}
-                zoom={12}
-                onClick={onHandleMapClick}
-
+                id="google-map"
+                onClick={handleMapClick}
+                center={userLocation || FALLBACK_CENTER}
+                zoom={userLocation ? 14 : 10}
+                onLoad={handleMapLoad}
+                options={{
+                    fullscreenControl: true,
+                    zoomControl: true,
+                }}
             >
 
                 {userLocation && (
                     <Marker
                         position={userLocation}
-                        title="Din position"
+                        title="Your position"
                         icon={{
                             url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
                         }}
+                        animation={google.maps.Animation.DROP}
                     />
+                )}
+
+                {places?.map((place) => (
+                    <>
+                        <Marker
+                            key={place._id}
+                            position={place.location}
+                            title={`${place.name} - ${place.category}`}
+                            icon={getMarkerIcon(place.category)}
+                            onClick={() => handlePlaceClick(place)}
+                            animation={google.maps.Animation.DROP}
+                        />
+                    </>
+                )
                 )}
 
                 {selectedLocation && (
@@ -155,17 +292,17 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
                             onCloseClick={() => setSelectedLocation(null)}
                         >
                             <Container>
-                                <p>Vald plats:</p>
+                                <p>Address:</p>
                                 <p>{selectedLocation.address}</p>
-                                {!isLoadingAddress && selectedLocation.address !== "Kunde inte hämta adess" && (
+                                {selectedLocation.address !== "Could not get address" && (
                                     <Button
                                         onClick={handleOpenModal}
-                                        className="btn btn-sm btn-primary"
                                         style={{ width: "100%" }}
                                     >
-                                        Lägg till ett matställe här
+                                        Add a places to eat
                                     </Button>
                                 )}
+
                             </Container>
                         </InfoWindow>
                     </>
@@ -174,12 +311,12 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
 
             <PlaceFormModal
                 show={showModal}
-                onHide={()=>setShowModal(false)}
+                onHide={() => setShowModal(false)}
                 address={selectedLocation?.address}
+                city={selectedLocation?.city}
                 coords={selectedLocation?.coords}
                 onSave={handleSavePlace}
-                />
-
+            />
         </>
 
     )

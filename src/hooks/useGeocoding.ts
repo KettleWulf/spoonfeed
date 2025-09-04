@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react"
-import type { Location } from "../types/Establishment.types";
+import type { Location } from "../types/Place.types";
+import extractCityFromResults from "../helpers/extractCityFromResults";
 
 
 
@@ -8,9 +9,9 @@ export const useGeocoding = () => {
     const [error, setError] = useState<string | null>(null);
     const [address, setAddress] = useState<string | null>(null);
 
-    const getAdress = useCallback((
+    const getAddress = useCallback((
         coords: Location,
-        onSuccess?: (address: string) => void, 
+        onSuccess?: (address: string, city?: string) => void, 
         onError?: (error: string) => void
     ) => {
 
@@ -32,10 +33,17 @@ export const useGeocoding = () => {
 
             if (status === google.maps.GeocoderStatus.OK && results && results[0]) {
                 const foundAddress = results[0].formatted_address;
+                const city = extractCityFromResults(results[0]);
+
+                console.log("🗺️ Geocoding result:");
+                console.log("🗺️   - Full address:", foundAddress);
+                console.log("🗺️   - Extracted city:", city);
+                console.log("🗺️   - Address components:", results[0].address_components);
+
                 setAddress(foundAddress);
                 setIsLoading(false);
 
-                onSuccess?.(foundAddress);
+                onSuccess?.(foundAddress, city || undefined);
             } else {
                 if (status === google.maps.GeocoderStatus.INVALID_REQUEST) {
                     setError("Invalid Request");
@@ -61,7 +69,7 @@ export const useGeocoding = () => {
         isLoading,
         error,
         address,
-        getAdress,
+        getAddress,
     }
 
 }

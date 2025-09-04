@@ -18,7 +18,9 @@ function App() {
 
 		<div id="App">
 
+
 			<Navigation />
+
 
 			<Routes>
 				<Route path="/login" element={<LoginPage />} />
@@ -46,6 +48,7 @@ function App() {
 
 			<ToastContainer closeOnClick theme="colored" limit={5} stacked position="bottom-right" />
 		</div>
+
 	)
 }
 

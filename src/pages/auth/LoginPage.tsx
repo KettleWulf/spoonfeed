@@ -5,14 +5,10 @@ import { toast } from "react-toastify";
 import { FirebaseError } from "firebase/app";
 import { Card, Col, Container, Row } from "react-bootstrap";
 import useAuth from "../../hooks/useAuth";
-import PasswordGuard from "../../components/auth/PasswordGuard";
 import LogInForm from "../../components/auth/LogInForm";
-import { useState } from "react";
 
-const password = import.meta.env.VITE_SECRET_PASSWORD_TO_LOGIN
 
 const LoginPage = () => {
-    const [passwordCheck, setPasswordCheck] = useState(false)
 
     const navigate = useNavigate()
 
@@ -46,12 +42,8 @@ const LoginPage = () => {
                 <Col md={{ span: 6, offset: 3 }}>
                     <Card className="mb-3">
                         <Card.Body>
-                            {passwordCheck
-                                ? <LogInForm onSubmit={onSubmit} />
-                                : <PasswordGuard
-                                    password={password}
-                                    correctPassword={() => setPasswordCheck(true)}
-                                />
+                            {
+                              <LogInForm onSubmit={onSubmit} />
                             }
                         </Card.Body>
                     </Card>
