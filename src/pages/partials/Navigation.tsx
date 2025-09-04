@@ -31,7 +31,7 @@ const Navigation = () => {
     return (
         <>
             <Navbar className="navbar">
-                <Container className={currentUser ?"" : "d-flex justify-content-center"} >
+                <Container className={currentUser ?"m-0" : "d-flex justify-content-center"} >
                     
                            <Navbar.Brand as={Link} to="/"><Image className="loga" src={loga}></Image></Navbar.Brand>
                     <Nav>
