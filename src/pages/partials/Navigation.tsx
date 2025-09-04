@@ -4,18 +4,20 @@ import { Navbar } from "react-bootstrap";
 import useAuth from "../../hooks/useAuth";
 import { FirebaseError } from "firebase/app";
 import { toast } from "react-toastify";
-import { Link, NavLink } from "react-router";
+import { Link, NavLink, useNavigate } from "react-router";
 import loga from "../../assets/images/Loga.png"
 
 const Navigation = () => {
 
+	const navigate = useNavigate();
     const { currentUser, logOut, userUrl, userEmail, userName } = useAuth()
 
     const handleLogOut = async () => {
 
         try {
 
-            const logout = await logOut()
+            const logout = await logOut();
+			navigate("/");
 
             return logout
 

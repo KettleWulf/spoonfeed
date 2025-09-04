@@ -26,7 +26,7 @@ export interface Place {
 	city: string;
 	description?: string;
 	category: Category;
-	offers: Offer[];
+	offers: Offer;
 
 	email?: string;
 	phone?: string;

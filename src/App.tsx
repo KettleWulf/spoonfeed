@@ -11,6 +11,7 @@ import ProtectedRoutes from "./components/auth/ProtectedRoutes";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import ListOfProfilePage from "./pages/auth/ListOfProfilePage";
 import PlacePage from "./pages/PlacePage";
+import { Container } from "react-bootstrap";
 
 function App() {
 
@@ -21,30 +22,24 @@ function App() {
 
 			<Navigation />
 
+			<Container className="py-2">
+				<Routes>
+					<Route path="/login" element={<LoginPage />} />
 
-			<Routes>
-				<Route path="/login" element={<LoginPage />} />
+					{/* Auth Routes */}
+					<Route path="/signup" element={<SignupPage />} />
+					<Route path="/forgot-Password" element={<ForgotPassword />} />
 
-				{/* Auth Routes */}
-				<Route path="/signup" element={<SignupPage />} />
-				<Route path="/forgot-Password" element={<ForgotPassword />} />
+					<Route element={<ProtectedRoutes />}>
+						<Route path="/Profile" element={<UppdateProfile />} />
+						<Route path="/Admins" element={<ListOfProfilePage />} />
+						<Route path="/places" element={<PlacesPage />} />
+					</Route>
+					<Route path="/" element={<HomePage />} />
+					<Route path="/places/:id" element={<PlacePage />} />
+				</Routes>
 
-				<Route element={<ProtectedRoutes />}>
-					<Route path="/Profile" element={<UppdateProfile />} />
-					<Route path="/Admins" element={<ListOfProfilePage />} />
-				</Route>
-				<Route path="/" element={<HomePage />} />
-				<Route path="/places" element={<PlacesPage />} />
-				<Route path="/places/:id" element={<PlacePage />} />
-			</Routes>
-
-
-
-
-
-
-
-
+			</Container>
 
 			<ToastContainer closeOnClick theme="colored" limit={5} stacked position="bottom-right" />
 		</div>
