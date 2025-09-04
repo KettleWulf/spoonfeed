@@ -125,7 +125,7 @@ const UpdateProfileFrom: React.FC<UpdateProfileFromProps> = ({ currentUser, user
                 </Form.Group>
 
 
-                <Button variant="primary" type="submit" disabled={isSubmitting}>
+                <Button className='btn' type="submit" disabled={isSubmitting}>
                     Save
                 </Button>
 
