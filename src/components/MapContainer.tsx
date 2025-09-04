@@ -31,14 +31,16 @@ interface ClickedLocation {
 
 interface MapProps {
     onSavePlace: (place: PlaceFormData) => Promise<string | void>
-    setCityString: (city: string) => void;
 }
 
 
-const Map: React.FC<MapProps> = ({ onSavePlace, setCityString }) => {
-    const [ searchParams ] = useSearchParams();
+const Map: React.FC<MapProps> = ({ onSavePlace }) => {
+    const [searchParams, setSearchParams] = useSearchParams();
+    
     const queryCity = searchParams.get("query") || "";
+
     const [currentCity, setCurrentCity] = useState(queryCity || "");
+    const [queryCityCoords, setQueryCityCoords] = useState<Location | null>(null);
     const [selectedLocation, setSelectedLocation] = useState<ClickedLocation | null>(null)
     const [showModal, setShowModal] = useState(false);
     const { data: places = [], isLoading: placesLoading } = useGetPlacesByCity(currentCity);
@@ -63,31 +65,36 @@ const Map: React.FC<MapProps> = ({ onSavePlace, setCityString }) => {
     useEffect(() => {
         if (userLocation && mapRef.current && userCity) {
             setCurrentCity(userCity);
+
+            setSearchParams({ query: userCity });
+        
             mapRef.current.panTo(userLocation);
             mapRef.current.setZoom(14);
         }
     }, [userLocation, userCity]);
 
     useEffect(() => {
-    if (!isLoaded || !mapRef.current || !queryCity) return;
+        if (!isLoaded || !mapRef.current || !queryCity) return;
 
-    const geocoder = new google.maps.Geocoder();
-    geocoder.geocode(
-        { address: queryCity, region: "SE" },
-        (results, status) => {
-            if (status === "OK" && results && results[0]) {
-                const location = results[0].geometry.location;
-                const coords = {
-                    lat: location.lat(),
-                    lng: location.lng()
-                };
+        const geocoder = new google.maps.Geocoder();
+        geocoder.geocode(
+            { address: queryCity, region: "SE" },
+            (results, status) => {
+                if (status === "OK" && results && results[0]) {
+                    const location = results[0].geometry.location;
+                    const coords = {
+                        lat: location.lat(),
+                        lng: location.lng()
+                    };
 
-                mapRef.current?.panTo(coords);
-                mapRef.current?.setZoom(13);
+                    setQueryCityCoords(coords);
+
+                    mapRef.current?.panTo(coords);
+                    mapRef.current?.setZoom(13);
+                }
             }
-        }
-    );
-}, [queryCity, isLoaded]);
+        );
+    }, [queryCity, isLoaded]);
 
     const handleSearchLocation = (coords: Location, city?: string) => {
         if (mapRef.current) {
@@ -97,11 +104,6 @@ const Map: React.FC<MapProps> = ({ onSavePlace, setCityString }) => {
 
         if (city && city !== currentCity) {
             setCurrentCity(city);
-        }
-
-
-        if (city) {
-            setCityString(city);
         }
 
         setSelectedLocation(null)
@@ -120,10 +122,6 @@ const Map: React.FC<MapProps> = ({ onSavePlace, setCityString }) => {
         if (userLocation) {
             map.panTo(userLocation);
             map.setZoom(14);
-        }
-
-        if (userCity) {
-            setCityString(userCity);
         }
     };
 
@@ -182,25 +180,25 @@ const Map: React.FC<MapProps> = ({ onSavePlace, setCityString }) => {
         window.open(url, "_blank");
     };
 
-    
+
     const handleOpenModal = () => {
         if (selectedLocation &&
             selectedLocation.address !== "Could not get address" &&
             selectedLocation.address !== "Getting address...") {
-                setShowModal(true);
-            }
-        };
-        
-        if (loadError) {
-            return (
-                <Alert variant="danger">
+            setShowModal(true);
+        }
+    };
+
+    if (loadError) {
+        return (
+            <Alert variant="danger">
                 <p>Error when loading Google Maps</p>
                 <p>Check API-key and necessary API-settings</p>
                 <p>{loadError.message}</p>
             </Alert>
         );
     }
-    
+
     if (!isLoaded || locationLoading) {
         return (
             <Container>
@@ -242,8 +240,8 @@ const Map: React.FC<MapProps> = ({ onSavePlace, setCityString }) => {
             <GoogleMap
                 id="google-map"
                 onClick={handleMapClick}
-                center={userLocation || FALLBACK_CENTER}
-                zoom={userLocation ? 14 : 10}
+                center={queryCityCoords || FALLBACK_CENTER}
+                zoom={queryCityCoords ? 14 : 10}
                 onLoad={handleMapLoad}
                 options={{
                     fullscreenControl: true,

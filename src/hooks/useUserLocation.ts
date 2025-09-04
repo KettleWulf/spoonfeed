@@ -17,7 +17,7 @@ const useUserLocation = () => {
         }
 
 
-        const getUserLocationWithCity = async () => {
+        const getUserLocationWithCity = () => {
             if (!navigator.geolocation) {
                 setError("Geolocation is not supported by this browser");
                 setIsLoading(false);
