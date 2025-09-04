@@ -35,7 +35,7 @@ interface MapProps {
 
 
 const Map: React.FC<MapProps> = ({ onSavePlace }) => {
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams ] = useSearchParams();
     
     const queryCity = searchParams.get("query") || "";
 
@@ -61,11 +61,10 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
         }
     }, [queryCity, currentCity]);
 
+
     useEffect(() => {
         if (userLocation && mapRef.current && userCity) {
             setCurrentCity(userCity);
-
-            setSearchParams({ query: userCity });
         
             mapRef.current.panTo(userLocation);
             mapRef.current.setZoom(14);
@@ -211,9 +210,6 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
         toast.warn("Could not get your position, showing " + FALLBACK_CITY);
     }
 
-    if (locationError && !userLocation) {
-        return <p>Couldn't get your position showing Stockholm instead.</p>
-    }
 
     return (
 
