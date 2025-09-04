@@ -34,7 +34,7 @@ const UpdateProfileFrom: React.FC<UpdateProfileFromProps> = ({ currentUser, user
         <>
 
             <div className='d-flex justify-content-center'>
-                <Image alt={currentUser?.photoURL ?? blankProfile} src={userUrl || urlUpload || undefined} roundedCircle className="img-cover w-75 UppdateProfileImg" />
+                <Image alt={currentUser?.photoURL ?? ""} src={userUrl || urlUpload || blankProfile || undefined} roundedCircle className="img-cover w-75 UppdateProfileImg" />
             </div>
 
 

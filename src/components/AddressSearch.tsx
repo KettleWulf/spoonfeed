@@ -79,6 +79,7 @@ const AddressSearch: React.FC<AddressSearchProps> = ({
                         </Button>
                     )}
                     <Button
+                    className="btn"
                         type="submit"
                         disabled={isLoading || !searchInput.trim()}
                     >

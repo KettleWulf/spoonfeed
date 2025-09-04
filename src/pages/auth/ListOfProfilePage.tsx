@@ -52,7 +52,7 @@ const ListOfProfilePage = () => {
     <Container className="py-5 center-y">
       <Row>
         <Col>
-          <Card className="mb-3  shadow-lg rounded-3 border-0">
+          <Card className="mb-3  shadow-lg rounded-3 border-0 map">
             <Card.Body>
               <h2>Admins</h2>
               <hr />

@@ -109,7 +109,7 @@ const PlaceFormModal: React.FC<PlaceFormModalProps> = ({
 				centered
 			>
 
-				<Form onSubmit={handleSubmit(onFormSubmit)} className="m-3">
+				<Form onSubmit={handleSubmit(onFormSubmit)} className="m-3 map">
 
 					<Modal.Header closeButton>
 						<Modal.Title>Add Establishment</Modal.Title>

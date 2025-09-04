@@ -57,14 +57,14 @@ const Navigation = () => {
                                             width={30}
                                             roundedCircle
                                         />
-                                        : userName || userEmail
+                                        : userName || userEmail 
                                     }
-                                    menuVariant="dark"
+                                    menuVariant=""
                                 >
                                    
                                     <NavDropdown.Item
-                                        className="text-danger fw-bold"
-                                        onClick={handleLogOut} href="*"
+                                        className="btn"
+                                        onClick={handleLogOut} href="/"
                                     >
                                         Log Out
                                     </NavDropdown.Item>

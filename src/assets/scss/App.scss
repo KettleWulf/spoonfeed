@@ -30,8 +30,9 @@
 .carouselImg {
     object-fit: cover;
     border-radius: 15px;
-    
+
 }
+
 .placeTitle {
     font-size: 33px;
 }
@@ -48,6 +49,7 @@
     display: flex;
     justify-content: space-around;
 }
+
 .navbar a {
     color: #fff;
 }
@@ -55,19 +57,70 @@
 .navbar a:hover {
     color: #A5D6A7;
 }
-	
+
 
 .btn {
-    background-color: #5E936C;
+    background-color: #5E936C !important;
     border: 0;
 }
 
 .btn:hover {
-    background-color: #67C090;
+    background-color: #67C090 !important;
     color: black;
 }
 
 
+
+
 .loga {
-    width: 120px;
+    width: 120px;                                
+}
+
+.cardHome {
+    background-color: #E8F5E9 !important;
+}
+
+.map {
+    background-color: whitesmoke !important;
+}
+.modal-content {
+    background-color: whitesmoke !important;
+}
+
+.mytable {
+    border-collapse: separate !important;
+    border-spacing: 0;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.mytable {
+    thead {
+        th {
+            background-color: #2E7D32 !important;
+            color: #fff;
+
+        }
+    }
+}
+
+.mytable {
+    tbody {
+        tr {
+            &:nth-child(even) {
+                td {
+                    background-color: #A5D6A7 !important;
+                }
+            }
+        }
+
+    }
+}
+
+.mytable {
+
+    td,
+    th {
+        padding: 16px;
+    }
 }
