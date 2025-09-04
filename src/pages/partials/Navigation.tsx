@@ -47,7 +47,7 @@ const Navigation = () => {
 								</Nav.Link>
 
 								<Nav.Link as={NavLink} to="/places">
-									Resturants
+									Restaurants
 								</Nav.Link>
 
 								<NavDropdown
