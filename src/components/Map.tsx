@@ -31,10 +31,11 @@ interface ClickedLocation {
 
 interface MapProps {
     onSavePlace: (place: PlaceFormData) => Promise<string | void>
+    setCityString: (city: string) => void;
 }
 
 
-const Map: React.FC<MapProps> = ({ onSavePlace }) => {
+const Map: React.FC<MapProps> = ({ onSavePlace, setCityString }) => {
 
     // States
     const [currentCity, setCurrentCity] = useState("");
@@ -83,6 +84,11 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
             setCurrentCity(city);
         }
 
+        
+        if(city){
+            setCityString(city);
+        }
+        
         setSelectedLocation(null)
     };
 
@@ -103,6 +109,10 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
         if (userLocation) {
             map.panTo(userLocation);
             map.setZoom(14);
+        }
+
+        if(userCity){
+            setCityString(userCity);
         }
     };
 
@@ -232,9 +242,9 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
                     </div>
                 )}
             </div>
-
+            
             <GoogleMap
-                mapContainerStyle={{ width: "750px", height: "750px" }}
+                id="google-map"
                 onClick={handleMapClick}
                 center={userLocation || FALLBACK_CENTER}
                 zoom={userLocation ? 14 : 10}

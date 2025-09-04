@@ -8,15 +8,24 @@ import type { Place, PlaceFormData } from "../types/Place.types";
 import { useGetPlacesByCity } from "../hooks/useGetPlacesByCity";
 import SortableTable from "../components/SortableTable";
 import type { ColumnDef } from "@tanstack/react-table";
+import { useState } from "react";
 
 const HomePage = () => {
+	const [ city, setCity ] = useState("");
 	const { currentUser } = useAuth();
-	const { data: places } = useGetPlacesByCity("");
+	const { data: places } = useGetPlacesByCity(city);
+
+	console.log("PLACES", places);
 
 	const columnDefs: ColumnDef<Place>[] = [
 		{ accessorKey: "name", header: "Name" },
 		{ accessorKey: "category", header: "Category" },
 	];
+
+	const setCityState = (city: string) => {
+		setCity(city.split(",")[0]);
+		console.log("CITY STATE HP", city.split(",")[0]);
+	}
 
 	const addPlace = async (place: PlaceFormData) => {
 		await addDoc(newPlacesCol, {
@@ -38,7 +47,7 @@ const HomePage = () => {
 							Nearby map
 						</Card.Header>
 						<Card.Body className="pt-0">
-							<Map onSavePlace={addPlace} />
+							<Map onSavePlace={addPlace} setCityString={setCityState}/>
 						</Card.Body>
 					</Card>
 				</Col>
