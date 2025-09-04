@@ -9,6 +9,23 @@ interface AuthContextType {
     logIn: (email: string, password: string) => Promise<UserCredential>,
     logOut: () => void,
 
+    changeEmail: (email: string) => Promise<void>,
+    changeUserName: (name: string) => Promise<void>,
+    changePhotoUrl: (url: string) => Promise<void>,
+    changePassword: (password: string) => Promise<void>
+
+    userName: string | null
+    userEmail: string | null
+    userUrl: string | null
+
+    reloadForm: () => void
+
+    forgotPassword: (email: string) => Promise<void>
+
+    updateUserDataName: (id: string, name: string) => Promise<void>
+    updateUserDataPhoto: (id: string, url: string) => Promise<void>
+
+
 
 }
 

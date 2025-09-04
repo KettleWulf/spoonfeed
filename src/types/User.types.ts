@@ -12,3 +12,26 @@ export type SignUpCredentials = {
 	confirmPassword: string
 }
 
+export type UppdateUserCredentials = {
+	email: string,
+	password: string,
+	confirmPassword: string,
+	photoUrl: FileList,
+	username: string ,
+}
+
+export type ForgotPasswordCredentials ={
+	email: string
+}
+
+export type PasswordcheckCredentials = {
+	password: string
+}
+
+export type UserList = {
+	_id?: string;
+	name?: string;
+	email: string;
+
+	photoFiles?: string;
+}
