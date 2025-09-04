@@ -178,7 +178,7 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
                 address={selectedLocation?.address}
                 coords={selectedLocation?.coords}
                 onSave={handleSavePlace}
-                />
+            />
 
         </>
 

@@ -19,6 +19,8 @@ import useStreamPlaceImages from "../hooks/useStreamPlaceImages";
 
 const PlacePage = () => {
 	const { currentUser } = useAuth();
+	
+
 	const { id } = useParams<{ id: string }>();
 	const { data: place, isLoading, error } = useGetPlace(id);
 	const { data: images, isLoading: isLoadingIMGs } = useStreamPlaceImages(id);
