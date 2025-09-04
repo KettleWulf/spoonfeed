@@ -54,7 +54,7 @@ const HomePage = () => {
 									Nearby map
 								</Card.Header>
 								<Card.Body className="py-0">
-									<Map onSavePlace={addPlace} setCityString={setCityState} />
+									<Map onSavePlace={addPlace}  />
 								</Card.Body>
 							</Card>
 						</Col>
