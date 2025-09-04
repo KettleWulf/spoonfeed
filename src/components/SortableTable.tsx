@@ -40,7 +40,7 @@ const SortableTable = <TData, TValue>({
 	});
 
 	return (
-		<BSTable hover responsive striped size="sm" className="">
+		<BSTable hover responsive striped size="sm" className="mytable">
 			<thead>
 				{table.getHeaderGroups().map((headerGroup) => (
 					<tr key={headerGroup.id}>
