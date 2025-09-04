@@ -40,10 +40,10 @@ const ForgotPassword = () => {
 
     
     return (
-        <Container className="py-3 center-y">
+        <Container className="py-5 center-y">
             <Row>
                 <Col md={{ span: 6, offset: 3 }}>
-                    <Card className="mb-3">
+                    <Card className="mb-3 shadow-lg rounded-3 border-0">
                         <Card.Body>
                             <ForgotPasswordForm onForgotPassword={onForgotPassword} />
                         </Card.Body>

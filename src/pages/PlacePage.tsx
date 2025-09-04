@@ -72,12 +72,12 @@ const PlacePage = () => {
 		<Container className="py-4">
 			<Row className="g-4 justify-content-center">
 				<Col>
-					<Card>
+					<Card className="shadow rounded-3 border-0">
 						<Card.Body className="px-3 py-2">
 							<Row>
 
 								<Col lg={6}>
-									<Card className="shadow-sm rounded-3 border-0">
+									<Card className="mt-3 shadow rounded-3 border-0">
 										<Card.Body>
 											{/* Header: name + category + suggestion status */}
 											<div className="d-flex justify-content-between align-items-start flex-wrap gap-2">
@@ -170,7 +170,7 @@ const PlacePage = () => {
 									<Card className="border-0">
 										<Card.Body>
 											<Card.Title className="text-center">
-												Piqtures
+												Pictures
 											</Card.Title>
 											<hr />
 											{images && images.length > 0 

@@ -29,7 +29,7 @@ const Navigation = () => {
 
     return (
         <>
-            <Navbar bg="success" variant="dark">
+            <Navbar className="navbar">
                 <Container>
                     <Navbar.Brand as={Link} to="/">Namn på sidan </Navbar.Brand>
                     <Nav>

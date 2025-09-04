@@ -4,6 +4,7 @@ import type { Place } from "../types/Place.types";
 import { useGetPlacesByCity } from "../hooks/useGetPlacesByCity";
 import { useGetPlaces } from "../hooks/useGetPlaces";
 import { useGetSuggestions } from "../hooks/useGetSuggestions";
+import { Card, Col, Container, Row } from "react-bootstrap";
 
 
 const columnDefs: ColumnDef<Place>[] = [
@@ -35,20 +36,32 @@ const PlacesPage = () => {
 
 	return (
 		<>
-			<h2>Places</h2>
-			{places && <SortableTable columns={columnDefs} data={places} getRowLink={(row) => `/places/${row._id}`} />}
 
-			<hr />
+			<Container className="py-5 center-y">
+				<Row>
+					<Col>
+						<Card className="mb-3 shadow-lg rounded-3 border-0">
+							<Card.Body>
+								<h2>Places</h2>
+								{places && <SortableTable columns={columnDefs} data={places} getRowLink={(row) => `/places/${row._id}`} />}
 
-			<h2>Places by city</h2>
-			{placesByCity && <SortableTable columns={columnDefs} data={placesByCity} getRowLink={(row) => `/places/${row._id}`} />}
+								<hr />
 
-			<hr />
+								<h2>Places by city</h2>
+								{placesByCity && <SortableTable columns={columnDefs} data={placesByCity} getRowLink={(row) => `/places/${row._id}`} />}
 
-			<h2>Suggestions</h2>
-			{suggestions && <SortableTable columns={columnDefs} data={suggestions} getRowLink={(row) => `/places/${row._id}`} />}
-				
-			<hr />
+								<hr />
+
+								<h2>Suggestions</h2>
+								{suggestions && <SortableTable columns={columnDefs} data={suggestions} getRowLink={(row) => `/places/${row._id}`} />}
+
+								<hr />
+
+							</Card.Body>
+						</Card>
+					</Col>
+				</Row >
+			</Container >
 		</>
 	)
 };

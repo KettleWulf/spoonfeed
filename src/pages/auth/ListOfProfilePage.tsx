@@ -10,7 +10,7 @@ const ListOfProfilePage = () => {
 
   const columns: ColumnDef<UserList>[] = [
     {
-      header: "Profile Piqture",
+      header: "Profile Picture",
       accessorKey: "photoFiles",
       cell: cell => {
         const url = cell.getValue() as string
@@ -19,7 +19,7 @@ const ListOfProfilePage = () => {
         return (
           <Image
             src={url ?? blankProfile }
-            alt="Profile Piqture"
+            alt="Profile Picture"
             width={50}
             height={50}
             roundedCircle
@@ -49,10 +49,10 @@ const ListOfProfilePage = () => {
 
   return (
 
-    <Container className="py-3 center-y">
+    <Container className="py-5 center-y">
       <Row>
         <Col>
-          <Card className="mb-3">
+          <Card className="mb-3  shadow-lg rounded-3 border-0">
             <Card.Body>
               <h2>Admins</h2>
               <hr />

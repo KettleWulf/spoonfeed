@@ -3,6 +3,13 @@
 @import "profileIMG";
 @import "dropzone";
 
+#App {
+    background-color: #E8F5E9;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
 #google-map {
     width: 400px;
     height: 400px;
@@ -30,5 +37,16 @@
     height: 200px;
     object-fit: cover;
     border-radius: 15px;
+}
+
+.navbar {
+    background-color: #2E7D32;
+}
+.navbar a {
+    color: #fff;
+}
+
+.navbar a:hover {
+    color: #A5D6A7;
 }
 	
