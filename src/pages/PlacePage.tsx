@@ -76,13 +76,15 @@ const PlacePage = () => {
 						<Card.Body className="px-3 py-2">
 							<Row>
 
-								<Col lg={6}>
-									<Card className="mt-3 shadow rounded-3 border-0">
+								<Col lg={6} className="py-3">
+									<Card.Title className="placeTitle text-center">{place.name}</Card.Title>
+									
+									<hr className="mt-4"/>
+									<Card className="mt-5 shadow rounded-3 border-0">
 										<Card.Body>
 											{/* Header: name + category + suggestion status */}
 											<div className="d-flex justify-content-between align-items-start flex-wrap gap-2">
 												<div>
-													<Card.Title className="mb-1">{place.name}</Card.Title>
 													<div className="text-muted">
 														{place.address}, {place.city}
 													</div>
@@ -167,27 +169,27 @@ const PlacePage = () => {
 
 
 								<Col lg={6}>
-									<Card className="border-0">
+									<Card className=" border-0">
 										<Card.Body>
-											<Card.Title className="text-center">
+											<Card.Title className="text-center mt-4">
 												Pictures
 											</Card.Title>
-											<hr />
-											{images && images.length > 0 
-											? <Carousel>
-												{images?.map((img) => (
-													<Carousel.Item key={img._id}>
-														<div className="carousel">
-															<img key={img._id} src={img.url} alt={`piqture on ${img.name}`} className="carouselImg" />
-														</div>
-													</Carousel.Item>
-												))}
-											</Carousel> 
-											: <div className="d-flex justify-content-center">
-												<Image alt="No Image Available" src={noImgPiqture} className="noImgAvailable"></Image>
-											</div> 
+											<hr  />
+											{images && images.length > 0
+												? <Carousel>
+													{images?.map((img) => (
+														<Carousel.Item key={img._id}>
+															<div className="carousel">
+																<img key={img._id} src={img.url} alt={`piqture on ${img.name}`} className="carouselImg" />
+															</div>
+														</Carousel.Item>
+													))}
+												</Carousel>
+												: <div className="d-flex justify-content-center">
+													<Image alt="No Image Available" src={noImgPiqture} className="noImgAvailable"></Image>
+												</div>
 											}
-											
+
 										</Card.Body>
 									</Card>
 								</Col>

@@ -23,7 +23,7 @@
 .carousel {
     display: flex;
     justify-content: center;
-    width: 550px;
+    width: 100%;
     height: 550px;
 }
 
@@ -31,6 +31,9 @@
     object-fit: cover;
     border-radius: 15px;
     
+}
+.placeTitle {
+    font-size: 33px;
 }
 
 .noImgAvailable {
