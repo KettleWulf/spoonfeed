@@ -8,11 +8,7 @@ export type Category =
 	| "Foodtruck"
 	| "Slop house";
 
-export type Offer = 
-	| "Breakfast" 
-	| "Lunch" 
-	| "After Work" 
-	| "Á la carte";
+export type Offer = "Breakfast" | "Lunch" | "After Work" | "Á la carte";
 
 export interface Location {
 	lat: number;
@@ -44,9 +40,10 @@ export interface Place {
 
 export type NewPlace = Omit<Place, "_id">;
 
-export type PlaceFormData = Omit<Place, "_id" | "updatedAt" | "createdAt" | "isSuggestion">;
-
-
+export type PlaceFormData = Omit<
+	Place,
+	"_id" | "updatedAt" | "createdAt" | "isSuggestion"
+>;
 
 export interface PlaceIMG {
 	_id: string;

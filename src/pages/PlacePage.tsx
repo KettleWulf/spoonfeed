@@ -120,11 +120,12 @@ const PlacePage = () => {
 					<Card className="shadow rounded-3 border-0">
 						<Card.Body className="px-3 py-2">
 							<Row>
-
 								<Col lg={6} className="py-3">
-									<Card.Title className="placeTitle text-center">{place.name}</Card.Title>
-									
-									<hr className="mt-4"/>
+									<Card.Title className="placeTitle text-center">
+										{place.name}
+									</Card.Title>
+
+									<hr className="mt-4" />
 									<Card className="mt-5 shadow rounded-3 border-0">
 										<Card.Body>
 											<div className="d-flex justify-content-between align-items-start flex-wrap gap-2">
@@ -223,22 +224,31 @@ const PlacePage = () => {
 											<Card.Title className="text-center mt-4">
 												Pictures
 											</Card.Title>
-											<hr  />
-											{images && images.length > 0
-												? <Carousel>
+											<hr />
+											{images && images.length > 0 ? (
+												<Carousel>
 													{images?.map((img) => (
 														<Carousel.Item key={img._id}>
 															<div className="carousel">
-																<img key={img._id} src={img.url} alt={`piqture on ${img.name}`} className="carouselImg" />
+																<img
+																	key={img._id}
+																	src={img.url}
+																	alt={`piqture on ${img.name}`}
+																	className="carouselImg"
+																/>
 															</div>
 														</Carousel.Item>
 													))}
 												</Carousel>
-												: <div className="d-flex justify-content-center">
-													<Image alt="No Image Available" src={noImgPiqture} className="noImgAvailable"></Image>
+											) : (
+												<div className="d-flex justify-content-center">
+													<Image
+														alt="No Image Available"
+														src={noImgPiqture}
+														className="noImgAvailable"
+													></Image>
 												</div>
-											}
-
+											)}
 										</Card.Body>
 									</Card>
 								</Col>

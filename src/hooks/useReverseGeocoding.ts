@@ -1,87 +1,94 @@
-import { useState, useCallback } from "react"
-import type { Location } from "../types/Place.types"
+import { useState, useCallback } from "react";
+import type { Location } from "../types/Place.types";
 import extractCityFromResults from "../helpers/extractCityFromResults";
 
 export const useReverseGeocoding = () => {
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [coordinates, setCoordinates] = useState<Location | null>(null);
+	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState<string | null>(null);
+	const [coordinates, setCoordinates] = useState<Location | null>(null);
 
-    const getCoordinates = useCallback((
-        address: string,
-        onSuccess?: (coords: Location, formattedAddress: string, city?: string) => void,
-        onError?: (error: string) => void,
-    ) => {
-        if (!window.google || !window.google.maps) {
-            setError("Google Maps API hasn't loaded");
-            onError?.("Google Maps API hasn't loaded");
-            return;
-        }
+	const getCoordinates = useCallback(
+		(
+			address: string,
+			onSuccess?: (
+				coords: Location,
+				formattedAddress: string,
+				city?: string
+			) => void,
+			onError?: (error: string) => void
+		) => {
+			if (!window.google || !window.google.maps) {
+				setError("Google Maps API hasn't loaded");
+				onError?.("Google Maps API hasn't loaded");
+				return;
+			}
 
-        if (!address || address.trim().length === 0) {
-            setError("Please provide an address");
-            onError?.("Please provide an address");
-            return;
-        }
+			if (!address || address.trim().length === 0) {
+				setError("Please provide an address");
+				onError?.("Please provide an address");
+				return;
+			}
 
-        const geocoder = new google.maps.Geocoder();
+			const geocoder = new google.maps.Geocoder();
 
-        setIsLoading(true);
-        setError(null);
+			setIsLoading(true);
+			setError(null);
 
-        const request: google.maps.GeocoderRequest = {
-            address: address,
-            region: "SE",
-            // Kanske behöver göra detta mer dynamiskt
-        }
+			const request: google.maps.GeocoderRequest = {
+				address: address,
+				region: "SE",
+				// Kanske behöver göra detta mer dynamiskt
+			};
 
-        geocoder.geocode(request, (results, status) => {
-            if (status === google.maps.GeocoderStatus.OK && results && results[0]) {
-                const location = results[0].geometry.location;
-                const coords: Location = {
-                    lat: location.lat(),
-                    lng: location.lng()
-                };
-                const formattedAddress = results[0].formatted_address;
+			geocoder.geocode(request, (results, status) => {
+				if (status === google.maps.GeocoderStatus.OK && results && results[0]) {
+					const location = results[0].geometry.location;
+					const coords: Location = {
+						lat: location.lat(),
+						lng: location.lng(),
+					};
+					const formattedAddress = results[0].formatted_address;
 
-                const city = extractCityFromResults(results[0]);
+					const city = extractCityFromResults(results[0]);
 
-                console.log("ReverseGeocoding result:");
-                console.log("- Address:", formattedAddress);
-                console.log("- Extracted city:", city);
+					console.log("ReverseGeocoding result:");
+					console.log("- Address:", formattedAddress);
+					console.log("- Extracted city:", city);
 
-                if(!city) return;
+					if (!city) return;
 
-                setCoordinates(coords);
-                setIsLoading(false);
+					setCoordinates(coords);
+					setIsLoading(false);
 
-                onSuccess?.(coords, formattedAddress, city);
-            } else {
-                if (status === google.maps.GeocoderStatus.INVALID_REQUEST) {
-                    setError("Invalid Request");
-                    setIsLoading(false);
-                } else if (status === google.maps.GeocoderStatus.REQUEST_DENIED) {
-                    setError("Request Denied");
-                    setIsLoading(false);
-                } else if (status === google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
-                    setError("Query limit exceeded");
-                    setIsLoading(false);
-                } else if (status === google.maps.GeocoderStatus.ZERO_RESULTS) {
-                    setError("No resluts found on this location");
-                    setIsLoading(false);
-                }
+					onSuccess?.(coords, formattedAddress, city);
+				} else {
+					if (status === google.maps.GeocoderStatus.INVALID_REQUEST) {
+						setError("Invalid Request");
+						setIsLoading(false);
+					} else if (status === google.maps.GeocoderStatus.REQUEST_DENIED) {
+						setError("Request Denied");
+						setIsLoading(false);
+					} else if (status === google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
+						setError("Query limit exceeded");
+						setIsLoading(false);
+					} else if (status === google.maps.GeocoderStatus.ZERO_RESULTS) {
+						setError("No resluts found on this location");
+						setIsLoading(false);
+					}
 
-                onError?.("Something else went wrong");
-            }
-        })
-    }, []);
+					onError?.("Something else went wrong");
+				}
+			});
+		},
+		[]
+	);
 
-    return {
-        isLoading,
-        error,
-        coordinates,
-        getCoordinates,
-    };
+	return {
+		isLoading,
+		error,
+		coordinates,
+		getCoordinates,
+	};
 };
 
 export default useReverseGeocoding;

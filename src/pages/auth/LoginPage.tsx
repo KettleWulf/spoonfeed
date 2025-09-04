@@ -7,51 +7,38 @@ import { Card, Col, Container, Row } from "react-bootstrap";
 import useAuth from "../../hooks/useAuth";
 import LogInForm from "../../components/auth/LogInForm";
 
-
 const LoginPage = () => {
+	const navigate = useNavigate();
 
-    const navigate = useNavigate()
+	const { logIn } = useAuth();
 
+	const onSubmit: SubmitHandler<SignUpCredentials> = async (data) => {
+		try {
+			await logIn(data.email, data.password);
 
+			toast.success("Welcome Back My Friend");
 
-    const { logIn } = useAuth()
+			navigate("/");
+		} catch (e) {
+			if (e instanceof FirebaseError) {
+				toast.error(e.message);
+			} else if (e instanceof Error) {
+				toast.error(e.message);
+			}
+		}
+	};
 
+	return (
+		<Container className="py-5 center-y">
+			<Row>
+				<Col md={{ span: 6, offset: 3 }}>
+					<Card className="mb-3  shadow-lg rounded-3 border-0 map">
+						<Card.Body>{<LogInForm onSubmit={onSubmit} />}</Card.Body>
+					</Card>
+				</Col>
+			</Row>
+		</Container>
+	);
+};
 
-    const onSubmit: SubmitHandler<SignUpCredentials> = async (data) => {
-
-
-        try {
-            await logIn(data.email, data.password)
-
-            toast.success("Welcome Back My Friend")
-
-            navigate("/")
-        } catch (e) {
-            if (e instanceof FirebaseError) {
-                toast.error(e.message)
-            } else if (e instanceof Error) {
-                toast.error(e.message)
-            }
-        }
-    }
-
-    return (
-
-        <Container className="py-5 center-y">
-            <Row>
-                <Col md={{ span: 6, offset: 3 }}>
-                    <Card className="mb-3  shadow-lg rounded-3 border-0 map">
-                        <Card.Body>
-                            {
-                              <LogInForm onSubmit={onSubmit} />
-                            }
-                        </Card.Body>
-                    </Card>
-
-                </Col>
-            </Row >
-        </Container >
-    );
-}
-
-export default LoginPage
+export default LoginPage;

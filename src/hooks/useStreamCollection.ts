@@ -1,9 +1,14 @@
-import { onSnapshot, query, type CollectionReference, type QueryConstraint } from "firebase/firestore";
+import {
+	onSnapshot,
+	query,
+	type CollectionReference,
+	type QueryConstraint,
+} from "firebase/firestore";
 import { useEffect, useState } from "react";
 
 const useStreamCollection = <T>(
 	colRef: CollectionReference<T>,
-	... queryConstraints: QueryConstraint[]
+	...queryConstraints: QueryConstraint[]
 ) => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [data, setData] = useState<T[] | null>(null);
@@ -12,27 +17,26 @@ const useStreamCollection = <T>(
 		const queryRef = query(colRef, ...queryConstraints);
 
 		const unsubscribe = onSnapshot(queryRef, (snapshot) => {
-
-			const data = snapshot.docs.map(doc => {
+			const data = snapshot.docs.map((doc) => {
 				return {
-					... doc.data(),
-					_id: doc.id
-				}
+					...doc.data(),
+					_id: doc.id,
+				};
 			});
 
 			setData(data);
 			setIsLoading(false);
 		});
 
-		return unsubscribe
+		return unsubscribe;
 
-	// eslint-disable-next-line react-hooks/exhaustive-deps
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [colRef, ...queryConstraints]);
 
 	return {
 		data,
-		isLoading
-	}
-}
+		isLoading,
+	};
+};
 
 export default useStreamCollection;

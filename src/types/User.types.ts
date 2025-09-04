@@ -7,26 +7,26 @@ export interface User {
 }
 
 export type SignUpCredentials = {
-	email: string,
-	password: string,
-	confirmPassword: string
-}
+	email: string;
+	password: string;
+	confirmPassword: string;
+};
 
 export type UppdateUserCredentials = {
-	email: string,
-	password: string,
-	confirmPassword: string,
-	photoUrl: FileList,
-	username: string ,
-}
+	email: string;
+	password: string;
+	confirmPassword: string;
+	photoUrl: FileList;
+	username: string;
+};
 
-export type ForgotPasswordCredentials ={
-	email: string
-}
+export type ForgotPasswordCredentials = {
+	email: string;
+};
 
 export type PasswordcheckCredentials = {
-	password: string
-}
+	password: string;
+};
 
 export type UserList = {
 	_id?: string;
@@ -34,4 +34,4 @@ export type UserList = {
 	email: string;
 
 	photoFiles?: string;
-}
+};

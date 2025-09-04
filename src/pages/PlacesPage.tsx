@@ -5,7 +5,6 @@ import { useGetPlaces } from "../hooks/useGetPlaces";
 import { useGetSuggestions } from "../hooks/useGetSuggestions";
 import { Card, Col, Container, Row } from "react-bootstrap";
 
-
 const columnDefs: ColumnDef<Place>[] = [
 	{
 		accessorKey: "name",
@@ -24,39 +23,45 @@ const columnDefs: ColumnDef<Place>[] = [
 	},
 ];
 
-
 const PlacesPage = () => {
-
-
 	const { data: places } = useGetPlaces();
 	const { data: suggestions, isLoading } = useGetSuggestions();
 
-	if (isLoading) <p>"Loading..."</p>
+	if (isLoading) <p>"Loading..."</p>;
 
 	return (
 		<>
-
 			<Container className="py-2 center-y">
 				<Row>
 					<Col>
 						<Card className="mb-3 shadow-lg rounded-3 border-0">
 							<Card.Body>
-
 								<h2>Suggestions</h2>
-								{suggestions && <SortableTable columns={columnDefs} data={suggestions} getRowLink={(row) => `/places/${row._id}`} />}
+								{suggestions && (
+									<SortableTable
+										columns={columnDefs}
+										data={suggestions}
+										getRowLink={(row) => `/places/${row._id}`}
+									/>
+								)}
 
 								<hr className="my-5" />
 
 								<h2>Confirmed Locations</h2>
-								{places && <SortableTable columns={columnDefs} data={places} getRowLink={(row) => `/places/${row._id}`} />}
-
+								{places && (
+									<SortableTable
+										columns={columnDefs}
+										data={places}
+										getRowLink={(row) => `/places/${row._id}`}
+									/>
+								)}
 							</Card.Body>
 						</Card>
 					</Col>
-				</Row >
-			</Container >
+				</Row>
+			</Container>
 		</>
-	)
+	);
 };
 
 export default PlacesPage;

@@ -29,7 +29,6 @@ export const db = getFirestore(app);
 // Get Storage Instance
 export const storage = getStorage(app);
 
-
 // Collections
 export const placesCol = createCollection<Place>("places");
 export const newPlacesCol = createCollection<NewPlace>("places");

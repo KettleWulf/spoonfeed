@@ -72,7 +72,6 @@ const UpdateProfileFrom: React.FC<UpdateProfileFromProps> = ({
 					)}
 				</Form.Group>
 
-            
 				{/* Name */}
 				<Form.Group className="mb-3" controlId="displayName">
 					<Form.Label>Name</Form.Label>

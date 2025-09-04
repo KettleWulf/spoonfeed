@@ -1,17 +1,16 @@
-import { useContext } from 'react'
-import { AuthContext } from '../context/AuthContext';
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
 const useAuth = () => {
+	const authContext = useContext(AuthContext);
 
-    const authContext = useContext(AuthContext)
-    
-        if (!authContext) {
-            throw new Error("AuthContext is being accessed outside of its AuthContextProvider.");
-    
-        }
+	if (!authContext) {
+		throw new Error(
+			"AuthContext is being accessed outside of its AuthContextProvider."
+		);
+	}
 
-        return authContext
-}
+	return authContext;
+};
 
-
-export default useAuth
+export default useAuth;

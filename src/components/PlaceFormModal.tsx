@@ -64,7 +64,6 @@ const PlaceFormModal: React.FC<PlaceFormModalProps> = ({
 		},
 	});
 
-
 	useEffect(() => {
 		if (show && initValues) {
 			reset({
@@ -78,7 +77,6 @@ const PlaceFormModal: React.FC<PlaceFormModalProps> = ({
 		}
 	}, [show, initValues, reset]);
 
-
 	useEffect(() => {
 		if (show && address) {
 			const parts = address.split(",");
@@ -87,7 +85,6 @@ const PlaceFormModal: React.FC<PlaceFormModalProps> = ({
 			if (city) setValue("city", city);
 		}
 	}, [show, address, city, setValue]);
-
 
 	const withProtocol = (url: string) =>
 		url && !/^https?:\/\//i.test(url) ? `https://${url}` : url;
@@ -121,11 +118,12 @@ const PlaceFormModal: React.FC<PlaceFormModalProps> = ({
 		>
 			<Form onSubmit={handleSubmit(onFormSubmit)} className="m-3">
 				<Modal.Header closeButton>
-					<Modal.Title>{currentUser && initValues 
-						? "Edit Place"
-						: currentUser 
-						? "Add Place"
-						: "Suggest Place"}
+					<Modal.Title>
+						{currentUser && initValues
+							? "Edit Place"
+							: currentUser
+							? "Add Place"
+							: "Suggest Place"}
 					</Modal.Title>
 				</Modal.Header>
 
@@ -209,9 +207,9 @@ const PlaceFormModal: React.FC<PlaceFormModalProps> = ({
 								required: "Please choose a category",
 							})}
 						>
-							{CATEGORY_OPTIONS.map((c) => (
-								<option key={c} value={c}>
-									{c}
+							{CATEGORY_OPTIONS.map((category) => (
+								<option key={category} value={category}>
+									{category}
 								</option>
 							))}
 						</Form.Select>
@@ -229,9 +227,9 @@ const PlaceFormModal: React.FC<PlaceFormModalProps> = ({
 							isInvalid={!!errors.offers}
 							{...register("offers", { required: "Please choose a service" })}
 						>
-							{OFFER_OPTIONS.map((o) => (
-								<option key={o} value={o}>
-									{o}
+							{OFFER_OPTIONS.map((offer) => (
+								<option key={offer} value={offer}>
+									{offer}
 								</option>
 							))}
 						</Form.Select>

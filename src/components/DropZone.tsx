@@ -15,22 +15,29 @@ interface UploadMemesProps {
 const DropZone: React.FC<UploadMemesProps> = ({ user, placeId }) => {
 	const uploadPlaceIMG = useUploadPlaceIMG(user, placeId);
 
-	// Drop it like it's hot 🔥
-	const onDrop = useCallback(async (acceptedFiles: File[]) => {
-		if (!acceptedFiles.length) {
-			toast.warning("Please don't add more than 3 files at once - we're not Meta.");
-			return;
-		}
+	const onDrop = useCallback(
+		async (acceptedFiles: File[]) => {
+			if (!acceptedFiles.length) {
+				toast.warning(
+					"Please don't add more than 3 files at once - we're not Meta."
+				);
+				return;
+			}
 
-	
+			for (const file of acceptedFiles) {
+				await uploadPlaceIMG.upload(file);
+			}
+		},
+		[uploadPlaceIMG]
+	);
 
-		for (const file of acceptedFiles) {
-			await uploadPlaceIMG.upload(file);
-  		}
-
-	}, [uploadPlaceIMG]);
-
-	const { getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject } = useDropzone({
+	const {
+		getRootProps,
+		getInputProps,
+		isDragActive,
+		isDragAccept,
+		isDragReject,
+	} = useDropzone({
 		accept: {
 			"image/gif": [],
 			"image/heic": [],
@@ -49,22 +56,28 @@ const DropZone: React.FC<UploadMemesProps> = ({ user, placeId }) => {
 	});
 
 	return (
-		<div {...getRootProps()} id="dropzone-wrapper" className={dropzoneWrapperClasses}>
+		<div
+			{...getRootProps()}
+			id="dropzone-wrapper"
+			className={dropzoneWrapperClasses}
+		>
 			<input {...getInputProps()} />
 
 			<div id="indicator">
-				{isDragActive
-					? isDragAccept
-						? <p>YU-HUP</p>
-						: <p>NAH-AH</p>
-					: <div>
+				{isDragActive ? (
+					isDragAccept ? (
+						<p>YU-HUP</p>
+					) : (
+						<p>NAH-AH</p>
+					)
+				) : (
+					<div>
 						<p className="h5 mb-1">- UPLOAD -</p>
 						<p>(drop your images here or click to choose in finder)</p>
 					</div>
-				}
+				)}
 			</div>
 
-			{/* Upload Progress Bar */}
 			{uploadPlaceIMG.progress !== null && (
 				<ProgressBar
 					animated
@@ -74,10 +87,14 @@ const DropZone: React.FC<UploadMemesProps> = ({ user, placeId }) => {
 				/>
 			)}
 
-			{uploadPlaceIMG.isError && <Alert variant="danger">{uploadPlaceIMG.error}</Alert>}
-			{uploadPlaceIMG.isSuccess && <Alert variant="light">Successfully uploaded!</Alert>}
+			{uploadPlaceIMG.isError && (
+				<Alert variant="danger">{uploadPlaceIMG.error}</Alert>
+			)}
+			{uploadPlaceIMG.isSuccess && (
+				<Alert variant="light">Successfully uploaded!</Alert>
+			)}
 		</div>
-	)
-}
+	);
+};
 
 export default DropZone;

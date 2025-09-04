@@ -8,7 +8,7 @@ import { Timestamp } from "firebase/firestore";
  */
 export const firebaseTimestampToDate = (firebaseTimestamp: Timestamp) => {
 	return firebaseTimestamp.toDate();
-}
+};
 
 /**
  * Convert a Date to an ISO string
@@ -17,7 +17,7 @@ export const firebaseTimestampToDate = (firebaseTimestamp: Timestamp) => {
  */
 export const dateToIsoString = (date: Date) => {
 	return date.toISOString();
-}
+};
 
 /**
  * Convert a Date to `YYYY-MM-DD HH:mm:ss` string
@@ -29,7 +29,7 @@ export const dateToYmdHms = (date: Date) => {
 		dateStyle: "short",
 		timeStyle: "short",
 	}).format(date);
-}
+};
 
 /**
  * Convert a Firebase Timestamp to an string
@@ -39,4 +39,4 @@ export const dateToYmdHms = (date: Date) => {
  */
 export const firebaseTimestampToString = (firebaseTimestamp: Timestamp) => {
 	return dateToYmdHms(firebaseTimestampToDate(firebaseTimestamp));
-}
+};

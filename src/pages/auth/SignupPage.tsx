@@ -1,6 +1,6 @@
-import SignUpForm from '../../components/auth/SignUpForm';
-import { useState } from 'react';
-import PasswordGuard from '../../components/auth/PasswordGuard';
+import SignUpForm from "../../components/auth/SignUpForm";
+import { useState } from "react";
+import PasswordGuard from "../../components/auth/PasswordGuard";
 import { type SubmitHandler } from "react-hook-form";
 import type { SignUpCredentials } from "../../types/User.types";
 import { FirebaseError } from "firebase/app";
@@ -11,14 +11,11 @@ import useAuth from "../../hooks/useAuth";
 import { usersCol } from "../../services/Firebase";
 import { doc, setDoc } from "firebase/firestore";
 
-const password = import.meta.env.VITE_SECRET_PASSWORD_TO_LOGIN
-
+const password = import.meta.env.VITE_SECRET_PASSWORD_TO_LOGIN;
 
 const SignupPage = () => {
-
-
 	const navigate = useNavigate();
-	const [passwordCheck, setPasswordCheck] = useState(false)
+	const [passwordCheck, setPasswordCheck] = useState(false);
 
 	const { signUp } = useAuth();
 
@@ -26,7 +23,6 @@ const SignupPage = () => {
 		try {
 			const cred = await signUp(data.email, data.password);
 			const uid = cred.user.uid;
-
 
 			await setDoc(
 				doc(usersCol, uid),
@@ -38,46 +34,36 @@ const SignupPage = () => {
 			);
 
 			toast.success("Welcome to the team");
-			navigate("/")
-
-		}
-		catch (e) {
+			navigate("/");
+		} catch (e) {
 			if (e instanceof FirebaseError) {
-				toast.error(e.message)
+				toast.error(e.message);
 			} else if (e instanceof Error) {
-				toast.error(e.message)
+				toast.error(e.message);
 			}
 		}
-
-	}
+	};
 
 	return (
-
 		<Container className="py-5 center-y">
 			<Row>
 				<Col md={{ span: 6, offset: 3 }}>
 					<Card className="mb-3  shadow-lg rounded-3 border-0 map">
 						<Card.Body>
-							{passwordCheck
-								? <SignUpForm onSubmit={onSubmit} />
-								: <PasswordGuard
+							{passwordCheck ? (
+								<SignUpForm onSubmit={onSubmit} />
+							) : (
+								<PasswordGuard
 									password={password}
 									correctPassword={() => setPasswordCheck(true)}
 								/>
-							}
+							)}
 						</Card.Body>
 					</Card>
 				</Col>
-			</Row >
-		</Container >
+			</Row>
+		</Container>
 	);
-}
+};
 
-
-
-
-
-
-
-
-export default SignupPage
+export default SignupPage;

@@ -5,7 +5,6 @@ import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { newImagesCol, storage } from "../services/Firebase";
 
-
 const useUploadPlaceIMG = (user: User, placeId: string) => {
 	const [error, setError] = useState<string | null>(null);
 	const [isError, setIsError] = useState(false);
@@ -32,20 +31,15 @@ const useUploadPlaceIMG = (user: User, placeId: string) => {
 			const storageFilename = `${filename}_${uuid}${ext}`;
 
 
-			/**
-			 * Upload the image to Cloud Storage
-			 */
-
-
+			//UPLOAD till DATABASE
 			const storageRef = ref(storage, `places/${placeId}/${storageFilename}`);
-			
+
 			const uploadTask = uploadBytesResumable(storageRef, image);
 
 			uploadTask.on("state_changed", (snapshot) => {
-
 				setProgress(
 					Math.round(
-						snapshot.bytesTransferred / snapshot.totalBytes * 100 * 10
+						(snapshot.bytesTransferred / snapshot.totalBytes) * 100 * 10
 					) / 10
 				);
 			});
@@ -54,11 +48,10 @@ const useUploadPlaceIMG = (user: User, placeId: string) => {
 
 			const url = await getDownloadURL(storageRef);
 
-
 			/**
 			 * Create document in Firestore for the uploaded image
 			 */
-
+			// SKAPA dokument i FIRESTORE
 			const colRef = newImagesCol(placeId);
 
 			await addDoc(colRef, {
@@ -73,9 +66,7 @@ const useUploadPlaceIMG = (user: User, placeId: string) => {
 
 			setIsSuccess(true);
 			setProgress(null);
-
 		} catch (err) {
-
 			setIsError(true);
 
 			if (err instanceof Error) {
@@ -83,11 +74,10 @@ const useUploadPlaceIMG = (user: User, placeId: string) => {
 			} else {
 				setError("An unknown error occurred.");
 			}
-
 		} finally {
 			setIsUploading(false);
 		}
-	}
+	};
 
 	return {
 		error,
@@ -96,7 +86,7 @@ const useUploadPlaceIMG = (user: User, placeId: string) => {
 		isUploading,
 		progress,
 		upload,
-	}
-}
+	};
+};
 
 export default useUploadPlaceIMG;

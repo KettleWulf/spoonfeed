@@ -18,20 +18,18 @@ const useStreamPlaceImages = (placeId?: string) => {
 
 		const queryRef = query(imagesCol(placeId), orderBy("createdAt", "desc"));
 		const unsubscribe = onSnapshot(queryRef, (snapshot) => {
-
-			const data = snapshot.docs.map(doc => {
+			const data = snapshot.docs.map((doc) => {
 				return {
-					... doc.data(),
-					_id: doc.id
-				}
+					...doc.data(),
+					_id: doc.id,
+				};
 			});
 
 			setData(data);
 			setIsLoading(false);
 		});
 
-		return unsubscribe
-
+		return unsubscribe;
 	}, [placeId]);
 
 	return { data, isLoading };

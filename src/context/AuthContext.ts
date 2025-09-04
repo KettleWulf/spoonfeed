@@ -1,32 +1,28 @@
-import type { User, UserCredential } from "firebase/auth"
-import { createContext } from "react"
-
+import type { User, UserCredential } from "firebase/auth";
+import { createContext } from "react";
 
 interface AuthContextType {
-    currentUser: User | null,
+	currentUser: User | null;
 
-    signUp: (email: string, password: string) => Promise<UserCredential>,
-    logIn: (email: string, password: string) => Promise<UserCredential>,
-    logOut: () => void,
+	signUp: (email: string, password: string) => Promise<UserCredential>;
+	logIn: (email: string, password: string) => Promise<UserCredential>;
+	logOut: () => void;
 
-    changeEmail: (email: string) => Promise<void>,
-    changeUserName: (name: string) => Promise<void>,
-    changePhotoUrl: (url: string) => Promise<void>,
-    changePassword: (password: string) => Promise<void>
+	changeEmail: (email: string) => Promise<void>;
+	changeUserName: (name: string) => Promise<void>;
+	changePhotoUrl: (url: string) => Promise<void>;
+	changePassword: (password: string) => Promise<void>;
 
-    userName: string | null
-    userEmail: string | null
-    userUrl: string | null
+	userName: string | null;
+	userEmail: string | null;
+	userUrl: string | null;
 
-    reloadForm: () => void
+	reloadForm: () => void;
 
-    forgotPassword: (email: string) => Promise<void>
+	forgotPassword: (email: string) => Promise<void>;
 
-    updateUserDataName: (id: string, name: string) => Promise<void>
-    updateUserDataPhoto: (id: string, url: string) => Promise<void>
-
-
-
+	updateUserDataName: (id: string, name: string) => Promise<void>;
+	updateUserDataPhoto: (id: string, url: string) => Promise<void>;
 }
 
-export const AuthContext = createContext<AuthContextType | null>(null)
+export const AuthContext = createContext<AuthContextType | null>(null);
