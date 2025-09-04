@@ -45,10 +45,7 @@ const HomePage = () => {
 
 						<Col xs={12} md={12} lg={9}>
 							<Card className="shadow-lg rounded-3 border-0">
-								<Card.Header as="h5" className="bg-white border-0">
-									Nearby map
-								</Card.Header>
-								<Card.Body className="py-0">
+								<Card.Body>
 									<Map onSavePlace={addPlace} setCityString={setCityState} />
 								</Card.Body>
 							</Card>
@@ -56,7 +53,7 @@ const HomePage = () => {
 
 
 						<Col xs={12} md={12} lg={3} className="me-auto">
-							<Card className=" shadow-lg rounded-3 border-0 h-100">
+							<Card className=" shadow-lg rounded-3 border-0 h-100 pt-2">
 								<Card.Header as="h5" className="bg-white border-0">
 									Places
 								</Card.Header>
