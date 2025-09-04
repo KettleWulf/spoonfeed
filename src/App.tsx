@@ -27,9 +27,9 @@ function App() {
 
 				{/* Auth Routes */}
 				<Route path="/signup" element={<SignupPage />} />
+				<Route path="/forgot-Password" element={<ForgotPassword />} />
 
 				<Route element={<ProtectedRoutes />}>
-					<Route path="/forgot-Password" element={<ForgotPassword />} />
 					<Route path="/Profile" element={<UppdateProfile />} />
 					<Route path="/Admins" element={<ListOfProfilePage />} />
 				</Route>
