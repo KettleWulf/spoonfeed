@@ -35,16 +35,12 @@ const UppdateProfile = () => {
 		try {
 			if (data.email !== (userEmail ?? "")) {
 				await changeEmail(data.email);
-				console.log("updated email");
-				//toast.success("Success you updated your email")
 			}
 
 			if (data.username !== (userName ?? "")) {
 				await changeUserName(data.username);
 
 				await updateUserDataName(currentUser.uid, data.username);
-				console.log("updated name", data.username);
-				//toast.success("Success you updated your Name")
 			}
 
 			if (data.photoUrl.length) {
@@ -73,7 +69,6 @@ const UppdateProfile = () => {
 
 			if (data.password) {
 				await changePassword(data.password);
-				console.log("updated password");
 			}
 
 			reloadForm();

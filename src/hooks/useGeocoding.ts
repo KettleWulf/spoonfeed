@@ -32,14 +32,6 @@ export const useGeocoding = () => {
 					const foundAddress = results[0].formatted_address;
 					const city = extractCityFromResults(results[0]);
 
-					console.log("🗺️ Geocoding result:");
-					console.log("🗺️   - Full address:", foundAddress);
-					console.log("🗺️   - Extracted city:", city);
-					console.log(
-						"🗺️   - Address components:",
-						results[0].address_components
-					);
-
 					setAddress(foundAddress);
 					setIsLoading(false);
 

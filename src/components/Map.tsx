@@ -147,7 +147,6 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
 		getAddress(
 			clickedCoords,
 			(foundAddress, city) => {
-				console.log("Extracted city:", city);
 
 				setSelectedLocation({
 					coords: clickedCoords,

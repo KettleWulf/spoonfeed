@@ -14,7 +14,6 @@ const ListOfProfilePage = () => {
 			accessorKey: "photoFiles",
 			cell: (cell) => {
 				const url = cell.getValue() as string;
-				console.log(url, "min bild");
 
 				return (
 					<Image
@@ -38,7 +37,6 @@ const ListOfProfilePage = () => {
 			cell: (email) => email.getValue(),
 		},
 	];
-	console.log(users);
 
 	if (isLoading) {
 		return <p>Loading Admins</p>;

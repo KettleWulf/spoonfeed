@@ -15,10 +15,7 @@ const HomePage = () => {
 	const [city, setCity] = useState("");
 	const { currentUser } = useAuth();
 	const { data: places } = useGetPlacesByCity(city);
-	console.log("HOME PAGE CITY", city);
 	const [searchParams] = useSearchParams();
-
-	console.log("PLACES", places);
 
 	const columnDefs: ColumnDef<Place>[] = [
 		{ accessorKey: "name", header: "Name" },
