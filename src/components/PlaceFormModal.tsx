@@ -34,10 +34,12 @@ interface PlaceFormModalProps {
 	city?: string;
 	coords?: Location;
 	onSave: (establishment: PlaceFormData) => void;
+	onDelete?: (establishment: PlaceFormData) => void;
 }
 
 const PlaceFormModal: React.FC<PlaceFormModalProps> = ({ 
-	onSave, 
+	onSave,
+	onDelete, 
 	initValues,
 	show,
 	address,
@@ -86,11 +88,10 @@ const PlaceFormModal: React.FC<PlaceFormModalProps> = ({
 				}
 			})
 		}
-		console.log(placeData);
 
 		onSave(placeData);
 
-		reset(); // maybe reset, maybe not?
+		reset();
 		onHide();
 	}
 
@@ -143,7 +144,7 @@ const PlaceFormModal: React.FC<PlaceFormModalProps> = ({
 									required: "Please enter address of establishment",
 									minLength: {
 										value: 2,
-										message: "Atleast 2 characters, dude",		// bättre validering? Minst 5 chars och 1 siffra?
+										message: "Atleast 2 characters, dude",
 									},
 								})}
 							/>
@@ -224,8 +225,8 @@ const PlaceFormModal: React.FC<PlaceFormModalProps> = ({
 					</Modal.Body>
 
 					<Modal.Footer>
-						{initValues && currentUser && (
-							<Button variant="danger" onClick={() => {}}>Delete</Button>
+						{initValues && currentUser && onDelete && (
+							<Button variant="danger" onClick={onDelete(data)}>Delete</Button>
 						)}
 						<Button variant="secondary" onClick={handleClose} disabled={isSubmitting}>
 							Avbryt
@@ -234,12 +235,6 @@ const PlaceFormModal: React.FC<PlaceFormModalProps> = ({
 							variant="primary"
 							type="submit"
 							disabled={isSubmitting}
-							onClick={() => {
-								// säkerställ att offers valideras (minst 1)
-								// if (!offers || offers.length === 0) {
-								// 	// trigga manuell felindikator
-								// }
-							}}
 						>
 							Save
 						</Button>

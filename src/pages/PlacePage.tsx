@@ -58,15 +58,6 @@ const PlacePage = () => {
 		);
 	}
 
-	// Normalize offers: accept string or string[]
-	const offers: string[] = Array.isArray(place.offers)
-		? place.offers
-		: place.offers
-			? [place.offers]
-			: [];
-
-	console.log("images:", images);
-
 
 	return (
 		<Container className="py-4">
@@ -102,16 +93,12 @@ const PlacePage = () => {
 											)}
 
 											{/* Offers */}
-											{offers.length > 0 && (
+											{place.offers && (
 												<div className="mt-3">
 													<div className="fw-semibold mb-1">Offers</div>
-													<Stack direction="horizontal" gap={2} className="flex-wrap">
-														{offers.map((o) => (
-															<Badge key={o} bg="secondary" className="mb-1">
-																{o}
-															</Badge>
-														))}
-													</Stack>
+														<Badge bg="secondary" className="mb-1">
+															{place.offers}
+														</Badge>
 												</div>
 											)}
 
