@@ -8,6 +8,7 @@ import { useSearchParams } from "react-router";
 
 
 
+
 interface AddressSearchProps {
     onLocationFound: (coords: Location, city?: string) => void;
     placeholder?: string;
@@ -21,6 +22,7 @@ const AddressSearch: React.FC<AddressSearchProps> = ({
     const [searchInput, setSearchInput] = useState("");
     const [searchError, setSearchError] = useState<string | null>(null);
     const [, setSearchParams]= useSearchParams();
+
 
 
 
@@ -87,6 +89,7 @@ const AddressSearch: React.FC<AddressSearchProps> = ({
                         </Button>
                     )}
                     <Button
+                    className="btn"
                         type="submit"
                         disabled={isLoading || !searchInput.trim()}
                     >

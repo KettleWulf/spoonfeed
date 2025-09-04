@@ -1,7 +1,6 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import SortableTable from "../components/SortableTable";
 import type { Place } from "../types/Place.types";
-import { useGetPlacesByCity } from "../hooks/useGetPlacesByCity";
 import { useGetPlaces } from "../hooks/useGetPlaces";
 import { useGetSuggestions } from "../hooks/useGetSuggestions";
 import { Card, Col, Container, Row } from "react-bootstrap";
@@ -28,34 +27,28 @@ const columnDefs: ColumnDef<Place>[] = [
 
 const PlacesPage = () => {
 
-	const { data: placesByCity } = useGetPlacesByCity("Stockholm");
-	const { data: places } = useGetPlaces();
-	const { data: suggestions } = useGetSuggestions();
 
-	// if (isLoading) <p>"I'm loading, chill..."</p>
+	const { data: places } = useGetPlaces();
+	const { data: suggestions, isLoading } = useGetSuggestions();
+
+	if (isLoading) <p>"Loading..."</p>
 
 	return (
 		<>
 
-			<Container className="py-5 center-y">
+			<Container className="py-2 center-y">
 				<Row>
 					<Col>
 						<Card className="mb-3 shadow-lg rounded-3 border-0">
 							<Card.Body>
-								<h2>Places</h2>
-								{places && <SortableTable columns={columnDefs} data={places} getRowLink={(row) => `/places/${row._id}`} />}
-
-								<hr />
-
-								<h2>Places by city</h2>
-								{placesByCity && <SortableTable columns={columnDefs} data={placesByCity} getRowLink={(row) => `/places/${row._id}`} />}
-
-								<hr />
 
 								<h2>Suggestions</h2>
 								{suggestions && <SortableTable columns={columnDefs} data={suggestions} getRowLink={(row) => `/places/${row._id}`} />}
 
-								<hr />
+								<hr className="my-5" />
+
+								<h2>Confirmed Locations</h2>
+								{places && <SortableTable columns={columnDefs} data={places} getRowLink={(row) => `/places/${row._id}`} />}
 
 							</Card.Body>
 						</Card>

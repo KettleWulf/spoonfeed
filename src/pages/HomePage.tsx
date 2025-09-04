@@ -53,9 +53,9 @@ const HomePage = () => {
 					<Row className="g-4">
 
 						<Col xs={12} md={12} lg={9}>
-							<Card className="shadow-lg rounded-3 border-0">
-								<Card.Header as="h5" className="bg-white border-0">
-									Nearby map
+							<Card className=" map text-center  shadow border-0 ">
+								<Card.Header as="h2" className="bg-white border-0 map m-1">
+									SpoonFeed
 								</Card.Header>
 								<Card.Body className="py-0">
 									<Map onSavePlace={addPlace}  />
@@ -65,10 +65,11 @@ const HomePage = () => {
 
 
 						<Col xs={12} md={12} lg={3} className="me-auto">
-							<Card className=" shadow-lg rounded-3 border-0 h-100">
-								<Card.Header as="h5" className="bg-white border-0">
+							<Card className=" cardHome  border-0 h-100">
+								<Card.Header as="h3" className="bg-white border-0 cardHome text-center ">
 									Places
 								</Card.Header>
+								<hr />
 								<Card.Body className="pt-0">
 									{places && (
 										<SortableTable

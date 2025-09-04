@@ -1,6 +1,6 @@
 import { GoogleMap, InfoWindow, Marker, useJsApiLoader } from "@react-google-maps/api";
 import { Alert, Container, Spinner, Button } from "react-bootstrap";
-import { useEffect, useRef, useState } from "react";
+import {  useEffect, useRef, useState } from "react";
 
 import useUserLocation from "../hooks/useUserLocation";
 import useGeocoding from "../hooks/useGeocoding";
@@ -143,6 +143,7 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
                 address: foundAddress,
                 city,
             });
+
 
             if (city && city !== currentCity) {
                 setCurrentCity(city);
