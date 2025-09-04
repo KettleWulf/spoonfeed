@@ -5,6 +5,7 @@ import useAuth from "../../hooks/useAuth";
 import { FirebaseError } from "firebase/app";
 import { toast } from "react-toastify";
 import { Link, NavLink } from "react-router";
+import loga from "../../assets/images/Loga.png"
 
 const Navigation = () => {
 
@@ -29,52 +30,47 @@ const Navigation = () => {
 
     return (
         <>
-            <Navbar bg="success" variant="dark">
-                <Container>
-                    <Navbar.Brand as={Link} to="/">Namn på sidan </Navbar.Brand>
+            <Navbar className="navbar">
+                <Container className={currentUser ?"m-0" : "d-flex justify-content-center"} >
+                    
+                           <Navbar.Brand as={Link} to="/"><Image className="loga" src={loga}></Image></Navbar.Brand>
                     <Nav>
-                        <Nav.Link as={NavLink} to="/about">About us</Nav.Link>
-                        <Nav.Link as={NavLink} to="/places">Resturants</Nav.Link>
-                        <Nav.Link as={NavLink} to="/tips">Send us a tip</Nav.Link>
                         {currentUser
-
                             ?
-                            <NavDropdown
-                                id="nav-dropdown-dark-example"
-                                title={userUrl 
-                                    ? 
-                                    <Image
-                                        src={userUrl}
-                                        title={(userName || userEmail) || ""}
-										className="img-cover"
-										fluid
-										height={30}
-										width={30}
-										roundedCircle
-                                    />
-                                    : userName || userEmail
-                                }
-                                menuVariant="dark"
-                            >
-                                <NavDropdown.Item
-                                     href="/Profile"
-                                >
-                                    Profile
-                                </NavDropdown.Item>
-                                 <NavDropdown.Item
-                                     href="/Admins"
-                                >
-                                    Admins
-                                </NavDropdown.Item>
+                            <>
+                                <Nav.Link as={NavLink} to="/Admins">Admins</Nav.Link>
 
-                                <NavDropdown.Item
-                                    className="text-danger fw-bold"
-                                    onClick={handleLogOut} href="*"
-                                >
-                                    Log Out
-                                </NavDropdown.Item>
+                                <Nav.Link as={NavLink} to="/Profile">Profile</Nav.Link>
 
-                            </NavDropdown>
+                                <Nav.Link as={NavLink} to="/places">Resturants</Nav.Link>
+
+                                <NavDropdown
+                                    id="nav-dropdown-dark-example"
+                                    title={userUrl
+                                        ?
+                                        <Image
+                                            src={userUrl}
+                                            title={(userName || userEmail) || ""}
+                                            className="img-cover"
+                                            fluid
+                                            height={30}
+                                            width={30}
+                                            roundedCircle
+                                        />
+                                        : userName || userEmail
+                                    }
+                                    menuVariant="dark"
+                                >
+                                   
+                                    <NavDropdown.Item
+                                        className="text-danger fw-bold"
+                                        onClick={handleLogOut} href="*"
+                                    >
+                                        Log Out
+                                    </NavDropdown.Item>
+
+                                </NavDropdown>
+                            </>
 
                             : <Nav.Link href="/login">Log In</Nav.Link>
                         }

@@ -4,7 +4,7 @@ import blankProfile from "../../assets/images/blank-profile-picture-973460_1280.
 import {useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import type { UppdateUserCredentials } from '../../types/User.types';
-import { Card, Image } from 'react-bootstrap';
+import { Image } from 'react-bootstrap';
 import type { User } from 'firebase/auth';
 
 
@@ -32,11 +32,11 @@ const UpdateProfileFrom: React.FC<UpdateProfileFromProps> = ({ currentUser, user
     const password = watch("password")
     return (
         <>
-            <Card.Title className="mb-3">Profile</Card.Title>
 
-            <div>
-                <Image alt={currentUser?.photoURL ?? blankProfile} src={userUrl || urlUpload || undefined} roundedCircle className="img-cover w-75" />
+            <div className='d-flex justify-content-center'>
+                <Image alt={currentUser?.photoURL ?? blankProfile} src={userUrl || urlUpload || undefined} roundedCircle className="img-cover w-75 UppdateProfileImg" />
             </div>
+
 
 
             { /* Sign up form */}
@@ -81,7 +81,7 @@ const UpdateProfileFrom: React.FC<UpdateProfileFromProps> = ({ currentUser, user
 
 
                 <Form.Group className="mb-3" controlId="photoUrl">
-                    <Form.Label>Profile Piqture</Form.Label>
+                    <Form.Label>Profile Picture</Form.Label>
                     <Form.Control type="file"
                         accept='image/png, image/jpeg, image/jpg'
                         {...register("photoUrl", {
@@ -125,7 +125,7 @@ const UpdateProfileFrom: React.FC<UpdateProfileFromProps> = ({ currentUser, user
                 </Form.Group>
 
 
-                <Button variant="primary" type="submit" disabled={isSubmitting}>
+                <Button className='btn' type="submit" disabled={isSubmitting}>
                     Save
                 </Button>
 
