@@ -243,7 +243,6 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
                     fullscreenControl: true,
                     zoomControl: true,
                 }}
-
             >
 
                 {userLocation && (
@@ -268,10 +267,8 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
                             animation={google.maps.Animation.DROP}
                         />
                     </>
-
                 )
                 )}
-
 
                 {selectedLocation && (
                     <>
@@ -310,7 +307,6 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
                 coords={selectedLocation?.coords}
                 onSave={handleSavePlace}
             />
-
         </>
 
     )
