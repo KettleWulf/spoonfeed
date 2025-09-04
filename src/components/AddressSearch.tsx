@@ -2,6 +2,7 @@ import { useState } from "react"
 import type { Location } from "../types/Place.types";
 import useReverseGeocoding from "../hooks/useReverseGeocoding";
 import { Alert, Button, Form, InputGroup } from "react-bootstrap";
+import { useSearchParams } from "react-router";
 
 
 
@@ -17,6 +18,8 @@ const AddressSearch: React.FC<AddressSearchProps> = ({
 
     const [searchInput, setSearchInput] = useState("");
     const [searchError, setSearchError] = useState<string | null>(null);
+    const [, setSearchParams] = useSearchParams();
+
 
 
     const {
@@ -37,7 +40,13 @@ const AddressSearch: React.FC<AddressSearchProps> = ({
 
         getCoordinates(
             searchInput, (coords, city) => {
-                console.log("Search found city:", city);
+                if(city){
+
+                    const cleanCity = city.split(",")[0];
+
+                    setSearchParams({query: cleanCity});
+                }
+
 
                 onLocationFound(coords, city);
 

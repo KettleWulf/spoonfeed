@@ -24,7 +24,7 @@ const HomePage = () => {
 
 	const setCityState = (city: string) => {
 		setCity(city.split(",")[0]);
-		console.log("CITY STATE HP", city.split(",")[0]);
+
 	}
 
 	const addPlace = async (place: PlaceFormData) => {

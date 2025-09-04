@@ -11,11 +11,11 @@ import AddressSearch from "./AddressSearch";
 import type { PlaceFormData, Location, Place } from "../types/Place.types";
 import { toast } from "react-toastify";
 import getMarkerIcon from "../helpers/getMarkerIcon";
+import { useSearchParams } from "react-router";
+import useCityFromCoords from "../hooks/useCityFromCoords";
 
-// Definerar biblioteket som Google Maps-apiet ska använda när kartan laddas
 const libraries: ("places" | "geocoding")[] = ["places", "geocoding"];
 
-// Fallback till sthlm om användaren inte get platsdata.
 const FALLBACK_CENTER = {
     lat: 59.334591,
     lng: 18.063240,
@@ -36,15 +36,14 @@ interface MapProps {
 
 
 const Map: React.FC<MapProps> = ({ onSavePlace, setCityString }) => {
-
-    // States
-    const [currentCity, setCurrentCity] = useState("");
+    const [ searchParams ] = useSearchParams();
+    const queryCity = searchParams.get("query") || "";
+    const [currentCity, setCurrentCity] = useState(queryCity || "");
     const [selectedLocation, setSelectedLocation] = useState<ClickedLocation | null>(null)
-    const [showModal, setShowModal] = useState(false)
-
-    // Hooks
+    const [showModal, setShowModal] = useState(false);
     const { data: places = [], isLoading: placesLoading } = useGetPlacesByCity(currentCity);
-    const { userLocation, userCity, isLoading: locationLoading, error: locationError } = useUserLocation();
+    const { userLocation, isLoading: locationLoading, error: locationError } = useUserLocation();
+    const { city: userCity } = useCityFromCoords(userLocation);
     const { getAddress } = useGeocoding();
     const { isLoaded, loadError } = useJsApiLoader({
         googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
@@ -53,27 +52,43 @@ const Map: React.FC<MapProps> = ({ onSavePlace, setCityString }) => {
         language: "sv",
         region: "SE",
     });
-
-    // Med mapRef kan vi kontrollera kartan, skapar en referens till kartan från google maps
     const mapRef = useRef<google.maps.Map | null>(null);
 
-    // useEffect som sätter currentCity till userCity, när denna är tillgänglig, userCity hämtas från useUserLocation
-
     useEffect(() => {
-        if (userCity && userCity !== currentCity) {
-            console.log("Setting currentCity to user location:", userCity);
-            setCurrentCity(userCity);
+        if (queryCity && queryCity !== currentCity) {
+            setCurrentCity(queryCity);
         }
-    }, [userCity, currentCity]);
+    }, [queryCity, currentCity]);
 
     useEffect(() => {
-        if (userLocation && mapRef.current) {
+        if (userLocation && mapRef.current && userCity) {
+            setCurrentCity(userCity);
             mapRef.current.panTo(userLocation);
             mapRef.current.setZoom(14);
         }
-    }, [userLocation]);
+    }, [userLocation, userCity]);
 
-    // Handler för när någon söker efter en stad, panorerar till och zoom in på vår sökning samt sätter currentCity till det som står i sökfältet
+    useEffect(() => {
+    if (!isLoaded || !mapRef.current || !queryCity) return;
+
+    const geocoder = new google.maps.Geocoder();
+    geocoder.geocode(
+        { address: queryCity, region: "SE" },
+        (results, status) => {
+            if (status === "OK" && results && results[0]) {
+                const location = results[0].geometry.location;
+                const coords = {
+                    lat: location.lat(),
+                    lng: location.lng()
+                };
+
+                mapRef.current?.panTo(coords);
+                mapRef.current?.setZoom(13);
+            }
+        }
+    );
+}, [queryCity, isLoaded]);
+
     const handleSearchLocation = (coords: Location, city?: string) => {
         if (mapRef.current) {
             mapRef.current.panTo(coords);
@@ -84,20 +99,17 @@ const Map: React.FC<MapProps> = ({ onSavePlace, setCityString }) => {
             setCurrentCity(city);
         }
 
-        
-        if(city){
+
+        if (city) {
             setCityString(city);
         }
-        
+
         setSelectedLocation(null)
     };
 
-
-    // Handler för kartan när den laddas in
     const handleMapLoad = (map: google.maps.Map) => {
         mapRef.current = map;
 
-        // styling så points of interests som google har satt ut inte syns
         map.setOptions({
             styles: [
                 { featureType: "poi", stylers: [{ visibility: "off" }] },
@@ -105,35 +117,30 @@ const Map: React.FC<MapProps> = ({ onSavePlace, setCityString }) => {
             ]
         });
 
-        // centrerar kartan på på användaren om denna är tillgänglig
         if (userLocation) {
             map.panTo(userLocation);
             map.setZoom(14);
         }
 
-        if(userCity){
+        if (userCity) {
             setCityString(userCity);
         }
     };
 
-    // handler för när man trycker på kartan
     const handleMapClick = (e: google.maps.MapMouseEvent) => {
         if (!e.latLng) return;
 
-        // Koordinaters om har hämtats från knapptryckning på kartan
         const clickedCoords = {
             lat: e.latLng.lat(),
             lng: e.latLng.lng(),
         }
 
-        // visar loading state
         setSelectedLocation({
             coords: clickedCoords,
             address: "Getting address...",
             city: undefined,
         });
 
-        // hämtar adress, getAddress kommer från useGeocoding och tar lat och lng och omvandlar till en adress
         getAddress(clickedCoords, (foundAddress, city) => {
             console.log("Extracted city:", city);
 
@@ -142,7 +149,7 @@ const Map: React.FC<MapProps> = ({ onSavePlace, setCityString }) => {
                 address: foundAddress,
                 city,
             });
-            // Om där finns en stad uppdateras staden (om det inte är samma som currentCity)
+
             if (city && city !== currentCity) {
                 setCurrentCity(city);
             }
@@ -156,7 +163,6 @@ const Map: React.FC<MapProps> = ({ onSavePlace, setCityString }) => {
             });
     };
 
-    // Sparar platsen man klickade på till databasen
     const handleSavePlace = async (place: PlaceFormData) => {
         try {
             await onSavePlace(place);
@@ -176,7 +182,26 @@ const Map: React.FC<MapProps> = ({ onSavePlace, setCityString }) => {
         window.open(url, "_blank");
     };
 
-    if (!isLoaded || locationLoading || !currentCity) {
+    
+    const handleOpenModal = () => {
+        if (selectedLocation &&
+            selectedLocation.address !== "Could not get address" &&
+            selectedLocation.address !== "Getting address...") {
+                setShowModal(true);
+            }
+        };
+        
+        if (loadError) {
+            return (
+                <Alert variant="danger">
+                <p>Error when loading Google Maps</p>
+                <p>Check API-key and necessary API-settings</p>
+                <p>{loadError.message}</p>
+            </Alert>
+        );
+    }
+    
+    if (!isLoaded || locationLoading) {
         return (
             <Container>
                 <div className="text-center">
@@ -185,35 +210,6 @@ const Map: React.FC<MapProps> = ({ onSavePlace, setCityString }) => {
                 </div>
             </Container>
         );
-    }
-
-    const handleOpenModal = () => {
-        if (selectedLocation &&
-            selectedLocation.address !== "Could not get address" &&
-            selectedLocation.address !== "Getting address...") {
-            setShowModal(true);
-        }
-    };
-
-    if (loadError) {
-        return (
-            <Alert variant="danger">
-                <p>Error when loading Google Maps</p>
-                <p>Check API-key and necessary API-settings</p>
-                <p>{loadError.message}</p>
-            </Alert>
-        );
-    }
-
-    if (!isLoaded || locationLoading) {
-        return (
-            <Container>
-                <div className="text-center">
-                    <Spinner animation="border" role="status" className="mb-2" />
-                    <p>Laddar karta</p>
-                </div>
-            </Container>
-        )
     }
 
     if (locationError && !userLocation) {
@@ -242,7 +238,7 @@ const Map: React.FC<MapProps> = ({ onSavePlace, setCityString }) => {
                     </div>
                 )}
             </div>
-            
+
             <GoogleMap
                 id="google-map"
                 onClick={handleMapClick}
