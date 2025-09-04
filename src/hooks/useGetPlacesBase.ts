@@ -1,4 +1,6 @@
+// useGetPlacesBase.ts
 import { orderBy, where, type QueryConstraint } from "firebase/firestore";
+import { useMemo } from "react";
 import { placesCol } from "../services/Firebase";
 import useStreamCollection from "./useStreamCollection";
 
@@ -9,21 +11,22 @@ interface Options {
 	isSuggestion: boolean;
 	orderByField: OrderField;
 	orderDir: OrderDir;
-	city?: string; 
+	city?: string;
 }
 
 const useGetPlacesBase = (opts: Options) => {
-	const constraints: QueryConstraint[] = [
-		where("isSuggestion", "==", opts.isSuggestion),
-	];
-
-	if (opts.city) {
-		constraints.push(where("city", "==", opts.city));
-	}
-
-	constraints.push(orderBy(opts.orderByField, opts.orderDir));
+	const constraints = useMemo<QueryConstraint[]>(() => {
+		const arr: QueryConstraint[] = [
+			where("isSuggestion", "==", opts.isSuggestion),
+		];
+		if (opts.city) {
+			arr.push(where("city", "==", opts.city));
+		}
+		arr.push(orderBy(opts.orderByField, opts.orderDir));
+		return arr;
+	}, [opts.isSuggestion, opts.city, opts.orderByField, opts.orderDir]);
 
 	return useStreamCollection(placesCol, ...constraints);
-}
+};
 
-export default useGetPlacesBase
+export default useGetPlacesBase;
