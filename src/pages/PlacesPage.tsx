@@ -41,20 +41,14 @@ const PlacesPage = () => {
 					<Col>
 						<Card className="mb-3 shadow-lg rounded-3 border-0">
 							<Card.Body>
-								<h2>Places</h2>
-								{places && <SortableTable columns={columnDefs} data={places} getRowLink={(row) => `/places/${row._id}`} />}
-
-								<hr />
-
-								<h2>Places by city</h2>
-								{placesByCity && <SortableTable columns={columnDefs} data={placesByCity} getRowLink={(row) => `/places/${row._id}`} />}
-
-								<hr />
 
 								<h2>Suggestions</h2>
 								{suggestions && <SortableTable columns={columnDefs} data={suggestions} getRowLink={(row) => `/places/${row._id}`} />}
 
 								<hr />
+
+								<h2 className="mt-5">Confirmed Locations</h2>
+								{places && <SortableTable columns={columnDefs} data={places} getRowLink={(row) => `/places/${row._id}`} />}
 
 							</Card.Body>
 						</Card>

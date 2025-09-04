@@ -206,7 +206,7 @@ const PlacePage = () => {
 												<div className="d-flex justify-content-end mt-3">
 													<Button
 														size="sm"
-														variant="outline-primary"
+														variant="primary"
 														onClick={() => setShowEdit(true)}
 													>
 														Edit
