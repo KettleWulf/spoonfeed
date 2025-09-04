@@ -5,6 +5,7 @@ import { Alert, Button, Form, InputGroup } from "react-bootstrap";
 
 
 
+
 interface AddressSearchProps {
     onLocationFound: (coords: Location, city?: string) => void;
     placeholder?: string;
@@ -17,6 +18,7 @@ const AddressSearch: React.FC<AddressSearchProps> = ({
 
     const [searchInput, setSearchInput] = useState("");
     const [searchError, setSearchError] = useState<string | null>(null);
+
 
 
     const {
@@ -37,8 +39,7 @@ const AddressSearch: React.FC<AddressSearchProps> = ({
 
         getCoordinates(
             searchInput, (coords, city) => {
-                console.log("Search found city:", city);
-
+                
                 onLocationFound(coords, city);
 
                 setSearchInput("");
