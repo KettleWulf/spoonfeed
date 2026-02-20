@@ -2,6 +2,13 @@ import { useCallback, useState } from "react";
 import type { Location } from "../types/Place.types";
 import extractCityFromResults from "../helpers/extractCityFromResults";
 
+const STATUS_MESSAGES: Partial<Record<google.maps.GeocoderStatus, string>> = {
+	INVALID_REQUEST: "Invalid request",
+	REQUEST_DENIED: "Request denied",
+	OVER_QUERY_LIMIT: "Query limit exceeded",
+	ZERO_RESULTS: "No results found for this location",
+};
+
 export const useGeocoding = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -37,21 +44,10 @@ export const useGeocoding = () => {
 
 					onSuccess?.(foundAddress, city || undefined);
 				} else {
-					if (status === google.maps.GeocoderStatus.INVALID_REQUEST) {
-						setError("Invalid Request");
-						setIsLoading(false);
-					} else if (status === google.maps.GeocoderStatus.REQUEST_DENIED) {
-						setError("Request Denied");
-						setIsLoading(false);
-					} else if (status === google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
-						setError("Query limit exceeded");
-						setIsLoading(false);
-					} else if (status === google.maps.GeocoderStatus.ZERO_RESULTS) {
-						setError("No resluts found on this location");
-						setIsLoading(false);
-					}
-
-					onError?.("Something else went wrong");
+					const msg = STATUS_MESSAGES[status] ?? "Geocoding failed";
+					setError(msg);
+					setIsLoading(false);
+					onError?.(msg);
 				}
 			});
 		},

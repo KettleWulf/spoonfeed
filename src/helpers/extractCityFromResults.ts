@@ -13,14 +13,6 @@ const extractCityFromResults = (
 		}
 	}
 
-	const addressParts = result.formatted_address.split(",");
-	if (addressParts.length > 1) {
-		const cityCandidate = addressParts[addressParts.length - 2]?.trim();
-		if (cityCandidate) {
-			const cleanCity = cityCandidate.replace(/\d+/g, "").trim();
-			return cleanCity || null;
-		}
-	}
 	return null;
 };
 

@@ -9,15 +9,15 @@ import { useEffect, useRef, useState } from "react";
 
 import useUserLocation from "../hooks/useUserLocation";
 import useGeocoding from "../hooks/useGeocoding";
+import useForwardGeocoding from "../hooks/useForwardGeocoding";
 import { useGetPlacesByCity } from "../hooks/useGetPlacesByCity";
 
 import PlaceFormModal from "./PlaceFormModal";
 import AddressSearch from "./AddressSearch";
 import type { PlaceFormData, Location, Place } from "../types/Place.types";
 import { toast } from "react-toastify";
-import getMarkerIcon from "../helpers/getMarkerIcon";
+import getMarkerIcon, { USER_MARKER_ICON } from "../helpers/getMarkerIcon";
 import { useSearchParams } from "react-router";
-import useCityFromCoords from "../hooks/useCityFromCoords";
 
 const libraries: ("places" | "geocoding")[] = ["places", "geocoding"];
 
@@ -54,8 +54,8 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
 		isLoading: locationLoading,
 		error: locationError,
 	} = useUserLocation();
-	const { city: userCity } = useCityFromCoords(userLocation);
 	const { getAddress } = useGeocoding();
+	const { getCoordinates } = useForwardGeocoding();
 	const { isLoaded, loadError } = useJsApiLoader({
 		googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
 		id: "googe-map-script",
@@ -66,39 +66,28 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
 	const mapRef = useRef<google.maps.Map | null>(null);
 
 	useEffect(() => {
-		if (queryCity && queryCity !== currentCity) {
-			setCurrentCity(queryCity);
-		}
-	}, [queryCity, currentCity]);
+		if (queryCity) setCurrentCity(queryCity);
+	}, [queryCity]);
 
 	useEffect(() => {
-		if (userLocation && mapRef.current && userCity) {
-			setCurrentCity(userCity);
+		if (!userLocation || !isLoaded) return;
 
-			mapRef.current.panTo(userLocation);
-			mapRef.current.setZoom(14);
-		}
-	}, [userLocation, userCity]);
+		getAddress(userLocation, (_address, city) => {
+			if (city) setCurrentCity(city);
+			if (mapRef.current) {
+				mapRef.current.panTo(userLocation);
+				mapRef.current.setZoom(14);
+			}
+		});
+	}, [userLocation, isLoaded]);
 
 	useEffect(() => {
 		if (!isLoaded || !mapRef.current || !queryCity) return;
 
-		const geocoder = new google.maps.Geocoder();
-		geocoder.geocode(
-			{ address: queryCity, region: "SE" },
-			(results, status) => {
-				if (status === "OK" && results && results[0]) {
-					const location = results[0].geometry.location;
-					const coords = {
-						lat: location.lat(),
-						lng: location.lng(),
-					};
-
-					mapRef.current?.panTo(coords);
-					mapRef.current?.setZoom(13);
-				}
-			}
-		);
+		getCoordinates(queryCity, (coords) => {
+			mapRef.current?.panTo(coords);
+			mapRef.current?.setZoom(13);
+		});
 	}, [queryCity, isLoaded]);
 
 	const handleSearchLocation = (coords: Location, city?: string) => {
@@ -254,24 +243,19 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
 					<Marker
 						position={userLocation}
 						title="Your position"
-						icon={{
-							url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
-						}}
+						icon={USER_MARKER_ICON}
 						animation={google.maps.Animation.DROP}
 					/>
 				)}
 
-				{places?.map((place) => (
-					<>
-						<Marker
-							key={place._id}
-							position={place.location}
-							title={`${place.name} - ${place.category}`}
-							icon={getMarkerIcon(place.category)}
-							onClick={() => handlePlaceClick(place)}
-							animation={google.maps.Animation.DROP}
-						/>
-					</>
+				{(places ?? []).map((place) => (
+					<Marker
+						key={place._id}
+						position={place.location}
+						title={`${place.name} - ${place.category}`}
+						icon={getMarkerIcon(place.category)}
+						onClick={() => handlePlaceClick(place)}
+					/>
 				))}
 
 				{selectedLocation && (
