@@ -1,69 +1,83 @@
-# React + TypeScript + Vite
+# SpoonFeed
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+SpoonFeed is a collaborative web app for discovering and sharing places to eat.
 
-Currently, two official plugins are available:
+Users can explore places on an interactive map, add new spots with address/location data, and attach photos. The app is built around Firebase services for authentication, data storage, and file uploads.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Core Features
 
-## Expanding the ESLint configuration
+- Interactive map view with markers for stored places
+- Search and geocoding support for finding locations and cities
+- Add new places directly from map clicks
+- Place list and detail views
+- Image uploads for places via drag-and-drop
+- User authentication (sign up, log in, password reset, profile updates)
+- Protected routes for authenticated-only pages
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Tech Stack
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Frontend: React 19, TypeScript, Vite
+- Routing: React Router
+- UI: React Bootstrap, Sass
+- Data layer: Firebase Firestore
+- Auth: Firebase Authentication
+- File storage: Firebase Storage
+- Maps and geospatial UX: Google Maps JavaScript API via `@react-google-maps/api`
+- Forms and utilities: React Hook Form, React Dropzone, React Toastify, TanStack Table
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+## Project Structure (high level)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- `src/components`: reusable UI and map-related components
+- `src/pages`: route-level pages
+- `src/context`: auth context and provider
+- `src/hooks`: Firebase, map, geocoding, streaming, and upload hooks
+- `src/services/Firebase.ts`: Firebase app/service initialization
+
+## Environment Variables
+
+Create a `.env` file in the project root and configure:
+
+```env
+VITE_FIREBASE_API_KEY=
+VITE_FIREBASE_AUTH_DOMAIN=
+VITE_FIREBASE_PROJECT_ID=
+VITE_FIREBASE_STORAGE_BUCKET=
+VITE_FIREBASE_MESSAGING_SENDER_ID=
+VITE_FIREBASE_APP_ID=
+VITE_GOOGLE_MAPS_API_KEY=
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Local Development
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
+
+Other useful scripts:
+
+```bash
+npm run build
+npm run check
+npm run preview
+```
+
+## Collaborators
+
+This project was developed collaboratively, with each team member taking primary ownership of a core subsystem while contributing across the codebase.
+
+### Lucas Hernandez – Authentication
+- Implementation of user authentication flows using Firebase Authentication  
+- Session handling and user-scoped access logic  
+- Secure access to protected features  
+
+### Philip Andersson – Map & Geospatial Logic
+- Interactive map integration using the Google Maps API  
+- Marker management and geospatial visualization  
+- Synchronization between map state and stored location data  
+
+### Olle Wistedt – Architecture & Data Layer ( & Janitor )
+- Overall application architecture and technical direction  
+- Data modeling and integration with Cloud Firestore  
+- Image handling and file storage via Firebase Storage  
+- Service integration across the application  
