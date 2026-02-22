@@ -3,7 +3,6 @@ import { type SubmitHandler } from "react-hook-form";
 import type { SignUpCredentials } from "../../types/User.types";
 import { toast } from "react-toastify";
 import { FirebaseError } from "firebase/app";
-import { Card, Col, Container, Row } from "react-bootstrap";
 import useAuth from "../../hooks/useAuth";
 import LogInForm from "../../components/auth/LogInForm";
 
@@ -29,15 +28,11 @@ const LoginPage = () => {
 	};
 
 	return (
-		<Container className="py-5 center-y">
-			<Row>
-				<Col md={{ span: 6, offset: 3 }}>
-					<Card className="mb-3  shadow-lg rounded-3 border-0 map">
-						<Card.Body>{<LogInForm onSubmit={onSubmit} />}</Card.Body>
-					</Card>
-				</Col>
-			</Row>
-		</Container>
+		<div className="flex min-h-[70vh] items-center justify-center py-5">
+			<div className="w-full max-w-xl rounded-2xl border border-white/70 bg-[whitesmoke] p-6 shadow-lg">
+				<LogInForm onSubmit={onSubmit} />
+			</div>
+		</div>
 	);
 };
 

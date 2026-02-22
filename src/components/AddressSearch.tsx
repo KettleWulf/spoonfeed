@@ -1,7 +1,6 @@
 import { useState } from "react";
 import type { Location } from "../types/Place.types";
 import useReverseGeocoding from "../hooks/useReverseGeocoding";
-import { Alert, Button, Form, InputGroup } from "react-bootstrap";
 import { useSearchParams } from "react-router";
 
 interface AddressSearchProps {
@@ -56,41 +55,41 @@ const AddressSearch: React.FC<AddressSearchProps> = ({
 	};
 
 	return (
-		<>
-			<Form onSubmit={handleSearch}>
-				<InputGroup>
-					<Form.Control
-						type="text"
-						placeholder={placeholder}
-						value={searchInput}
-						onChange={(e) => setSearchInput(e.target.value)}
+		<form onSubmit={handleSearch}>
+			<div className="flex flex-wrap gap-2">
+				<input
+					type="text"
+					placeholder={placeholder}
+					value={searchInput}
+					onChange={(e) => setSearchInput(e.target.value)}
+					disabled={isLoading}
+					className="min-w-[240px] flex-1 rounded-md border border-emerald-200 bg-white px-3 py-2 outline-none ring-emerald-500 focus:ring-2 disabled:opacity-60"
+				/>
+				{searchInput && (
+					<button
+						type="button"
+						onClick={handleClear}
 						disabled={isLoading}
-					/>
-					{searchInput && (
-						<Button
-							type="button"
-							variant="outline-secondary"
-							onClick={handleClear}
-							disabled={isLoading}
-						>
-							Clear
-						</Button>
-					)}
-					<Button
-						className="btn"
-						type="submit"
-						disabled={isLoading || !searchInput.trim()}
+						className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
 					>
-						Search
-					</Button>
-				</InputGroup>
+						Clear
+					</button>
+				)}
+				<button
+					type="submit"
+					disabled={isLoading || !searchInput.trim()}
+					className="rounded-md bg-[#5e936c] px-4 py-2 text-white transition-colors hover:bg-[#67c090] hover:text-black disabled:cursor-not-allowed disabled:opacity-60"
+				>
+					Search
+				</button>
+			</div>
 
-				{searchError ||
-					(geocodingError && (
-						<Alert variant="danger">{searchError || geocodingError}</Alert>
-					))}
-			</Form>
-		</>
+			{(searchError || geocodingError) && (
+				<div className="mt-2 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+					{searchError || geocodingError}
+				</div>
+			)}
+		</form>
 	);
 };
 

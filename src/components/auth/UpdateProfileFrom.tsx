@@ -1,10 +1,7 @@
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
 import blankProfile from "../../assets/images/blank-profile-picture-973460_1280.png";
 import { useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import type { UppdateUserCredentials } from "../../types/User.types";
-import { Image } from "react-bootstrap";
 import type { User } from "firebase/auth";
 
 type UpdateProfileFromProps = {
@@ -39,21 +36,22 @@ const UpdateProfileFrom: React.FC<UpdateProfileFromProps> = ({
 	const password = watch("password");
 	return (
 		<>
-			<div className="d-flex justify-content-center">
-				<Image
+			<div className="flex justify-center">
+				<img
 					alt={currentUser?.photoURL ?? blankProfile}
 					src={userUrl || urlUpload || undefined}
-					roundedCircle
-					className="img-cover w-75 UppdateProfileImg"
+					className="aspect-square w-3/4 max-w-48 rounded-full object-cover"
 				/>
 			</div>
 
-			{/* Sign up form */}
-			<Form onSubmit={handleSubmit(onUppdateProfile)}>
-				{/* Email */}
-				<Form.Group className="mb-3" controlId="formBasicEmail">
-					<Form.Label>Email address</Form.Label>
-					<Form.Control
+			<form onSubmit={handleSubmit(onUppdateProfile)} className="mt-6 space-y-4">
+				<div className="space-y-1">
+					<label htmlFor="profile-email" className="block text-sm font-medium">
+						Email address
+					</label>
+					<input
+						id="profile-email"
+						className="w-full rounded-md border border-emerald-200 bg-white px-3 py-2 outline-none ring-emerald-500 focus:ring-2"
 						type="email"
 						placeholder="Email"
 						{...register("email", {
@@ -64,18 +62,23 @@ const UpdateProfileFrom: React.FC<UpdateProfileFromProps> = ({
 						})}
 					/>
 					{errors.email ? (
-						<p className="text-danger">{errors.email.message || "invalid"}</p>
+						<p className="text-sm text-red-600">
+							{errors.email.message || "invalid"}
+						</p>
 					) : (
-						<Form.Text className="text-muted">
+						<p className="text-xs text-gray-500">
 							We'll never share your email with anyone else.
-						</Form.Text>
+						</p>
 					)}
-				</Form.Group>
+				</div>
 
-				{/* Name */}
-				<Form.Group className="mb-3" controlId="displayName">
-					<Form.Label>Name</Form.Label>
-					<Form.Control
+				<div className="space-y-1">
+					<label htmlFor="profile-name" className="block text-sm font-medium">
+						Name
+					</label>
+					<input
+						id="profile-name"
+						className="w-full rounded-md border border-emerald-200 bg-white px-3 py-2 outline-none ring-emerald-500 focus:ring-2"
 						type="text"
 						placeholder="Sven"
 						{...register("username", {
@@ -86,15 +89,19 @@ const UpdateProfileFrom: React.FC<UpdateProfileFromProps> = ({
 						})}
 					/>
 					{errors.username && (
-						<p className="text-danger">
+						<p className="text-sm text-red-600">
 							{errors.username.message || "invalid"}
 						</p>
 					)}
-				</Form.Group>
+				</div>
 
-				<Form.Group className="mb-3" controlId="photoUrl">
-					<Form.Label>Profile Picture</Form.Label>
-					<Form.Control
+				<div className="space-y-1">
+					<label htmlFor="profile-photo" className="block text-sm font-medium">
+						Profile Picture
+					</label>
+					<input
+						id="profile-photo"
+						className="w-full rounded-md border border-emerald-200 bg-white px-3 py-2 text-sm outline-none file:mr-3 file:rounded-md file:border-0 file:bg-emerald-700 file:px-3 file:py-1 file:text-white hover:file:bg-emerald-600 focus:ring-2 focus:ring-emerald-500"
 						type="file"
 						accept="image/png, image/jpeg, image/jpg"
 						{...register("photoUrl", {
@@ -107,16 +114,19 @@ const UpdateProfileFrom: React.FC<UpdateProfileFromProps> = ({
 					/>
 
 					{errors.photoUrl && (
-						<p className="text-danger">
+						<p className="text-sm text-red-600">
 							{errors.photoUrl.message || "invalid"}
 						</p>
 					)}
-				</Form.Group>
+				</div>
 
-				{/* Password */}
-				<Form.Group className="mb-3" controlId="formBasicPassword">
-					<Form.Label>Password</Form.Label>
-					<Form.Control
+				<div className="space-y-1">
+					<label htmlFor="profile-password" className="block text-sm font-medium">
+						Password
+					</label>
+					<input
+						id="profile-password"
+						className="w-full rounded-md border border-emerald-200 bg-white px-3 py-2 outline-none ring-emerald-500 focus:ring-2"
 						type="password"
 						autoComplete="new-password"
 						placeholder="Password"
@@ -128,16 +138,22 @@ const UpdateProfileFrom: React.FC<UpdateProfileFromProps> = ({
 						})}
 					/>
 					{errors.password && (
-						<p className="text-danger">
+						<p className="text-sm text-red-600">
 							{errors.password.message || "invalid"}
 						</p>
 					)}
-				</Form.Group>
+				</div>
 
-				{/* Comfirm Password */}
-				<Form.Group className="mb-3" controlId="formBasicCheckbox">
-					<Form.Label>Confirm Password</Form.Label>
-					<Form.Control
+				<div className="space-y-1">
+					<label
+						htmlFor="profile-confirm-password"
+						className="block text-sm font-medium"
+					>
+						Confirm Password
+					</label>
+					<input
+						id="profile-confirm-password"
+						className="w-full rounded-md border border-emerald-200 bg-white px-3 py-2 outline-none ring-emerald-500 focus:ring-2"
 						type="password"
 						autoComplete="off"
 						placeholder="Confirm Password"
@@ -147,16 +163,20 @@ const UpdateProfileFrom: React.FC<UpdateProfileFromProps> = ({
 						})}
 					/>
 					{errors.confirmPassword && (
-						<p className="text-danger">
+						<p className="text-sm text-red-600">
 							{errors.confirmPassword.message || "invalid"}
 						</p>
 					)}
-				</Form.Group>
+				</div>
 
-				<Button className="btn" type="submit" disabled={isSubmitting}>
+				<button
+					type="submit"
+					disabled={isSubmitting}
+					className="rounded-md bg-[#5e936c] px-4 py-2 text-white transition-colors hover:bg-[#67c090] hover:text-black disabled:cursor-not-allowed disabled:opacity-60"
+				>
 					Save
-				</Button>
-			</Form>
+				</button>
+			</form>
 		</>
 	);
 };

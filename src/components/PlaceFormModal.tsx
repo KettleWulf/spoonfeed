@@ -5,7 +5,6 @@ import type {
 	Offer,
 	PlaceFormData,
 } from "../types/Place.types";
-import { Button, Modal, Form } from "react-bootstrap";
 import { useEffect } from "react";
 import useAuth from "../hooks/useAuth";
 
@@ -34,6 +33,9 @@ interface PlaceFormModalProps {
 	onSave: (establishment: PlaceFormData) => void;
 	onDelete?: () => void;
 }
+
+const inputBaseClass =
+	"w-full rounded-md border border-emerald-200 bg-white px-3 py-2 outline-none ring-emerald-500 focus:ring-2";
 
 const PlaceFormModal: React.FC<PlaceFormModalProps> = ({
 	onSave,
@@ -104,35 +106,42 @@ const PlaceFormModal: React.FC<PlaceFormModalProps> = ({
 	};
 
 	const handleClose = () => {
+		if (isSubmitting) return;
 		reset();
 		onHide();
 	};
 
+	if (!show) return null;
+
 	return (
-		<Modal
-			show={show}
-			onHide={handleClose}
-			backdrop="static"
-			keyboard={!isSubmitting}
-			centered
-		>
-			<Form onSubmit={handleSubmit(onFormSubmit)} className="m-3">
-				<Modal.Header closeButton>
-					<Modal.Title>
+		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+			<div className="max-h-[92vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-[whitesmoke] p-4 shadow-xl">
+				<div className="mb-4 flex items-center justify-between">
+					<h2 className="text-xl font-semibold">
 						{currentUser && initValues
 							? "Edit Place"
 							: currentUser
 							? "Add Place"
 							: "Suggest Place"}
-					</Modal.Title>
-				</Modal.Header>
+					</h2>
+					<button
+						type="button"
+						onClick={handleClose}
+						className="rounded-md border border-gray-300 bg-white px-2 py-1 text-sm"
+					>
+						Close
+					</button>
+				</div>
 
-				<Modal.Body>
-					{/* Name */}
-					<Form.Group className="mb-3" controlId="name">
-						<Form.Label>Name</Form.Label>
-						<Form.Control
+				<form onSubmit={handleSubmit(onFormSubmit)} className="space-y-3">
+					<div>
+						<label htmlFor="name" className="mb-1 block text-sm font-medium">
+							Name
+						</label>
+						<input
+							id="name"
 							type="text"
+							className={inputBaseClass}
 							placeholder="Enter name of establishment"
 							{...register("name", {
 								required: "Please enter name of establishment",
@@ -140,17 +149,20 @@ const PlaceFormModal: React.FC<PlaceFormModalProps> = ({
 							})}
 						/>
 						{errors.name && (
-							<div className="form-text text-danger">
+							<p className="mt-1 text-sm text-red-600">
 								{errors.name.message || "Invalid value"}
-							</div>
+							</p>
 						)}
-					</Form.Group>
+					</div>
 
-					{/* Address */}
-					<Form.Group className="mb-3" controlId="address">
-						<Form.Label>Address</Form.Label>
-						<Form.Control
+					<div>
+						<label htmlFor="address" className="mb-1 block text-sm font-medium">
+							Address
+						</label>
+						<input
+							id="address"
 							type="text"
+							className={inputBaseClass}
 							placeholder="Enter address of establishment"
 							{...register("address", {
 								required: "Please enter address of establishment",
@@ -158,17 +170,20 @@ const PlaceFormModal: React.FC<PlaceFormModalProps> = ({
 							})}
 						/>
 						{errors.address && (
-							<div className="form-text text-danger">
+							<p className="mt-1 text-sm text-red-600">
 								{errors.address.message || "Invalid value"}
-							</div>
+							</p>
 						)}
-					</Form.Group>
+					</div>
 
-					{/* City */}
-					<Form.Group className="mb-3" controlId="city">
-						<Form.Label>City</Form.Label>
-						<Form.Control
+					<div>
+						<label htmlFor="city" className="mb-1 block text-sm font-medium">
+							City
+						</label>
+						<input
+							id="city"
 							type="text"
+							className={inputBaseClass}
 							placeholder="Enter name of city"
 							{...register("city", {
 								required: "Please enter city",
@@ -176,33 +191,40 @@ const PlaceFormModal: React.FC<PlaceFormModalProps> = ({
 							})}
 						/>
 						{errors.city && (
-							<div className="form-text text-danger">
+							<p className="mt-1 text-sm text-red-600">
 								{errors.city.message || "Invalid value"}
-							</div>
+							</p>
 						)}
-					</Form.Group>
+					</div>
 
-					{/* Description */}
-					<Form.Group className="mb-3" controlId="description">
-						<Form.Label>Description</Form.Label>
-						<Form.Control
-							as="textarea"
+					<div>
+						<label
+							htmlFor="description"
+							className="mb-1 block text-sm font-medium"
+						>
+							Description
+						</label>
+						<textarea
+							id="description"
 							rows={3}
+							className={inputBaseClass}
 							placeholder="Describe the establishment (optional)..."
 							{...register("description")}
 						/>
 						{errors.description && (
-							<div className="form-text text-danger">
+							<p className="mt-1 text-sm text-red-600">
 								{errors.description.message || "Invalid value"}
-							</div>
+							</p>
 						)}
-					</Form.Group>
+					</div>
 
-					{/* Category */}
-					<Form.Group className="mb-3" controlId="category">
-						<Form.Label>Category</Form.Label>
-						<Form.Select
-							isInvalid={!!errors.category}
+					<div>
+						<label htmlFor="category" className="mb-1 block text-sm font-medium">
+							Category
+						</label>
+						<select
+							id="category"
+							className={inputBaseClass}
 							{...register("category", {
 								required: "Please choose a category",
 							})}
@@ -212,19 +234,21 @@ const PlaceFormModal: React.FC<PlaceFormModalProps> = ({
 									{category}
 								</option>
 							))}
-						</Form.Select>
+						</select>
 						{errors.category && (
-							<div className="form-text text-danger">
+							<p className="mt-1 text-sm text-red-600">
 								{errors.category.message || "Invalid value"}
-							</div>
+							</p>
 						)}
-					</Form.Group>
+					</div>
 
-					{/* Offer */}
-					<Form.Group className="mb-3" controlId="offers">
-						<Form.Label>Offer</Form.Label>
-						<Form.Select
-							isInvalid={!!errors.offers}
+					<div>
+						<label htmlFor="offers" className="mb-1 block text-sm font-medium">
+							Offer
+						</label>
+						<select
+							id="offers"
+							className={inputBaseClass}
 							{...register("offers", { required: "Please choose a service" })}
 						>
 							{OFFER_OPTIONS.map((offer) => (
@@ -232,23 +256,26 @@ const PlaceFormModal: React.FC<PlaceFormModalProps> = ({
 									{offer}
 								</option>
 							))}
-						</Form.Select>
+						</select>
 						{errors.offers && (
-							<div className="form-text text-danger">
+							<p className="mt-1 text-sm text-red-600">
 								{errors.offers.message || "Invalid value"}
-							</div>
+							</p>
 						)}
-					</Form.Group>
+					</div>
 
-					{/* Contact */}
-					<hr />
-					<div className="fw-semibold mb-2">Contact</div>
+					<hr className="border-emerald-100" />
+					<div className="font-semibold">Contact</div>
 
-					<Form.Group className="mb-3" controlId="phone">
-						<Form.Label>Phone</Form.Label>
-						<Form.Control
+					<div>
+						<label htmlFor="phone" className="mb-1 block text-sm font-medium">
+							Phone
+						</label>
+						<input
+							id="phone"
 							type="tel"
 							inputMode="tel"
+							className={inputBaseClass}
 							placeholder="+46 70 123 45 67"
 							{...register("phone", {
 								pattern: {
@@ -258,79 +285,104 @@ const PlaceFormModal: React.FC<PlaceFormModalProps> = ({
 							})}
 						/>
 						{errors.phone && (
-							<div className="form-text text-danger">
+							<p className="mt-1 text-sm text-red-600">
 								{errors.phone.message || "Invalid value"}
-							</div>
+							</p>
 						)}
-					</Form.Group>
+					</div>
 
-					<Form.Group className="mb-3" controlId="email">
-						<Form.Label>Email</Form.Label>
-						<Form.Control
+					<div>
+						<label htmlFor="email" className="mb-1 block text-sm font-medium">
+							Email
+						</label>
+						<input
+							id="email"
 							type="email"
+							className={inputBaseClass}
 							placeholder="name@example.com"
 							{...register("email")}
 						/>
 						{errors.email && (
-							<div className="form-text text-danger">
+							<p className="mt-1 text-sm text-red-600">
 								{errors.email.message || "Invalid value"}
-							</div>
+							</p>
 						)}
-					</Form.Group>
+					</div>
 
-					<Form.Group className="mb-3" controlId="website">
-						<Form.Label>Website</Form.Label>
-						<Form.Control
+					<div>
+						<label htmlFor="website" className="mb-1 block text-sm font-medium">
+							Website
+						</label>
+						<input
+							id="website"
 							type="url"
+							className={inputBaseClass}
 							placeholder="https://example.com"
 							{...register("website")}
 						/>
-					</Form.Group>
+					</div>
 
-					<Form.Group className="mb-3" controlId="facebook">
-						<Form.Label>Facebook</Form.Label>
-						<Form.Control
+					<div>
+						<label htmlFor="facebook" className="mb-1 block text-sm font-medium">
+							Facebook
+						</label>
+						<input
+							id="facebook"
 							type="url"
+							className={inputBaseClass}
 							placeholder="https://facebook.com/yourpage"
 							{...register("facebook")}
 						/>
-					</Form.Group>
+					</div>
 
-					<Form.Group className="mb-3" controlId="instagram">
-						<Form.Label>Instagram</Form.Label>
-						<Form.Control
+					<div>
+						<label htmlFor="instagram" className="mb-1 block text-sm font-medium">
+							Instagram
+						</label>
+						<input
+							id="instagram"
 							type="url"
+							className={inputBaseClass}
 							placeholder="https://instagram.com/yourhandle"
 							{...register("instagram")}
 						/>
-					</Form.Group>
+					</div>
 
 					{coords && (
-						<Form.Text className="text-muted d-block mb-2">
+						<p className="text-sm text-gray-500">
 							Coordinates: {coords.lat.toFixed(6)}, {coords.lng.toFixed(6)}
-						</Form.Text>
+						</p>
 					)}
-				</Modal.Body>
 
-				<Modal.Footer>
-					{currentUser && onDelete && (
-						<Button variant="danger" onClick={() => onDelete()}>
-							Delete
-						</Button>
-					)}
-					<Button
-						variant="secondary"
-						onClick={handleClose}
-						disabled={isSubmitting}
-					>
-						Back
-					</Button>
-					<Button variant="primary" type="submit" disabled={isSubmitting}>
-						Save
-					</Button>
-				</Modal.Footer>
-			</Form>
-		</Modal>
+					<div className="mt-4 flex flex-wrap justify-end gap-2">
+						{currentUser && onDelete && (
+							<button
+								type="button"
+								onClick={() => onDelete()}
+								className="rounded-md bg-red-600 px-4 py-2 text-white hover:bg-red-500"
+							>
+								Delete
+							</button>
+						)}
+						<button
+							type="button"
+							onClick={handleClose}
+							disabled={isSubmitting}
+							className="rounded-md border border-gray-300 bg-white px-4 py-2 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
+						>
+							Back
+						</button>
+						<button
+							type="submit"
+							disabled={isSubmitting}
+							className="rounded-md bg-[#5e936c] px-4 py-2 text-white transition-colors hover:bg-[#67c090] hover:text-black disabled:cursor-not-allowed disabled:opacity-60"
+						>
+							Save
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
 	);
 };
 

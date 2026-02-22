@@ -1,7 +1,6 @@
 import { Route, Routes } from "react-router"
 import HomePage from "./pages/HomePage"
 import Navigation from "./pages/partials/Navigation"
-import "./assets/scss/App.scss";
 import SignupPage from "./pages/auth/SignupPage";
 import LoginPage from "./pages/auth/LoginPage";
 import PlacesPage from "./pages/PlacesPage";
@@ -11,18 +10,14 @@ import ProtectedRoutes from "./components/auth/ProtectedRoutes";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import ListOfProfilePage from "./pages/auth/ListOfProfilePage";
 import PlacePage from "./pages/PlacePage";
-import { Container } from "react-bootstrap";
 
 function App() {
-
 	return (
 
-		<div id="App">
-
-
+		<div className="bg-white">
 			<Navigation />
 
-			<Container className="py-2">
+			<main className="mx-auto w-full max-w-[1400px] flex-1 px-4 py-2 sm:px-6 lg:px-8">
 				<Routes>
 					<Route path="/login" element={<LoginPage />} />
 
@@ -39,7 +34,7 @@ function App() {
 					<Route path="/places/:id" element={<PlacePage />} />
 				</Routes>
 
-			</Container>
+			</main>
 
 			<ToastContainer closeOnClick theme="colored" limit={5} stacked position="bottom-right" />
 		</div>

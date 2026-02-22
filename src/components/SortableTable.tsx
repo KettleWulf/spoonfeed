@@ -6,7 +6,6 @@ import {
 	type ColumnDef,
 	type SortingState,
 } from "@tanstack/react-table";
-import BSTable from "react-bootstrap/Table";
 import { useState } from "react";
 import { Link } from "react-router";
 
@@ -40,57 +39,69 @@ const SortableTable = <TData, TValue>({
 	});
 
 	return (
-		<BSTable hover responsive striped size="sm" className="mytable">
-			<thead>
-				{table.getHeaderGroups().map((headerGroup) => (
-					<tr key={headerGroup.id}>
-						{headerGroup.headers.map((header) => {
-							const sortDirection = header.column.getIsSorted();
+		<div className="overflow-x-auto rounded-md">
+			<table className="min-w-full border-separate border-spacing-0 overflow-hidden rounded-md text-sm">
+				<thead>
+					{table.getHeaderGroups().map((headerGroup) => (
+						<tr key={headerGroup.id}>
+							{headerGroup.headers.map((header) => {
+								const sortDirection = header.column.getIsSorted();
 
-							return (
-								<th key={header.id} colSpan={header.colSpan}>
-									{header.isPlaceholder ? null : (
-										<div
-											className={header.column.getCanSort() ? "sortable" : ""}
-											onClick={header.column.getToggleSortingHandler()}
-										>
-											{flexRender(
-												header.column.columnDef.header,
-												header.getContext()
-											)}
-
-											{sortDirection && sortingIndicators[sortDirection]}
-										</div>
-									)}
-								</th>
-							);
-						})}
-					</tr>
-				))}
-			</thead>
-
-			<tbody>
-				{table.getRowModel().rows.map((row) => {
-					const href = getRowLink?.(row.original);
-					return (
-						<tr key={row.id} style={{ cursor: href ? "pointer" : "auto" }}>
-							{row.getVisibleCells().map((cell, index) => (
-								<td key={cell.id} className="position-relative">
-									{flexRender(cell.column.columnDef.cell, cell.getContext())}
-									{href && index === 0 && (
-										<Link
-											to={href}
-											className="stretched-link"
-											aria-label="Open details"
-										/>
-									)}
-								</td>
-							))}
+								return (
+									<th
+										key={header.id}
+										colSpan={header.colSpan}
+										className="bg-[#2e7d32] px-4 py-3 text-left font-semibold text-white"
+									>
+										{header.isPlaceholder ? null : (
+											<button
+												type="button"
+												className={`flex items-center gap-1 ${header.column.getCanSort() ? "cursor-pointer" : "cursor-default"}`}
+												onClick={header.column.getToggleSortingHandler()}
+											>
+												{flexRender(
+													header.column.columnDef.header,
+													header.getContext()
+												)}
+												{sortDirection && sortingIndicators[sortDirection]}
+											</button>
+										)}
+									</th>
+								);
+							})}
 						</tr>
-					);
-				})}
-			</tbody>
-		</BSTable>
+					))}
+				</thead>
+
+				<tbody>
+					{table.getRowModel().rows.map((row, rowIndex) => {
+						const href = getRowLink?.(row.original);
+						return (
+							<tr
+								key={row.id}
+								className={href ? "cursor-pointer" : ""}
+							>
+								{row.getVisibleCells().map((cell, index) => (
+									<td
+										key={cell.id}
+										className={`relative px-4 py-3 ${rowIndex % 2 === 1 ? "bg-[#a5d6a7]" : "bg-white"}`}
+									>
+										{flexRender(cell.column.columnDef.cell, cell.getContext())}
+										{href && index === 0 && (
+											<Link
+												to={href}
+												className="absolute inset-0"
+												aria-label="Open details"
+											/>
+										)}
+									</td>
+								))}
+							</tr>
+						);
+					})}
+				</tbody>
+			</table>
+		</div>
 	);
 };
 

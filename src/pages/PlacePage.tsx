@@ -1,16 +1,3 @@
-import {
-	Alert,
-	Badge,
-	Button,
-	Card,
-	Carousel,
-	Col,
-	Container,
-	Image,
-	Row,
-	Spinner,
-	Stack,
-} from "react-bootstrap";
 import { useNavigate, useParams } from "react-router";
 import useGetPlace from "../hooks/useGetPlace";
 import { firebaseTimestampToString } from "../helpers/time";
@@ -34,6 +21,7 @@ const PlacePage = () => {
 	const { data: images } = useStreamPlaceImages(id);
 
 	const [showEdit, setShowEdit] = useState(false);
+	const [activeImageIndex, setActiveImageIndex] = useState(0);
 
 	const initValues = useMemo<PlaceFormData | undefined>(() => {
 		if (!place) return undefined;
@@ -84,187 +72,196 @@ const PlacePage = () => {
 		}
 	};
 
+	const hasImages = !!images && images.length > 0;
+	const safeImages = images ?? [];
+	const activeImage = hasImages ? safeImages[activeImageIndex] : null;
+
+	const handlePreviousImage = () => {
+		if (!images?.length) return;
+		setActiveImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+	};
+
+	const handleNextImage = () => {
+		if (!images?.length) return;
+		setActiveImageIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+	};
+
 	if (isLoading) {
 		return (
-			<Container className="py-4">
-				<Card className="shadow-sm rounded-3">
-					<Card.Body className="d-flex align-items-center gap-2">
-						<Spinner animation="border" size="sm" />
-						<span>Loading place…</span>
-					</Card.Body>
-				</Card>
-			</Container>
+			<div className="py-4">
+				<div className="rounded-xl bg-white p-4 shadow-sm">
+					<div className="flex items-center gap-2">
+						<div className="h-4 w-4 animate-spin rounded-full border-2 border-emerald-700 border-t-transparent" />
+						<span>Loading place...</span>
+					</div>
+				</div>
+			</div>
 		);
 	}
 
 	if (error) {
 		return (
-			<Container className="py-4">
-				<Alert variant="danger">Failed to load place: {String(error)}</Alert>
-			</Container>
+			<div className="py-4">
+				<div className="rounded-md border border-red-200 bg-red-50 p-4 text-red-700">
+					Failed to load place: {String(error)}
+				</div>
+			</div>
 		);
 	}
 
 	if (!place || !id) {
 		return (
-			<Container className="py-4">
-				<Alert variant="warning">Place not found.</Alert>
-			</Container>
+			<div className="py-4">
+				<div className="rounded-md border border-amber-200 bg-amber-50 p-4 text-amber-800">
+					Place not found.
+				</div>
+			</div>
 		);
 	}
 
 	return (
-		<Container className="py-4">
-			<Row className="g-4 justify-content-center">
-				<Col>
-					<Card className="shadow rounded-3 border-0">
-						<Card.Body className="px-3 py-2">
-							<Row>
-								<Col lg={6} className="py-3">
-									<Card.Title className="placeTitle text-center">
-										{place.name}
-									</Card.Title>
+		<div className="py-4">
+			<div className="rounded-2xl border border-white/70 bg-white p-3 shadow">
+				<div className="grid gap-4 lg:grid-cols-2">
+					<section className="py-3">
+						<h1 className="text-center text-[33px] font-semibold">{place.name}</h1>
 
-									<hr className="mt-4" />
-									<Card className="mt-5 shadow rounded-3 border-0">
-										<Card.Body>
-											<div className="d-flex justify-content-between align-items-start flex-wrap gap-2">
-												<div>
-													<div className="text-muted">
-														{place.address}, {place.city}
-													</div>
-												</div>
-												<div className="d-flex gap-2">
-													<Badge bg="secondary">{place.category}</Badge>
-													{place.isSuggestion && (
-														<Badge bg="warning" text="dark">
-															Suggestion
-														</Badge>
-													)}
-												</div>
-											</div>
-
-											{place.description && (
-												<Card.Text className="mt-3">
-													{place.description}
-												</Card.Text>
-											)}
-
-											{place.offers && (
-												<div className="mt-3">
-													<div className="fw-semibold mb-1">Offers</div>
-													<Badge bg="secondary" className="mb-1">
-														{place.offers}
-													</Badge>
-												</div>
-											)}
-
-											<div className="mt-4">
-												<div className="fw-semibold mb-1">Contact</div>
-												<Stack gap={1}>
-													{place.phone && (
-														<div>
-															<span className="text-muted">Phone:</span>{" "}
-															{place.phone}
-														</div>
-													)}
-													{place.email && (
-														<div>
-															<span className="text-muted">Email:</span>{" "}
-															{place.email}
-														</div>
-													)}
-													{place.website && (
-														<div>
-															<span className="text-muted">Website:</span>{" "}
-															{place.website}
-														</div>
-													)}
-													{place.facebook && (
-														<div>
-															<span className="text-muted">Facebook:</span>{" "}
-															{place.facebook}
-														</div>
-													)}
-													{place.instagram && (
-														<div>
-															<span className="text-muted">Instagram:</span>{" "}
-															{place.instagram}
-														</div>
-													)}
-													{!place.phone &&
-														!place.email &&
-														!place.website &&
-														!place.facebook &&
-														!place.instagram && (
-															<div className="text-muted">
-																No contact information provided.
-															</div>
-														)}
-												</Stack>
-											</div>
-											{currentUser && (
-												<div className="d-flex justify-content-end mt-3">
-													<Button
-														size="sm"
-														variant="primary"
-														onClick={() => setShowEdit(true)}
-													>
-														Edit
-													</Button>
-												</div>
-											)}
-										</Card.Body>
-									</Card>
-								</Col>
-
-								<Col lg={6}>
-									<Card className=" border-0">
-										<Card.Body>
-											<Card.Title className="text-center mt-4">
-												Pictures
-											</Card.Title>
-											<hr />
-											{images && images.length > 0 ? (
-												<Carousel>
-													{images?.map((img) => (
-														<Carousel.Item key={img._id}>
-															<div className="carousel">
-																<img
-																	key={img._id}
-																	src={img.url}
-																	alt={`piqture on ${img.name}`}
-																	className="carouselImg"
-																/>
-															</div>
-														</Carousel.Item>
-													))}
-												</Carousel>
-											) : (
-												<div className="d-flex justify-content-center">
-													<Image
-														alt="No Image Available"
-														src={noImgPiqture}
-														className="noImgAvailable"
-													></Image>
-												</div>
-											)}
-										</Card.Body>
-									</Card>
-								</Col>
-								{currentUser && <DropZone user={currentUser} placeId={id} />}
-								<div className="mt-1 small text-muted">
-									{place.updatedAt && (
-										<>
-											Last Updated: {firebaseTimestampToString(place.updatedAt)}
-										</>
+						<hr className="mt-4 border-emerald-100" />
+						<div className="mt-5 rounded-xl border border-white/70 bg-white p-4 shadow">
+							<div className="flex flex-wrap items-start justify-between gap-2">
+								<div className="text-gray-500">
+									{place.address}, {place.city}
+								</div>
+								<div className="flex gap-2">
+									<span className="rounded-full bg-gray-600 px-3 py-1 text-xs text-white">
+										{place.category}
+									</span>
+									{place.isSuggestion && (
+										<span className="rounded-full bg-amber-300 px-3 py-1 text-xs text-amber-900">
+											Suggestion
+										</span>
 									)}
 								</div>
-							</Row>
-						</Card.Body>
-					</Card>
-				</Col>
-			</Row>
+							</div>
+
+							{place.description && <p className="mt-3">{place.description}</p>}
+
+							{place.offers && (
+								<div className="mt-3">
+									<div className="mb-1 font-semibold">Offers</div>
+									<span className="rounded-full bg-gray-600 px-3 py-1 text-xs text-white">
+										{place.offers}
+									</span>
+								</div>
+							)}
+
+							<div className="mt-4">
+								<div className="mb-1 font-semibold">Contact</div>
+								<div className="space-y-1">
+									{place.phone && (
+										<div>
+											<span className="text-gray-500">Phone:</span> {place.phone}
+										</div>
+									)}
+									{place.email && (
+										<div>
+											<span className="text-gray-500">Email:</span> {place.email}
+										</div>
+									)}
+									{place.website && (
+										<div>
+											<span className="text-gray-500">Website:</span> {place.website}
+										</div>
+									)}
+									{place.facebook && (
+										<div>
+											<span className="text-gray-500">Facebook:</span> {place.facebook}
+										</div>
+									)}
+									{place.instagram && (
+										<div>
+											<span className="text-gray-500">Instagram:</span> {place.instagram}
+										</div>
+									)}
+									{!place.phone &&
+										!place.email &&
+										!place.website &&
+										!place.facebook &&
+										!place.instagram && (
+											<div className="text-gray-500">No contact information provided.</div>
+										)}
+								</div>
+							</div>
+							{currentUser && (
+								<div className="mt-3 flex justify-end">
+									<button
+										type="button"
+										onClick={() => setShowEdit(true)}
+										className="rounded-md bg-[#5e936c] px-3 py-2 text-sm text-white transition-colors hover:bg-[#67c090] hover:text-black"
+									>
+										Edit
+									</button>
+								</div>
+							)}
+						</div>
+					</section>
+
+					<section>
+						<div className="rounded-xl p-2">
+							<h2 className="mt-4 text-center text-xl font-semibold">Pictures</h2>
+							<hr className="my-4 border-emerald-100" />
+
+							{activeImage ? (
+								<div>
+									<div className="flex h-[550px] w-full items-center justify-center">
+										<img
+											src={activeImage.url}
+											alt={`piqture on ${activeImage.name}`}
+											className="h-full w-full rounded-[15px] object-cover"
+										/>
+									</div>
+									{safeImages.length > 1 && (
+										<div className="mt-3 flex items-center justify-center gap-2">
+											<button
+												type="button"
+												onClick={handlePreviousImage}
+												className="rounded-md border border-gray-300 bg-white px-3 py-1 text-sm hover:bg-gray-50"
+											>
+												Previous
+											</button>
+											<span className="text-sm text-gray-600">
+												{activeImageIndex + 1} / {safeImages.length}
+											</span>
+											<button
+												type="button"
+												onClick={handleNextImage}
+												className="rounded-md border border-gray-300 bg-white px-3 py-1 text-sm hover:bg-gray-50"
+											>
+												Next
+											</button>
+										</div>
+									)}
+								</div>
+							) : (
+								<div className="flex justify-center">
+									<img
+										alt="No Image Available"
+										src={noImgPiqture}
+										className="h-[200px] w-[200px] rounded-[15px] object-cover"
+									/>
+								</div>
+							)}
+						</div>
+					</section>
+				</div>
+
+				{currentUser && <DropZone user={currentUser} placeId={id} />}
+				<div className="mt-1 text-sm text-gray-500">
+					{place.updatedAt && (
+						<>Last Updated: {firebaseTimestampToString(place.updatedAt)}</>
+					)}
+				</div>
+			</div>
 
 			<PlaceFormModal
 				show={showEdit}
@@ -276,7 +273,7 @@ const PlacePage = () => {
 				onSave={updatePlace}
 				onDelete={currentUser ? deletePlace : undefined}
 			/>
-		</Container>
+		</div>
 	);
 };
 

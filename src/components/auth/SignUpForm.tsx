@@ -1,6 +1,3 @@
-import { Card } from "react-bootstrap";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import type { SignUpCredentials } from "../../types/User.types";
 import { Link } from "react-router";
@@ -19,14 +16,16 @@ const SignUpForm: React.FC<Props> = ({ onSubmit }) => {
 	const password = watch("password");
 	return (
 		<>
-			<Card.Title className="mb-3">Sign Up</Card.Title>
+			<h1 className="mb-3 text-2xl font-semibold">Sign Up</h1>
 
-			{/* Sign up form */}
-			<Form onSubmit={handleSubmit(onSubmit)}>
-				{/* Email */}
-				<Form.Group className="mb-3" controlId="formBasicEmail">
-					<Form.Label>Email address</Form.Label>
-					<Form.Control
+			<form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+				<div className="space-y-1">
+					<label htmlFor="signup-email" className="block text-sm font-medium">
+						Email address
+					</label>
+					<input
+						id="signup-email"
+						className="w-full rounded-md border border-emerald-200 bg-white px-3 py-2 outline-none ring-emerald-500 focus:ring-2"
 						type="email"
 						placeholder="Enter email"
 						{...register("email", {
@@ -34,18 +33,23 @@ const SignUpForm: React.FC<Props> = ({ onSubmit }) => {
 						})}
 					/>
 					{errors.email ? (
-						<p className="text-danger">{errors.email.message || "invalid"}</p>
+						<p className="text-sm text-red-600">
+							{errors.email.message || "invalid"}
+						</p>
 					) : (
-						<Form.Text className="text-muted">
+						<p className="text-xs text-gray-500">
 							We'll never share your email with anyone else.
-						</Form.Text>
+						</p>
 					)}
-				</Form.Group>
+				</div>
 
-				{/* Password */}
-				<Form.Group className="mb-3" controlId="formBasicPassword">
-					<Form.Label>Password</Form.Label>
-					<Form.Control
+				<div className="space-y-1">
+					<label htmlFor="signup-password" className="block text-sm font-medium">
+						Password
+					</label>
+					<input
+						id="signup-password"
+						className="w-full rounded-md border border-emerald-200 bg-white px-3 py-2 outline-none ring-emerald-500 focus:ring-2"
 						type="password"
 						autoComplete="new-password"
 						placeholder="Password"
@@ -58,16 +62,19 @@ const SignUpForm: React.FC<Props> = ({ onSubmit }) => {
 						})}
 					/>
 					{errors.password && (
-						<p className="text-danger">
+						<p className="text-sm text-red-600">
 							{errors.password.message || "invalid"}
 						</p>
 					)}
-				</Form.Group>
+				</div>
 
-				{/* Comfirm Password */}
-				<Form.Group className="mb-3" controlId="formBasicCheckbox">
-					<Form.Label>Confirm Password</Form.Label>
-					<Form.Control
+				<div className="space-y-1">
+					<label htmlFor="signup-confirm-password" className="block text-sm font-medium">
+						Confirm Password
+					</label>
+					<input
+						id="signup-confirm-password"
+						className="w-full rounded-md border border-emerald-200 bg-white px-3 py-2 outline-none ring-emerald-500 focus:ring-2"
 						type="password"
 						autoComplete="off"
 						placeholder="Confirm Password"
@@ -78,17 +85,21 @@ const SignUpForm: React.FC<Props> = ({ onSubmit }) => {
 						})}
 					/>
 					{errors.confirmPassword && (
-						<p className="text-danger">
+						<p className="text-sm text-red-600">
 							{errors.confirmPassword.message || "invalid"}
 						</p>
 					)}
-				</Form.Group>
-				<Button variant="primary" type="submit" disabled={isSubmitting}>
+				</div>
+				<button
+					type="submit"
+					disabled={isSubmitting}
+					className="rounded-md bg-[#5e936c] px-4 py-2 text-white transition-colors hover:bg-[#67c090] hover:text-black disabled:cursor-not-allowed disabled:opacity-60"
+				>
 					Submit
-				</Button>
-			</Form>
+				</button>
+			</form>
 
-			<div className="text-center">
+			<div className="mt-3 text-center text-sm">
 				Already have an account <Link to="/Login">Log in</Link>
 			</div>
 		</>

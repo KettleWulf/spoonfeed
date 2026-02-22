@@ -5,7 +5,6 @@ import { type SubmitHandler } from "react-hook-form";
 import type { SignUpCredentials } from "../../types/User.types";
 import { FirebaseError } from "firebase/app";
 import { toast } from "react-toastify";
-import { Card, Col, Container, Row } from "react-bootstrap";
 import { useNavigate } from "react-router";
 import useAuth from "../../hooks/useAuth";
 import { usersCol } from "../../services/Firebase";
@@ -45,24 +44,18 @@ const SignupPage = () => {
 	};
 
 	return (
-		<Container className="py-5 center-y">
-			<Row>
-				<Col md={{ span: 6, offset: 3 }}>
-					<Card className="mb-3  shadow-lg rounded-3 border-0 map">
-						<Card.Body>
-							{passwordCheck ? (
-								<SignUpForm onSubmit={onSubmit} />
-							) : (
-								<PasswordGuard
-									password={password}
-									correctPassword={() => setPasswordCheck(true)}
-								/>
-							)}
-						</Card.Body>
-					</Card>
-				</Col>
-			</Row>
-		</Container>
+		<div className="flex min-h-[70vh] items-center justify-center py-5">
+			<div className="w-full max-w-xl rounded-2xl border border-white/70 bg-[whitesmoke] p-6 shadow-lg">
+				{passwordCheck ? (
+					<SignUpForm onSubmit={onSubmit} />
+				) : (
+					<PasswordGuard
+						password={password}
+						correctPassword={() => setPasswordCheck(true)}
+					/>
+				)}
+			</div>
+		</div>
 	);
 };
 

@@ -3,15 +3,14 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router";
 import App from "./App.tsx";
 import AuthContextProvider from "./context/AuthContextProvider.tsx";
-
-
-
+import "./index.css";
+import "react-toastify/dist/ReactToastify.css";
 
 createRoot(document.getElementById("root")!).render(
 	<StrictMode>
 		<AuthContextProvider>
 			<BrowserRouter>
-					<App />
+				<App />
 			</BrowserRouter>
 		</AuthContextProvider>
 	</StrictMode>

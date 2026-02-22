@@ -1,4 +1,3 @@
-import { Card, Col, Container, Row } from "react-bootstrap";
 import Map from "../components/Map";
 import { addDoc, serverTimestamp } from "firebase/firestore";
 import { newPlacesCol } from "../services/Firebase";
@@ -40,29 +39,24 @@ const HomePage = () => {
 	};
 
 	return (
-		<Container fluid className="py-3">
-			<Row className="g-4">
-				<Col xs={12} md={12} lg={9}>
-					<Card className=" map text-center  shadow border-0 ">
-						<Card.Header as="h2" className="bg-white border-0 map m-1">
+		<div className="py-3">
+			<div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
+				<section className="lg:col-span-9">
+					<div className="rounded-2xl border border-white/70 bg-[whitesmoke] text-center shadow">
+						<h2 className="m-1 rounded-xl bg-[whitesmoke] py-2 text-2xl font-semibold">
 							SpoonFeed
-						</Card.Header>
-						<Card.Body className="py-0">
+						</h2>
+						<div className="pb-2">
 							<Map onSavePlace={addPlace} />
-						</Card.Body>
-					</Card>
-				</Col>
+						</div>
+					</div>
+				</section>
 
-				<Col xs={12} md={12} lg={3} className="me-auto">
-					<Card className=" cardHome  border-0 h-100">
-						<Card.Header
-							as="h3"
-							className="bg-white border-0 cardHome text-center "
-						>
-							Places
-						</Card.Header>
-						<hr />
-						<Card.Body className="pt-0">
+				<aside className="lg:col-span-3">
+					<div className="h-full rounded-2xl border border-white/60 bg-[#e8f5e9] shadow">
+						<h3 className="px-4 py-3 text-center text-xl font-semibold">Places</h3>
+						<hr className="border-emerald-100" />
+						<div className="p-4 pt-2">
 							{places && (
 								<SortableTable
 									columns={columnDefs}
@@ -70,11 +64,11 @@ const HomePage = () => {
 									getRowLink={(row) => `/places/${row._id}`}
 								/>
 							)}
-						</Card.Body>
-					</Card>
-				</Col>
-			</Row>
-		</Container>
+						</div>
+					</div>
+				</aside>
+			</div>
+		</div>
 	);
 };
 

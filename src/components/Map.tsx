@@ -4,7 +4,6 @@ import {
 	Marker,
 	useJsApiLoader,
 } from "@react-google-maps/api";
-import { Alert, Container, Spinner, Button } from "react-bootstrap";
 import { useEffect, useRef, useState } from "react";
 
 import useUserLocation from "../hooks/useUserLocation";
@@ -147,7 +146,6 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
 		getAddress(
 			clickedCoords,
 			(foundAddress, city) => {
-
 				setSelectedLocation({
 					coords: clickedCoords,
 					address: foundAddress,
@@ -199,22 +197,20 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
 
 	if (loadError) {
 		return (
-			<Alert variant="danger">
+			<div className="rounded-md border border-red-200 bg-red-50 p-4 text-red-700">
 				<p>Error when loading Google Maps</p>
 				<p>Check API-key and necessary API-settings</p>
 				<p>{loadError.message}</p>
-			</Alert>
+			</div>
 		);
 	}
 
 	if (!isLoaded || locationLoading) {
 		return (
-			<Container>
-				<div className="text-center">
-					<Spinner animation="border" role="status" className="mb-2" />
-					<p>Loading map and detecting location...</p>
-				</div>
-			</Container>
+			<div className="p-6 text-center">
+				<div className="mx-auto mb-2 h-6 w-6 animate-spin rounded-full border-2 border-emerald-700 border-t-transparent" />
+				<p>Loading map and detecting location...</p>
+			</div>
 		);
 	}
 
@@ -227,13 +223,13 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
 			<div className="mb-3">
 				<AddressSearch onLocationFound={handleSearchLocation} />
 				{placesLoading && (
-					<div className="text-center mt-2">
-						<Spinner animation="border" size="sm" className="me-2" />
+					<div className="mt-2 flex items-center justify-center gap-2">
+						<div className="h-4 w-4 animate-spin rounded-full border-2 border-emerald-700 border-t-transparent" />
 						<p>Loading places to eat in {currentCity} </p>
 					</div>
 				)}
 				{places && places.length === 0 && !placesLoading && (
-					<div className="alert alert-info mt-2">
+					<div className="mt-2 rounded-md border border-blue-200 bg-blue-50 px-3 py-2 text-blue-700">
 						<small>No places to eat in {currentCity}, please add some!</small>
 					</div>
 				)}
@@ -241,6 +237,7 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
 
 			<GoogleMap
 				id="google-map"
+				mapContainerClassName="h-[600px] w-full rounded-xl"
 				onClick={handleMapClick}
 				center={userLocation || FALLBACK_CENTER}
 				zoom={userLocation ? 14 : 10}
@@ -262,16 +259,14 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
 				)}
 
 				{places?.map((place) => (
-					<>
-						<Marker
-							key={place._id}
-							position={place.location}
-							title={`${place.name} - ${place.category}`}
-							icon={getMarkerIcon(place.category)}
-							onClick={() => handlePlaceClick(place)}
-							animation={google.maps.Animation.DROP}
-						/>
-					</>
+					<Marker
+						key={place._id}
+						position={place.location}
+						title={`${place.name} - ${place.category}`}
+						icon={getMarkerIcon(place.category)}
+						onClick={() => handlePlaceClick(place)}
+						animation={google.maps.Animation.DROP}
+					/>
 				))}
 
 				{selectedLocation && (
@@ -285,15 +280,18 @@ const Map: React.FC<MapProps> = ({ onSavePlace }) => {
 							position={selectedLocation.coords}
 							onCloseClick={() => setSelectedLocation(null)}
 						>
-							<Container>
+							<div className="p-1">
 								<p>Address:</p>
 								<p>{selectedLocation.address}</p>
 								{selectedLocation.address !== "Could not get address" && (
-									<Button onClick={handleOpenModal} style={{ width: "100%" }}>
-										Add a places to eat
-									</Button>
+									<button
+										onClick={handleOpenModal}
+										className="mt-1 w-full rounded-md bg-[#5e936c] px-3 py-2 text-white transition-colors hover:bg-[#67c090] hover:text-black"
+									>
+										Add a place to eat
+									</button>
 								)}
-							</Container>
+							</div>
 						</InfoWindow>
 					</>
 				)}

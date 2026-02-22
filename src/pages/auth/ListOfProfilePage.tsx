@@ -1,4 +1,3 @@
-import { Card, Col, Container, Image, Row } from "react-bootstrap";
 import SortableTable from "../../components/SortableTable";
 import { useGetUsers } from "../../hooks/useGetUsers";
 import type { UserList } from "../../types/User.types";
@@ -16,12 +15,12 @@ const ListOfProfilePage = () => {
 				const url = cell.getValue() as string;
 
 				return (
-					<Image
+					<img
 						src={url ?? blankProfile}
 						alt="Profile Picture"
 						width={50}
 						height={50}
-						roundedCircle
+						className="h-[50px] w-[50px] rounded-full object-cover"
 					/>
 				);
 			},
@@ -43,19 +42,13 @@ const ListOfProfilePage = () => {
 	}
 
 	return (
-		<Container className="py-5 center-y">
-			<Row>
-				<Col>
-					<Card className="mb-3  shadow-lg rounded-3 border-0 map">
-						<Card.Body>
-							<h2>Admins</h2>
-							<hr />
-							{users && <SortableTable data={users} columns={columns} />}
-						</Card.Body>
-					</Card>
-				</Col>
-			</Row>
-		</Container>
+		<div className="py-5">
+			<div className="rounded-2xl border border-white/70 bg-[whitesmoke] p-6 shadow-lg">
+				<h2 className="text-2xl font-semibold">Admins</h2>
+				<hr className="my-4 border-emerald-100" />
+				{users && <SortableTable data={users} columns={columns} />}
+			</div>
+		</div>
 	);
 };
 

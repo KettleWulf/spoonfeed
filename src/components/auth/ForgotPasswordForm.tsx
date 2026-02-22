@@ -1,8 +1,5 @@
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import type { ForgotPasswordCredentials } from "../../types/User.types";
-import { Card } from "react-bootstrap";
 
 type ForgotPasswordFormProps = {
 	onForgotPassword: SubmitHandler<ForgotPasswordCredentials>;
@@ -19,14 +16,19 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
 
 	return (
 		<>
-			<Card.Title className="mb-3">Forgot Password</Card.Title>
+			<h1 className="mb-3 text-2xl font-semibold">Forgot Password</h1>
 
-			{/* Sign up form */}
-			<Form onSubmit={handleSubmit(onForgotPassword)}>
-				{/* Email */}
-				<Form.Group className="mb-3" controlId="formBasicEmail">
-					<Form.Label>Email address</Form.Label>
-					<Form.Control
+			<form onSubmit={handleSubmit(onForgotPassword)} className="space-y-4">
+				<div className="space-y-1">
+					<label
+						htmlFor="forgot-password-email"
+						className="block text-sm font-medium"
+					>
+						Email address
+					</label>
+					<input
+						id="forgot-password-email"
+						className="w-full rounded-md border border-emerald-200 bg-white px-3 py-2 outline-none ring-emerald-500 focus:ring-2"
 						type="email"
 						placeholder="Email"
 						{...register("email", {
@@ -37,14 +39,20 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
 						})}
 					/>
 					{errors.email && (
-						<p className="text-danger">{errors.email.message || "invalid"}</p>
+						<p className="text-sm text-red-600">
+							{errors.email.message || "invalid"}
+						</p>
 					)}
-				</Form.Group>
+				</div>
 
-				<Button variant="primary" type="submit" disabled={isSubmitting}>
+				<button
+					type="submit"
+					disabled={isSubmitting}
+					className="rounded-md bg-[#5e936c] px-4 py-2 text-white transition-colors hover:bg-[#67c090] hover:text-black disabled:cursor-not-allowed disabled:opacity-60"
+				>
 					Send
-				</Button>
-			</Form>
+				</button>
+			</form>
 		</>
 	);
 };
